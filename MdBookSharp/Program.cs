@@ -1,17 +1,25 @@
-﻿using Markdig;
-using MdBookSharp.Books;
+﻿using MdBookSharp.Books;
 using MdBookSharp.Extensions;
-using System.Diagnostics;
+using System.Reflection;
 
-List<MdBookExtension> extensions = new();
+List<MdBookExtension> extensions = [
 
-var path = "C:\\Users\\anete\\Desktop\\Nabunassar TTRPG\\mdbook\\nabunassar_sharp\\";
+];
+
+var path = Path.GetFullPath("..\\Book\\");
+var asmname = Assembly.GetEntryAssembly().GetName().Name;
+
+void FindBook()
+{
+    var dir = Directory.GetParent(path);
+    path = dir.FullName;
+    if (dir.Name != asmname)
+        FindBook();
+}
+FindBook();
+
+path = Path.Combine(Directory.GetParent(path).FullName, "Book");
 
 Book.Load(path)
     .Render(extensions)
     .Build();
-
-var psi = new ProcessStartInfo();
-psi.FileName = @"c:\windows\explorer.exe";
-psi.Arguments = path;
-Process.Start(psi);

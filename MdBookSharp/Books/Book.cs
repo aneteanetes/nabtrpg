@@ -1,14 +1,10 @@
 ﻿using Geranium.Reflection;
 using HandlebarsDotNet;
 using Markdig;
-using MdBookSharp.Builder;
 using MdBookSharp.Extensions;
 using MdBookSharp.MdBook;
 using MdBookSharp.Resources;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Text.Json;
-using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace MdBookSharp.Books
 {
@@ -40,7 +36,7 @@ namespace MdBookSharp.Books
 
         public string ProjectRootPath { get; set; }
 
-        public string Binpath { get; set; } = "book";
+        public string Binpath { get; set; } = "booksharp";
 
         public static Book Load(string path)
         {
@@ -52,11 +48,15 @@ namespace MdBookSharp.Books
             book.ProjectPath = path;
             book.ProjectRootPath = rootpath;
 
-            Directory.Delete(Path.Combine(book.ProjectRootPath,book.Binpath),true);
 
-            var favicon = Directory.GetFiles(path, "favicon*",SearchOption.AllDirectories).FirstOrDefault();
+            var resultPath = Path.Combine(book.ProjectRootPath, book.Binpath);
+            if (Directory.Exists(resultPath))
+                Directory.Delete(resultPath, true);
+
+            var favicon = Directory.GetFiles(path, "favicon*",SearchOption.AllDirectories).LastOrDefault();
             book.IsFaviconSvg = Path.GetExtension(favicon) == ".svg";
-            book.IsFaviconPng = Path.GetExtension(favicon) == ".png";
+            if (!book.IsFaviconSvg)
+                book.IsFaviconPng = Path.GetExtension(favicon) == ".png";
 
             //book.AdditionalCssFiles = Directory.GetFiles(path, "*.css", SearchOption.AllDirectories).Select(csspath => csspath.Replace(path, book.PathToRoot)).ToArray();
             //book.AdditionalJsFiles = Directory.GetFiles(path, "*.js", SearchOption.AllDirectories).Select(js => js.Replace(path, book.PathToRoot)).ToArray();
@@ -76,7 +76,21 @@ namespace MdBookSharp.Books
                 if (page.RelativePath.IsEmpty())
                     continue;
 
-                page.PathToRoot = "./";
+                if (page.RelativePath.IsNotEmpty())
+                    page.PathToRoot = Path.GetRelativePath(page.RelativePath.Replace(".md",".html"), "./");
+
+                if (page.PathToRoot.IsNotEmpty() && page.PathToRoot.StartsWith("..\\"))
+                    page.PathToRoot = "./" + page.PathToRoot.Substring(3);
+
+                if (page.PathToRoot.IsNotEmpty())
+                {
+                    page.PathToRoot = page.PathToRoot.Replace("\\", "/");
+
+                    if (page.PathToRoot == "..")
+                        page.PathToRoot = "./";
+                    else
+                        page.PathToRoot += "/";
+                }
             }
 
             return book;
@@ -119,10 +133,24 @@ namespace MdBookSharp.Books
             page.RelativePath = page.Path.Replace(absPath, "");
 
             if (prev != default)
-                page.Prev = prev.FileNameWithoutExtension + ".html";
+            {
+                page.Prev = Path.GetRelativePath(page.RelativePath.Replace(".md", ".html"), prev.RelativePath.Replace(".md", ".html"));
+
+                if (page.Prev.StartsWith("..\\"))
+                    page.Prev = "./" + page.Prev.Substring(3);
+
+                    page.Prev = page.Prev.Replace("\\", "/");
+            }
 
             if (next != default)
-                page.Next = next.FileNameWithoutExtension + ".html";
+            {
+                page.Next = Path.GetRelativePath(page.RelativePath.Replace(".md", ".html"), next.Path.Replace(absPath,"").Replace(".md", ".html"));
+
+                if (page.Next.StartsWith("..\\"))
+                    page.Next = "./" + page.Next.Substring(3);
+
+                page.Next = page.Next.Replace("\\", "/");
+            }
 
             internalIndex++;
         }
@@ -147,7 +175,7 @@ namespace MdBookSharp.Books
 
         public void Build()
         {
-            BuildPages();
+            RenderPages();
 
             var firstPage = Pages.ElementAtOrDefault(0);
             if (firstPage != null)
@@ -198,7 +226,7 @@ namespace MdBookSharp.Books
 
         private void WritePage(Page page)
         {
-            var path = Path.Combine(ProjectRootPath, Binpath, Path.GetFileNameWithoutExtension(page.RelativePath) + ".html");
+            var path = Path.Combine(ProjectRootPath, Binpath, page.RelativePath.Replace(".md",".html"));
 
             ValidateDirectory(path);
 
@@ -244,13 +272,24 @@ namespace MdBookSharp.Books
                     level = page.Level;
                 }
 
+                page.Url = page.RelativePath;
+
+                if (!page.RelativePath.IsEmpty() && !renderingPage.RelativePath.IsEmpty() && page != renderingPage)
+                    page.Url = Path.GetRelativePath(renderingPage.RelativePath, page.RelativePath);
+
+                if (page.Url.IsNotEmpty())
+                    page.Url = page.Url.Replace(".md", ".html");
+
+                if (page.Url.IsNotEmpty() && page.Url.StartsWith("..\\"))
+                    page.Url = ".\\" + page.Url.Substring(3);
+
                 RenderedNavbar += tpl.Invoke(page);
 
                 page.IsActive = "";
             }
         }
 
-        private void BuildPages()
+        private void RenderPages()
         {
             var template = EmbeddedResources.GetEmbeddedFileContent("page.hbs");
             var bindHtml = Handlebars.Compile(template);

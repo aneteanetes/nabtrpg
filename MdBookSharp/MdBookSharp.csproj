@@ -26,4 +26,8 @@
 	  <EmbeddedResource Remove="Resources\EmbeddedResources.cs" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Include="..\Book\**" />
+	</ItemGroup>
+
 </Project>

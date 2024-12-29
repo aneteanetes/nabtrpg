@@ -130,7 +130,7 @@
                             <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Содержание" aria-label="Содержание" aria-controls="sidebar">
                                 <i class="fa fa-bars"></i>
                             </label>
-                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <button id="theme-toggle" class="icon-button" type="button" title="Тема" aria-label="Тема" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
                                 <i class="fa fa-paint-brush"></i>
                             </button>
                             <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
@@ -138,7 +138,7 @@
                                 <li role="none"><button role="menuitem" class="theme" id="navy">Тёмная</button></li>
                                 <!--<li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>-->
                             </ul>
-                            <button id="search-toggle" class="icon-button" type="button" title="Поиск (ctrl+s)" aria-label="Поиск" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <button id="search-toggle" class="icon-button" type="button" title="Поиск (ctrl+f)" aria-label="Поиск" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                                 <i class="fa fa-search"></i>
                             </button>
                         </div>
@@ -147,7 +147,7 @@
 
                         <div class="right-buttons">
                             {{#if IsPrintEnable}}
-                            <a href="{{ PathToRoot }}print.html" title="Print this book" aria-label="Print this book">
+                            <a href="{{ PathToRoot }}print.html" title="Печать" aria-label="Печать">
                                 <i id="print-button" class="fa fa-print"></i>
                             </a>
                             {{/if}}
@@ -182,13 +182,13 @@
                         <nav class="nav-wrapper" aria-label="Page navigation">
                             <!-- Mobile navigation buttons -->
                             {{#IsPrevExists}}
-                            <a rel="prev" href="{{ PathToRoot }}{{Prev}}" class="mobile-nav-chapters previous" title="Назад" aria-label="Назад" aria-keyshortcuts="Left">
+                            <a rel="prev" href="{{Prev}}" class="mobile-nav-chapters previous" title="Назад" aria-label="Назад" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                             {{/IsPrevExists}}
 
                             {{#IsNextExists}}
-                            <a rel="next prefetch" href="{{ PathToRoot }}{{Next}}" class="mobile-nav-chapters next" title="Вперёд" aria-label="Вперёд" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="{{Next}}" class="mobile-nav-chapters next" title="Вперёд" aria-label="Вперёд" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                             {{/IsNextExists}}
@@ -200,13 +200,13 @@
 
                 <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     {{#IsPrevExists}}
-                    <a rel="prev" href="{{ PathToRoot }}{{Prev}}" class="nav-chapters previous" title="Назад" aria-label="Назад" aria-keyshortcuts="Left">
+                    <a rel="prev" href="{{Prev}}" class="nav-chapters previous" title="Назад" aria-label="Назад" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                     {{/IsPrevExists}}
 
                     {{#IsNextExists}}
-                    <a rel="next prefetch" href="{{ PathToRoot }}{{Next}}" class="nav-chapters next" title="Вперёд" aria-label="Вперёд" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="{{Next}}" class="nav-chapters next" title="Вперёд" aria-label="Вперёд" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                     {{/IsNextExists}}

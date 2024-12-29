@@ -27,6 +27,8 @@ namespace MdBookSharp.Books
 
         public string RelativePath { get; set; }
 
+        public string Url { get; set; }
+
         public string RelativePathHtml => System.IO.Path.GetFileNameWithoutExtension(RelativePath) + ".html";
 
         public bool IsCounted { get; set; } = true;
