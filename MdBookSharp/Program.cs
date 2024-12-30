@@ -1,9 +1,10 @@
 ﻿using MdBookSharp.Books;
 using MdBookSharp.Extensions;
+using MdBookSharp.Extensions.Dices;
 using System.Reflection;
 
 List<MdBookExtension> extensions = [
-
+    new DiceExtension()
 ];
 
 var path = Path.GetFullPath("..\\Book\\");

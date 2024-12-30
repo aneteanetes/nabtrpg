@@ -34,6 +34,9 @@
     {{#each AdditionalCssFiles}}
     <link rel="stylesheet" href="{{ ../PathToRoot }}{{ this }}">
     {{/each}}
+    {{#each ExtensionCssFiles}}
+    <link rel="stylesheet" href="{{ ../PathToRoot }}{{ this }}">
+    {{/each}}
 
     <!-- Provide site root to javascript -->
     <script>

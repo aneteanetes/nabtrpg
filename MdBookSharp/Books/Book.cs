@@ -22,6 +22,8 @@ namespace MdBookSharp.Books
 
         public string[] AdditionalCssFiles { get; set; }
 
+        public List<EmbeddedResource> ExtensionCssFiles { get; set; } = [];
+
         public string[] AdditionalJsFiles { get; set; }
 
         public bool IsFaviconPng { get; set; }
@@ -61,6 +63,8 @@ namespace MdBookSharp.Books
             //book.AdditionalCssFiles = Directory.GetFiles(path, "*.css", SearchOption.AllDirectories).Select(csspath => csspath.Replace(path, book.PathToRoot)).ToArray();
             //book.AdditionalJsFiles = Directory.GetFiles(path, "*.js", SearchOption.AllDirectories).Select(js => js.Replace(path, book.PathToRoot)).ToArray();
 
+            book.ExtensionCssFiles = EmbeddedResources.GetEmbeddedFolder("extensions.css");
+
             int internalCounter = 1;
 
             int internalIndex = 0;
@@ -98,6 +102,8 @@ namespace MdBookSharp.Books
 
         private void BindPage(Page page, string absPath, int internalCounter, int internalIndex, string parentCount="")
         {
+            page.ExtensionCssFiles = this.ExtensionCssFiles.Select(x=>x.FileName).ToArray();
+
             var prev = Pages.ElementAtOrDefault(internalIndex - 1);
             if (prev != null && prev.Path.IsEmpty())
             {
@@ -196,6 +202,14 @@ namespace MdBookSharp.Books
             }
 
             foreach (var file in EmbeddedResources.GetEmbeddedFolder("book"))
+            {
+                var path = Path.Combine(ProjectRootPath, Binpath, file.FileName);
+                ValidateDirectory(path);
+
+                File.WriteAllBytes(path, file.Content.ToArray());
+            }
+
+            foreach (var file in EmbeddedResources.GetEmbeddedFolder("extensions.css"))
             {
                 var path = Path.Combine(ProjectRootPath, Binpath, file.FileName);
                 ValidateDirectory(path);

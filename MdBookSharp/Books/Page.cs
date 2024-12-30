@@ -1,4 +1,5 @@
 ﻿using Geranium.Reflection;
+using MdBookSharp.Resources;
 using System.Diagnostics;
 
 namespace MdBookSharp.Books
@@ -24,6 +25,8 @@ namespace MdBookSharp.Books
         private string fileNameWithoutExtension;
 
         public string Path { get; set; }
+
+        public string[] ExtensionCssFiles { get; set; } = [];
 
         public string RelativePath { get; set; }
 

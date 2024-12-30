@@ -68,7 +68,7 @@ namespace MdBookSharp.Resources
             List<EmbeddedResource> Files = new();
 
             var names = Assembly.GetManifestResourceNames();
-            var inFolder = names.Where(n=>n.Contains(path));
+            var inFolder = names.Where(n=>n.Contains(path)).ToArray();
             foreach (var filePath in inFolder)
             {
                 var splitted = filePath.Split('.');
@@ -82,7 +82,8 @@ namespace MdBookSharp.Resources
                 Files.Add(new EmbeddedResource()
                 {
                     FileName = Path.Combine(name,fileName),
-                    Content = GetEmbeddedFile(filePath)
+                    Content = GetEmbeddedFile(filePath),
+                    Path = filePath
                 });
             }
 
@@ -96,6 +97,8 @@ namespace MdBookSharp.Resources
     internal class EmbeddedResource
     {
         public string FileName { get; set; }
+
+        public string Path { get; set; }
 
         public MemoryStream Content { get; set; }
     }
