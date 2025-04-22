@@ -1,4 +1,5 @@
-﻿using MdBookSharp.Books;
+﻿using Geranium.Reflection;
+using MdBookSharp.Books;
 using System.Text.RegularExpressions;
 
 namespace MdBookSharp.MdBook
@@ -20,9 +21,14 @@ namespace MdBookSharp.MdBook
 
             Dictionary<int, int> levelCounters = new();
 
-            foreach (var line in content.Skip(1))
+            foreach (var line in content.Skip(1).ToArray())
             {
+                if (line.IsEmpty())
+                    continue;
+
                 Page page = new();
+
+                Console.WriteLine($"Parsing {Array.IndexOf(content, line)} page of {content.Length-1}...");
 
                 if (line.Contains("#"))
                 {

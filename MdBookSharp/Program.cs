@@ -1,13 +1,16 @@
 ﻿using MdBookSharp.Books;
 using MdBookSharp.Extensions;
 using MdBookSharp.Extensions.Dices;
+using MdBookSharp.Extensions.WoWPlates;
 using System.Reflection;
 
 List<MdBookExtension> extensions = [
-    new DiceExtension()
+    new DiceExtension(),
+    new WoWPlateExtension()
 ];
 
-var path = Path.GetFullPath("..\\Book\\");
+
+var path = "C:\\Users\\anete\\source\\repos\\wow2drusadapt";/* Path.GetFullPath("..\\Book\\");
 var asmname = Assembly.GetEntryAssembly().GetName().Name;
 
 void FindBook()
@@ -20,6 +23,7 @@ void FindBook()
 FindBook();
 
 path = Path.Combine(Directory.GetParent(path).FullName, "Book");
+*/
 
 Book.Load(path)
     .Render(extensions)

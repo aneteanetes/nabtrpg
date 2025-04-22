@@ -12,6 +12,8 @@ namespace MdBookSharp.Extensions.Dices
         d6,
         d8,
         d10,
-        d12
+        d12,
+        d20,
+        dPercent
     }
 }

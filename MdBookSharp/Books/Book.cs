@@ -5,6 +5,8 @@ using MdBookSharp.Extensions;
 using MdBookSharp.MdBook;
 using MdBookSharp.Resources;
 using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace MdBookSharp.Books
 {
@@ -20,11 +22,11 @@ namespace MdBookSharp.Books
 
         public bool IsPrintEnable { get; set; }
 
-        public string[] AdditionalCssFiles { get; set; }
+        public List<string> AdditionalCssFiles { get; set; } = new();
 
         public List<EmbeddedResource> ExtensionCssFiles { get; set; } = [];
 
-        public string[] AdditionalJsFiles { get; set; }
+        public List<string> AdditionalJsFiles { get; set; } = new();
 
         public bool IsFaviconPng { get; set; }
 
@@ -40,28 +42,74 @@ namespace MdBookSharp.Books
 
         public string Binpath { get; set; } = "booksharp";
 
+        private JsonNode Settings { get; set; }
+
+        private Configuration _configuration { get; set; }
+        private Configuration Configuration
+        {
+            get
+            {
+                if (_configuration == null)
+                    _configuration = JsonSerializer.Deserialize<Configuration>(Settings);
+
+                return _configuration;
+            }
+        }
+
+        public bool IsNeedGenerateNavBar { get; set; } = true;
+
+        public Dictionary<string, string> Manifest = new();
+
         public static Book Load(string path)
         {
             var rootpath=path;
 
-            path = Path.Combine(path, "src")+"\\";
+            path = Path.Combine(path, "src") + "\\";
 
-            var book = SummaryParser.Parse(Path.Combine(path, "SUMMARY.md"));
+            var summarymd = "SUMMARY.md";
+            var summerypath = Path.Combine(path, summarymd);
+
+            var book = SummaryParser.Parse(summerypath);
             book.ProjectPath = path;
             book.ProjectRootPath = rootpath;
 
+            var settingsPath = Path.Combine(path, "settings.json");
+            if (File.Exists(settingsPath))
+                book.Settings = JsonObject.Parse(File.ReadAllText(settingsPath));
+
+            if (book.Configuration.IsIncrementalBuild)
+                book.Configuration.IsClearFolder = false;
 
             var resultPath = Path.Combine(book.ProjectRootPath, book.Binpath);
             if (Directory.Exists(resultPath))
-                Directory.Delete(resultPath, true);
+            {
+                if (book.Configuration.IsIncrementalBuild)
+                {
+                    // read manifest
+                    var manifestpath = Path.Combine(resultPath, summarymd);
+                    if (File.Exists(manifestpath))
+                    {
+                        var manifestwritetime = File.GetLastWriteTime(manifestpath);
+                        var summarywritetime = File.GetLastWriteTime(summerypath);
+
+                        if (manifestwritetime == summarywritetime)
+                            book.IsNeedGenerateNavBar = false;
+                    }
+
+                    book.Manifest = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(Path.Combine(resultPath, "navbar.manifest")));
+                }
+                else if (book.Configuration.IsClearFolder)
+                {
+                    Directory.Delete(resultPath, true);
+                }
+            }
 
             var favicon = Directory.GetFiles(path, "favicon*",SearchOption.AllDirectories).LastOrDefault();
             book.IsFaviconSvg = Path.GetExtension(favicon) == ".svg";
             if (!book.IsFaviconSvg)
                 book.IsFaviconPng = Path.GetExtension(favicon) == ".png";
 
-            //book.AdditionalCssFiles = Directory.GetFiles(path, "*.css", SearchOption.AllDirectories).Select(csspath => csspath.Replace(path, book.PathToRoot)).ToArray();
-            //book.AdditionalJsFiles = Directory.GetFiles(path, "*.js", SearchOption.AllDirectories).Select(js => js.Replace(path, book.PathToRoot)).ToArray();
+            ProcessAdditionalFiles(book);
 
             book.ExtensionCssFiles = EmbeddedResources.GetEmbeddedFolder("extensions.css");
 
@@ -98,6 +146,36 @@ namespace MdBookSharp.Books
             }
 
             return book;
+        }
+
+        private static void ProcessAdditionalFiles(Book book)
+        {
+            var themePath = Path.Combine(book.ProjectRootPath, "theme");
+
+            foreach (var cssfile in Directory.GetFiles(Path.Combine(themePath,"css"),"*.css", SearchOption.AllDirectories))
+            {
+                ProcessAdditionalFile(book, cssfile, FileType.Css);
+            }
+
+            foreach (var cssfile in Directory.GetFiles(Path.Combine(themePath, "js"), "*.js", SearchOption.AllDirectories))
+            {
+                ProcessAdditionalFile(book, cssfile, FileType.Js);
+            }
+        }
+
+        private static void ProcessAdditionalFile(Book book, string filepath, FileType fileType)
+        {
+            switch (fileType)
+            {
+                case FileType.Css:
+                    book.AdditionalCssFiles.Add(filepath.Replace(book.ProjectRootPath, ""));
+                    break;
+                case FileType.Js:
+                    book.AdditionalJsFiles.Add(filepath.Replace(book.ProjectRootPath, ""));
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void BindPage(Page page, string absPath, int internalCounter, int internalIndex, string parentCount="")
@@ -163,13 +241,25 @@ namespace MdBookSharp.Books
 
         public Book Render(List<MdBookExtension> extensions)
         {
-            var pipelineBuilder = new MarkdownPipelineBuilder().UseAdvancedExtensions();
+            foreach (var extension in extensions)
+            {
+                var cfgType = extension.GetSettingsType();
+                var node = Settings["extensions"][extension.GetType().Name];
+                if(node != null)
+                extension.BindSettings(JsonSerializer.Deserialize(node.ToString(), returnType: cfgType));
+            }
+
+            var pipelineBuilder = new MarkdownPipelineBuilder()
+                .UseAdvancedExtensions()
+                .UsePipeTables();
             var pipeline = pipelineBuilder.Build();
 
             foreach (var page in Pages)
             {
                 if (page.MdContent.IsEmpty())
                     continue;
+
+                Console.WriteLine($"Processing {Pages.IndexOf(page)} page of {Pages.Count}...");
 
                 page.Html = Markdown.ToHtml(page.MdContent, pipeline);
                 extensions.ForEach(extension => extension.Process(page));
@@ -194,13 +284,18 @@ namespace MdBookSharp.Books
                     Directory.CreateDirectory(dir);
                 }
                 File.WriteAllText(path, firstPage.Content);
+
+                Console.WriteLine($"Writing first page...");
             }
 
             foreach (var page in Pages.Where(x=>x.Path.IsNotEmpty()))
             {
                 WritePage(page);
+
+                Console.WriteLine($"Writing {Pages.IndexOf(page)} page of {Pages.Count}...");
             }
 
+            Console.WriteLine($"Copying embedded 'book' content...");
             foreach (var file in EmbeddedResources.GetEmbeddedFolder("book"))
             {
                 var path = Path.Combine(ProjectRootPath, Binpath, file.FileName);
@@ -209,6 +304,7 @@ namespace MdBookSharp.Books
                 File.WriteAllBytes(path, file.Content.ToArray());
             }
 
+            Console.WriteLine($"Copying extensions content...");
             foreach (var file in EmbeddedResources.GetEmbeddedFolder("extensions.css"))
             {
                 var path = Path.Combine(ProjectRootPath, Binpath, file.FileName);
@@ -217,13 +313,41 @@ namespace MdBookSharp.Books
                 File.WriteAllBytes(path, file.Content.ToArray());
             }
 
-            var imageroot = PathToRoot + "\\images";
+            Console.WriteLine($"Copying images ...");
             foreach (var image in Directory.GetFiles(Path.Combine(ProjectPath, "images"),".", SearchOption.AllDirectories))
             {
                 var path = Path.Combine(ProjectRootPath, Binpath, image.Replace(ProjectPath, ""));
                 ValidateDirectory(path);
                 File.Copy(image,path,true);
+
             }
+
+            Console.WriteLine($"Copying theme content ...");
+            var root = new DirectoryInfo(ProjectPath).Parent.FullName;
+            foreach (var file in Directory.GetFiles(Path.Combine(root, "theme"), ".", SearchOption.AllDirectories))
+            {
+                var path = Path.Combine(ProjectRootPath, Binpath, file.Replace(root, "").Trim('\\'));
+                ValidateDirectory(path);
+                try
+                {
+                    var bytes = File.ReadAllBytes(file);
+                    File.WriteAllBytes(path, bytes);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+            }
+
+            Console.WriteLine($"Writing manifest...");
+
+            var summaryfilepath = Path.Combine(ProjectPath, "SUMMARY.md");
+            ValidateDirectory(summaryfilepath);
+            var summarydestpath = Path.Combine(ProjectRootPath, Binpath, "SUMMARY.md");
+            File.Copy(summaryfilepath, summarydestpath,true);
+
+            File.WriteAllText(Path.Combine(ProjectRootPath, Binpath, "navbar.manifest"), JsonSerializer.Serialize(Manifest));
+
         }
 
         private string ValidateDirectory(string path)
@@ -251,8 +375,6 @@ namespace MdBookSharp.Books
         {
             RenderedNavbar = "";
             int level = 0;
-
-            string closing = "";
 
             foreach (var page in Pages)
             {
@@ -291,6 +413,9 @@ namespace MdBookSharp.Books
                 if (!page.RelativePath.IsEmpty() && !renderingPage.RelativePath.IsEmpty() && page != renderingPage)
                     page.Url = Path.GetRelativePath(renderingPage.RelativePath, page.RelativePath);
 
+                if (page.IsActive == "active")
+                    page.Url = "../" + page.Url;
+
                 if (page.Url.IsNotEmpty())
                     page.Url = page.Url.Replace(".md", ".html");
 
@@ -310,10 +435,20 @@ namespace MdBookSharp.Books
 
             foreach (var page in Pages)
             {
-                BuildNavbar(page);
-
                 if (page.Path.IsEmpty())
                     continue;
+
+                if (IsNeedGenerateNavBar)
+                {
+                    BuildNavbar(page);
+                    Manifest[page.Path] = RenderedNavbar;
+                }
+                else
+                {
+                    RenderedNavbar = Manifest[page.Path];
+                }
+
+                Console.WriteLine($"Rendering {Pages.IndexOf(page)} page of {Pages.Count}...");
 
                 page.Content = bindHtml.Invoke(new
                 {
