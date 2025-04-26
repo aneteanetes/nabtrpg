@@ -11,24 +11,21 @@ namespace MdBookSharp.Extensions.WoWPlates
             //not inversed for 'faster' check
             if (file.MdContent.Contains("</plate>"))
             {
-                var doc = new HtmlDocument();
-                doc.LoadHtml(file.Html);
-
-                foreach (var plate in doc.DocumentNode.Descendants("plate").ToArray())
+                foreach (var plate in file.HtmlDocument.DocumentNode.Descendants("plate").ToArray())
                 {
                     var img = plate.GetAttributeValue("img","");
                     var name = plate.GetAttributeValue("name", "");
                     var subtype = plate.GetAttributeValue("subtype", "");
                     var html = plate.InnerHtml;
 
-                    var div = doc.CreateElement("div");
+                    var div = file.HtmlDocument.CreateElement("div");
                     div.AddClass("trait");
                     div.InnerHtml = PanelInnerHtml(img, subtype, name, html);
 
                     plate.ParentNode.ReplaceChild(div, plate);
                 }
 
-                file.Html = doc.DocumentNode.InnerHtml;
+                file.Html = file.HtmlDocument.DocumentNode.InnerHtml;
             }
         }
 
@@ -50,7 +47,10 @@ namespace MdBookSharp.Extensions.WoWPlates
         </del>
       </div>
     </div>
-                              <span class=""whtt-name""><b class=""whtt-name"">{name}</b></a>
+                              <span class=""whtt-name"">
+<h6 style=""display: inline-block;margin: 0;"">
+<b class=""whtt-name"">{name}</b>
+</h6>
                               <div class=""subtype"">{subtype}</div>
                             </td>
                         </tr>

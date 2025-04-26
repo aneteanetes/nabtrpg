@@ -1,16 +1,18 @@
 ﻿using Geranium.Reflection;
 using HandlebarsDotNet;
+using HtmlAgilityPack;
 using Markdig;
 using MdBookSharp.Extensions;
 using MdBookSharp.MdBook;
 using MdBookSharp.Resources;
+using MdBookSharp.Search;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace MdBookSharp.Books
 {
-    internal class Book
+    internal partial class Book
     {
         public string Title { get; set; }
 
@@ -262,6 +264,11 @@ namespace MdBookSharp.Books
                 Console.WriteLine($"Processing {Pages.IndexOf(page)} page of {Pages.Count}...");
 
                 page.Html = Markdown.ToHtml(page.MdContent, pipeline);
+
+                var htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(page.Html);
+                page.HtmlDocument = htmlDoc;
+
                 extensions.ForEach(extension => extension.Process(page));
                 page.IsRendered = true;
             }
@@ -272,6 +279,8 @@ namespace MdBookSharp.Books
         public void Build()
         {
             RenderPages();
+
+            var searchIndexJson = SearchIndexBuilder.BuildIndex(this);
 
             var firstPage = Pages.ElementAtOrDefault(0);
             if (firstPage != null)
@@ -346,7 +355,13 @@ namespace MdBookSharp.Books
             var summarydestpath = Path.Combine(ProjectRootPath, Binpath, "SUMMARY.md");
             File.Copy(summaryfilepath, summarydestpath,true);
 
-            File.WriteAllText(Path.Combine(ProjectRootPath, Binpath, "navbar.manifest"), JsonSerializer.Serialize(Manifest));
+            var binRoot = Path.Combine(ProjectRootPath, Binpath);
+
+            File.WriteAllText(Path.Combine(binRoot, "navbar.manifest"), JsonSerializer.Serialize(Manifest));
+
+
+            File.WriteAllText(Path.Combine(binRoot, "searchindex.json"), searchIndexJson);
+            File.WriteAllText(Path.Combine(binRoot, "searchindex.js"), @"Object.assign(window.search, "+searchIndexJson+")");
 
         }
 

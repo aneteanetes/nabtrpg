@@ -20,6 +20,8 @@ namespace MdBookSharp.MdBook
             int currentLevel = 0;
 
             Dictionary<int, int> levelCounters = new();
+            Stack<Page> levels = new Stack<Page>();
+            Page firstPage = null;
 
             foreach (var line in content.Skip(1).ToArray())
             {
@@ -28,7 +30,7 @@ namespace MdBookSharp.MdBook
 
                 Page page = new();
 
-                Console.WriteLine($"Parsing {Array.IndexOf(content, line)} page of {content.Length-1}...");
+                Console.WriteLine($"Parsing {Array.IndexOf(content, line)} page of {content.Length - 1}...");
 
                 if (line.Contains("#"))
                 {
@@ -44,46 +46,63 @@ namespace MdBookSharp.MdBook
                 }
 
                 var from = line.IndexOf("[") + 1;
-                var to = line.IndexOf("]")-from;
-                page.Name = line.Substring(from,to );
+                var to = line.IndexOf("]") - from;
+                page.Name = line.Substring(from, to);
 
                 from = line.IndexOf("(") + 1;
                 to = line.IndexOf(")") - from;
-                page.Path = line.Substring(from,to);
+                page.Path = line.Substring(from, to);
 
                 page.IsCounted = line.Contains("-");
                 page.IsCollapsible = line.Contains("+");
 
-                if (page.IsCounted)
+                var layer = page.Level = Regex.Matches(line, "   ").Count;
+
+
+                if (layer > currentLevel)
                 {
-                    var layer = page.Level = Regex.Matches(line, "   ").Count;
-                    
-                    if (layer > currentLevel)
+                    levels.Push(prev);
+                    if (page.IsCounted)
                     {
                         prefixes.Add(prev.Number);
                         currentLevel = layer;
                         levelCounters[layer] = counter;
                     }
-                    else if (layer < currentLevel)
+                }
+                else if (layer < currentLevel)
+                {
+                    levels.Pop();
+                    if (page.IsCounted)
                     {
                         prefixes.RemoveAt(prefixes.Count - 1);
                         currentLevel = layer;
                     }
+                }
 
 
-                    if (layer == 0)
+                if (layer == 0)
+                {
+                    if (page.IsCounted)
                     {
                         page.Number = $"{rootCounter}";
                         rootCounter++;
                         levelCounters.Clear();
                     }
-                    else
+
+                    levels.Clear();
+                }
+                else
+                {
+
+                    if (page.IsCounted)
                     {
                         levelCounters[layer]++;
                         page.Number = prefixes.Last() + $".{levelCounters[layer]}";
                     }
-
                 }
+
+                if (levels.Count > 0)
+                    page.Parent = levels.Peek();
 
                 prev = page;
                 book.Pages.Add(page);

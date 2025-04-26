@@ -1020,8 +1020,8 @@ window.search = window.search || {};
             // Set the field used to identify documents.
             this.setRef('id');
             
-            for (let key in config.index.documentStore.docs) {
-              this.addDoc(config.index.documentStore.docs[key]);
+            for (let key in config.docs) {
+              this.addDoc(config.docs[key]);
             }
         });
 

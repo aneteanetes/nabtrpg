@@ -1,12 +1,13 @@
 ﻿using MdBookSharp.Books;
 using MdBookSharp.Extensions;
 using MdBookSharp.Extensions.Dices;
+using MdBookSharp.Extensions.Searching;
 using MdBookSharp.Extensions.WoWPlates;
-using System.Reflection;
 
 List<MdBookExtension> extensions = [
+    new SearchExtension(),
     new DiceExtension(),
-    new WoWPlateExtension()
+    new WoWPlateExtension(),
 ];
 
 

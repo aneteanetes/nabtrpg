@@ -1,4 +1,6 @@
 ﻿using Geranium.Reflection;
+using HtmlAgilityPack;
+using Markdig.Syntax;
 using MdBookSharp.Resources;
 using System.Diagnostics;
 
@@ -48,6 +50,8 @@ namespace MdBookSharp.Books
 
         public string Html { get; set; }
 
+        public string InnerText { get; set; }
+
         public string Prev { get; set; }
 
         public string Next { get; set; }
@@ -61,5 +65,9 @@ namespace MdBookSharp.Books
         public bool IsPrevExists => Prev.IsNotEmpty();
 
         public bool IsNextExists => Next.IsNotEmpty();
+
+        public HtmlDocument HtmlDocument { get; internal set; }
+
+        public Page Parent { get; set; }
     }
 }
