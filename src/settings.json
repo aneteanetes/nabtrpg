@@ -1,0 +1,14 @@
+{
+  "IsIncrementalBuild": true,
+  "SearchResultOptions": {
+    "limit_results":15    
+  },
+  "extensions": {
+    "DiceExtension": {
+      "IconSize": 32
+    },
+    "ImageTokenExtension": {
+      "IconSize": 32
+    }
+  }
+}
