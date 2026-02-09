@@ -1,5 +1,5 @@
 {
-  "IsIncrementalBuild": true,
+  "IsIncrementalBuild": false,
   "SearchResultOptions": {
     "limit_results":15    
   },
@@ -8,7 +8,35 @@
       "IconSize": 32
     },
     "ImageTokenExtension": {
-      "IconSize": 32
+      "IconSize": 32,
+      "Tokens": [
+        "OZ",
+        "hp4",
+        "hp6",
+        "hp8",
+        "hp10",
+        "hp12",
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "TokenMappings": {
+        "hp4": "OZ4",
+        "hp6": "OZ6",
+        "hp8": "OZ8",
+        "hp10": "OZ10",
+        "hp12": "OZ12",
+        "r1":"rank1",
+        "r2":"rank2",
+        "r3":"rank3",
+        "r4":"rank4",
+        "r5":"rank5"
+      }
+    },
+    "NavbarImageExtension":{
+      "ImageAbsPath":"/images/logo.png"
     }
   }
 }
