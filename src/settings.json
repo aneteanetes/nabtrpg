@@ -3,7 +3,7 @@
   "SearchResultOptions": {
     "limit_results":15    
   },
-  "extensions": {
+  "Extensions": {
     "DiceExtension": {
       "IconSize": 32
     },
@@ -37,6 +37,20 @@
     },
     "NavbarImageExtension":{
       "ImageAbsPath":"/images/logo.png"
+    },
+    "LuaExtension":{
+      "ScriptsFolder":"lua"
+    },
+    "ChangelogExtension":{
+      "ChangeLogPath":"./changelog.json",
+      "ChangelogHeader":"Хроники ковчега",
+      "FullchangeText":"Архив изменений",
+      "ContactsHeader":"Связь с создателями:",
+      "TelegramLink":"https://t.me/aneteanetes",
+      "VKLink":"https://vk.com/aneteanetes",
+      "FullChangesUrl":"./changelog.html",
+      "EntryCount": 2,
+      "ChangeLogMenuName":"Архив изменений"
     }
   }
 }

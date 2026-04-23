@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="../vue.global.prod.js"></script>
+    <script src="../tailwind4.js"></script>
+    <link rel="stylesheet" href="../editor.css">
+    <link rel="stylesheet" href="../css/rpg-awesome.min.css">
+    <title>Генератор персонажей - Набонассар</title>
+</head>
+<body class="p-6">
+    <div id="app" class="flex gap-4 h-[700px] max-w-6xl mx-auto">
+        
+        <!-- ЛЕВО: КАТЕГОРИИ -->        
+        <div class="w-1/4 nwn-bg flex flex-col uppercase text-xs tracking-widest">
+            <div class="p-4 border-b border-white/5 text-yellow-700 font-bold">Модусы</div>
+            <button v-for="(t,key) in tabLabels" :key="key" 
+                    @click="currentTab = key"
+                    class="p-4 text-left hover:bg-white/5 uppercase text-xs transition-all"
+                    :style="{ borderLeft: currentTab === key ? '4px solid #b18c5d' : 'none', background: currentTab === key ? '#3d352a' : 'transparent' }">
+                {{ tabLabels[key] }}
+            </button>
+        </div>
+
+        <!-- ЦЕНТР: КОНТЕНТ -->
+        <div class="w-1/2 nwn-bg px-6 pb-6 overflow-y-auto">
+            
+             <div v-if="currentTab === 'classes'" class="pt-6">
+                <h2 style="color: #b18c5d; margin-top: 0;">ВЫБОР КЛАССА</h2>
+                
+                <!-- Контейнер для кнопок -->
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button v-for="(info, key) in classesInfo" 
+                            :key="key"
+                            @click="selectClass(key)"
+                            class="nwn-btn"
+                            :style="{ 
+                                flex: 1, 
+                                padding: '10px', 
+                                border: selectedClass === key ? '1px solid #b18c5d' : '1px solid #4a3d2b',
+                                background: selectedClass === key ? '#3d352a' : '#2d261e',
+                                color: selectedClass === key ? '#fff' : '#c9ad7d'
+                            }">
+                        {{ info.name }}
+                    </button>
+                </div>
+
+                <!-- Описание класса (показывается только после выбора) -->
+                <div v-if="selectedClass" style="background: rgba(0,0,0,0.4); padding: 20px; border: 1px double #3d3428;">
+                    <h3 style="color: #fff; margin-top: 0; text-transform: uppercase;">
+                        {{ classesInfo[selectedClass].name }}
+                    </h3>
+                    <p style="color: #d1b894; line-height: 1.6; font-style: italic;">
+                        {{ classesInfo[selectedClass].desc }}
+                    </p>
+                </div>
+                
+                <!-- Заглушка, если ничего не выбрано -->
+                <div v-else style="color: #5c4a33; text-align: center; margin-top: 40px;">
+                    Выберите класс, чтобы увидеть его описание
+                </div>
+            </div>
+
+            <div v-if="currentTab === 'stats'" class="pt-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl italic">Очки: {{ points }}</h2> 
+                    <label class="flex items-center cursor-pointer" @click="addTal()">
+                        <input type="checkbox" v-model="additionalTalant" class="nwn-checkbox">
+                        <span class="nwn-checkbox-custom"></span>
+                        <span class="ml-[8px]">Дополнительный талант</span>
+                    </label>
+                </div>
+                
+                <div v-for="(val, s) in stats" :key="s" style="margin-bottom: 40px;">
+                    <!-- Заголовок характеристики -->
+                    <h3 style="color: #b18c5d; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; margin-bottom: 12px;">
+                        {{ labels[s] }}
+                    </h3>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <!-- Отрисовка 5 кнопок-рангов -->
+                        <div v-for="n in 5" :key="n" 
+                            @click="modStat(s, n)" 
+                            style="cursor: pointer; user-select: none;">
+                            
+                            <img 
+                                :src="n === val ? activeDice[n] : inactiveDice[n-1]"
+                                :style="{ 
+                                    width: '50px',
+                                    height: 'auto',
+                                    filter: n === val ? 'drop-shadow(0 0 8px rgba(177, 140, 93, 0.5))' : 'none'
+                                }" 
+                                alt="Attribute dice"
+                            />
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 style="color: #b18c5d; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; margin-bottom: 12px;">
+                        Ранг существа:
+                    </h3>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <div class="nwn-select-container" @click="isRanksOpen = !isRanksOpen">
+                            <!-- Шапка селекта -->
+                            <div class="nwn-select-header">
+                                <span>{{ this.ranks[selectedRank-1] || '' }}</span>
+                                <span class="nwn-select-arrow">▼</span>
+                            </div>
+
+                            <!-- Выпадающий список -->
+                            <div v-if="isRanksOpen" class="nwn-select-options nwn-select-options-up">
+                                <div 
+                                    v-for="opt in ranks" 
+                                    :key="opt" 
+                                    class="nwn-option"
+                                    @click="selectCreatureRank(opt)"
+                                >
+                                    {{ opt }}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div v-if="currentTab === 'skills'" class="relative">
+                <div class="sticky top-0 bg-[#1a1612] py-2 z-10 border-b border-[#3d3428] flex justify-between">
+                    <h2 class="text-xl mb-4 italic" style="margin: 0;">
+                        Навыки
+                    </h2>
+                    <button @click="skillReset()" class="nwn-btn flex items-center justify-center text-sm leading-none inline mr-2 h-6 w-24">Сбросить</button>
+                </div>
+                
+                <div v-for="(sv,s) in stats" :key="s">                    
+                    <div class="flex justify-center mb-2 mt-2">
+                        <span class="text-[14px]">{{ labels[s] }}</span>
+                    </div>
+                    <div v-for="(k,v) in getSkills(s)" :key="v" class="flex justify-between p-2 border-b border-white/5">
+                        <span
+                            @mouseenter="updateTooltip($event, null,null,k.desc)"
+                            @mousemove="updateTooltip($event, null,null,k.desc)"
+                            @mouseleave="hideTooltip"
+                        >{{ labels[v] }}</span>
+                        <div>
+                            <button 
+                                @click="skillLow(v)" 
+                                :disabled="skills[v].value <= 0"
+                                class="nwn-btn w-6 h-6 flex items-center justify-center text-sm leading-none inline mr-2"
+                            >
+                                -
+                            </button>
+
+                            <!-- <span class="text-white font-bold">{{ k }}</span> -->
+                            <img 
+                                    :src="activeDice[k.value]"
+                                    :style="{ 
+                                        width: '25px',
+                                        height: 'auto',
+                                        display: 'inline',
+                                    }" 
+                                    alt="Attribute dice"
+                                />
+
+                            <button 
+                                @click="skillHigh(v)" 
+                                :disabled="skills[v].value >= 5 || skillSum()>=15"
+                                class="nwn-btn w-6 h-6 flex items-center justify-center text-sm leading-none inline ml-2"
+                            >
+                                +
+                            </button>
+                        </div>                    
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="currentTab === 'tals'" class="relative">
+                <div class="sticky top-0 bg-[#1a1612] py-2 z-10 border-b border-[#3d3428] flex justify-between">
+                    <h2 class="text-xl mb-4 italic" style="margin: 0;">
+                        Выбор талантов
+                    </h2>
+                    <button @click="talReset()" class="nwn-btn flex items-center justify-center text-sm leading-none inline mr-2 h-6 w-24">Сбросить</button>
+                </div>
+                <div v-for="f in talents" class="stat-row mb-3" style="flex-direction: column; align-items: flex-start;">
+                    <div v-if="selectedClass" style="background: rgba(0,0,0,0.4); padding: 20px; border: 1px double #3d3428;">
+                        <div class="flex justify-between">
+                            <h3 style="color: #fff; margin-top: 0; text-transform: uppercase;">
+                            <i :class="'mr-1'+' ra '+f.icon"></i>
+                                {{ f.name }}
+                            </h3>
+                        
+                            <button v-if="!tals.includes(f.name)" 
+                                    @click="takeTal(f)" 
+                                    :disabled="!canTal(f)" 
+                                    class="nwn-btn">Изучить</button> 
+                            
+                            <button v-else 
+                                    @click="removeTal(f)" 
+                                    class="nwn-btn" 
+                                    style="color: #ff4d4d; border-color: #5e1e1e;">Забыть</button>
+                        </div>
+
+                        <p class="mt-1" style="color: #d1b894; line-height: 1.6; font-style: italic;">
+                            {{ f.desc }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="currentTab === 'feats'" class="pt-6">
+                <h2 class="text-xl mb-4 italic">Доступные фиты</h2>
+                <!-- <div v-for="f in feats" :key="f.id" class="p-3 mb-2 bg-black/30 border border-white/5">
+                    <div class="flex justify-between">
+                        <span :class="canHas(f) ? 'text-white' : 'text-red-900'">{{ f.name }}</span>
+                        <button v-if="!myFeats.includes(f.id)" @click="takeFeat(f)" :disabled="!canHas(f)" class="nwn-btn text-[10px] px-2 uppercase">Взять</button>
+                    </div>
+                    <p class="text-[10px] text-gray-500 mt-1">{{ f.desc }}</p>
+                </div> -->
+
+                <div v-for="f in feats" class="stat-row" style="flex-direction: column; align-items: flex-start;">
+                    <div style="display: flex; justify-content: space-between; width: 100%;">
+                        <b :style="{ color: canHas(f) ? '#fff' : '#5e1e1e' }">{{ f.name }}</b>
+                        
+                        <!-- Если фит ЕЩЕ НЕ взят — кнопка ВЗЯТЬ -->
+                        <button v-if="!myFeats.includes(f.id)" 
+                                @click="takeFeat(f)" 
+                                :disabled="!canHas(f)" 
+                                class="nwn-btn">ВЗЯТЬ</button>
+                        
+                        <!-- Если фит УЖЕ взят — кнопка УБРАТЬ -->
+                        <button v-else 
+                                @click="removeFeat(f)" 
+                                class="nwn-btn" 
+                                style="color: #ff4d4d; border-color: #5e1e1e;">УБРАТЬ</button>
+                    </div>
+                    <small style="font-size: 10px; color: #888;">{{ f.desc }}</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- ПРАВО: ЛИСТ -->
+        <div class="w-1/4 nwn-bg p-4 bg-[#14110e] overflow-y-auto">
+            <h2 class="text-center text-yellow-700 font-bold mb-6 bottom-list pb-2">ЛИСТ ПЕРСОНАЖА</h2>
+            
+            <div style="margin-bottom: 15px; padding-bottom: 10px;" class="bottom-list flex justify-between">
+                <div>
+                    <span style="font-size: 18px; font-weight: bold;">
+                        {{ selectedClass ? classesInfo[selectedClass].name : 'Не выбран' }}
+                    </span>
+                    <span style="display: inline-block;">
+                        <img 
+                            :src="rankDiceImage[this.selectedRank]"
+                            @mouseenter="updateTooltip($event, this.selectedRank-1,'ranks')"
+                            @mousemove="updateTooltip($event, this.selectedRank-1,'ranks')"
+                            @mouseleave="hideTooltip"
+                            :style="{
+                                width: '15px',
+                                marginLeft: '5px', 
+                                height: 'auto',
+                            }" 
+                            alt="Dice rank"
+                        />
+                    </span>
+                </div>
+                <div>
+                    <span>Уровень: </span>
+                    <span>{{ currentLvl }}</span>
+                </div>
+            </div>
+
+            <div class="flex justify-center mb-2">
+                <span class="text-[14px]">Характеристики</span>
+            </div>
+            <div class="text-[12px] uppercase space-y-2 mb-2 flex justify-between bottom-list">
+                <div v-for="(v, s) in stats" :key="s" class="mb-4">
+                    <!-- <span>{{ labels[s] }}:</span> -->
+                    <img class="mx-1"   
+                        :src="activeDice[v]"
+                        @mouseenter="updateTooltip($event, s,'labels')"
+                        @mousemove="updateTooltip($event, s,'labels')"
+                        @mouseleave="hideTooltip"
+                        :style="{
+                            width: '30px',
+                            height: 'auto',
+                        }" 
+                        alt="dice"
+                    />
+                </div>
+            </div>
+            
+            <div class="flex justify-center mb-2">
+                <span class="text-[14px]">Атрибуты</span>
+            </div>
+            <div class="text-[14px] space-y-2 mb-2 bottom-list">
+                <div v-for="(v, s) in attrs" :key="s" class="flex justify-between">
+                    <span><i :class='"mr-1 ra "+icons[s]'></i> {{ labels[s] }}:</span>
+                    <span class="text-white">{{ getAttrValue(v) }}</span>
+                </div>
+                <span class="mb-4"></span>
+            </div>
+
+            <div class="flex justify-center mb-2">
+                <span class="text-[14px]">Атака</span>
+            </div>
+            <div class="text-[14px] space-y-2 mb-2 bottom-list">
+                <div v-for="(v, s) in attrsd" :key="s" class="flex justify-between">
+                    <span>{{ labels[s] }}:</span>
+                    <div class="flex">
+                        <div v-for="(vv, ss) in v" :key="ss">
+                            <img 
+                                :src="activeDice[vv]"
+                                @mouseenter="updateTooltip($event, vv,'dices')"
+                                @mousemove="updateTooltip($event, vv,'dices')"
+                                @mouseleave="hideTooltip"
+                                :style="{
+                                    width: '20px',
+                                    marginLeft: '5px', 
+                                    height: 'auto',
+                                }" 
+                                alt="dice"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <span class="mb-4"></span>
+            </div>
+            
+            <div v-if="currentSkillsExists == true" class="flex justify-center mb-2">
+                <span class="text-[14px]">Навыки</span>
+            </div>
+            <div v-if="currentSkillsExists == true" class="text-[14px] bottom-list">
+                <div v-for="(k,v) in currentSkills" :key="v" class="flex justify-between mb-2 items-center">
+                    <span 
+                        @mouseenter="updateTooltip($event, '','descriptions',skills[v].desc)"
+                        @mousemove="updateTooltip($event, '','descriptions',skills[v].desc)"
+                        @mouseleave="hideTooltip">{{ labels[v] }}</span>
+                    <div>   
+                        <img v-for="(kk,vv) in k" :key="vv"
+                        
+                            @mouseenter="updateTooltip($event, kk.desc,'descriptions',)"
+                            @mousemove="updateTooltip($event, kk.desc,'descriptions')"
+                            @mouseleave="hideTooltip"
+
+                            :src="activeDice[kk.value]"
+                            :style="{ 
+                                width: '20px',
+                                height: 'auto',
+                                display: 'inline',
+                                marginLeft: '2px',
+                            }"
+                            alt="Attribute dice"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="tals.length > 0" class="flex justify-center mb-2">
+                <span class="text-[14px]">Таланты</span>
+            </div>
+            <div v-if="tals.length > 0" class="text-[14px]">
+                <div v-for="v in currentTals" class="flex justify-between mb-2 items-center" 
+                    @mouseenter="updateTooltip($event, null,'descriptions',v.desc)"
+                    @mousemove="updateTooltip($event, null,'descriptions',v.desc)"
+                    @mouseleave="hideTooltip">
+                    <span>{{ v.name }}</span>
+                    <!-- <div>   
+                        <img v-for="(kk,vv) in k" :key="vv"
+                        
+                            @mouseenter="updateTooltip($event, kk.desc,'descriptions',)"
+                            @mousemove="updateTooltip($event, kk.desc,'descriptions')"
+                            @mouseleave="hideTooltip"
+
+                            :src="activeDice[kk.value]"
+                            :style="{ 
+                                width: '20px',
+                                height: 'auto',
+                                display: 'inline',
+                                marginLeft: '2px',
+                            }"
+                            alt="Attribute dice"
+                        />
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- tooltip -->
+        <div v-if="showTooltip" 
+            ref="tooltipRef"
+            class="nwn-tooltip" 
+            :style="{ left: tooltipX + 'px', top: tooltipY + 'px' }">
+            {{ hoverDesc }}
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            data() {
+                return {
+                    currentTab: 'classes',
+                    // Добавили этот объект, чтобы не писать сложные условия в HTML
+                    tabLabels: {
+                        classes: 'Класс',
+                        stats: 'Характеристики',
+                        skills: 'Навыки',
+                        tals: 'Таланты',
+                        feats: 'Способности'
+                    },
+                    additionalTalant:false,
+                    classesInfo: {
+                        warrior: { name: "Воин", desc:"Может использовать 1 Очко Воли чтобы добавить кость любой своей характеристики в пулл броска. Количество добавленных костей может быть неограничено. Воины сосредоточены на прямолинейном и надёжном результате." },rogue: { name: "Плут", desc:"Может потратить 1 Очко Воли чтобы добавить к броску пула ещё один результат. Количество добавленных результатов ограничено только пулом. Плут самый азартный класс, часто ему требуется найти нестандартный подход для использования своих способностей на максимум." },mage: { name: "Маг", desc:"Может используя 1 Очко Воли увеличить ранг кости перед броском пула. Можно увеличивать ранг вплоть до d12, но только на тех костях, которые есть в пулле изначально. Маги подходят тем игрокам, кто хочет почувствовать себя могущественными персонажами без гарантированного результата." },prriest: { name: "Жрец", desc:"Может потратить 1 Очко Воли чтобы создать кость сцены d4. Максимальное количество костей не ограничено. Жрецы сосредоточены на помощи всей партии, они обладают большим контролем над ситуацией чем остальные классы." },
+                    },
+                    showTooltip: false,
+                    hoverDesc: '',
+                    tooltipX: 0,
+                    tooltipY: 0,
+                    isRanksOpen:false,
+                    selectedRank:3,
+                    level:0,
+                    selectedClass: 'warrior',
+                    ranks:[
+                        "Слабый",
+                        "Малый",
+                        "Нормальный",
+                        "Крупный",
+                        "Большой"
+                    ],
+                    dices:[
+                        '',
+                        'd4',
+                        'd6',
+                        'd8',
+                        'd10',
+                        'd12',
+                    ],
+                    descriptions: {
+                        con: 'Телосложение', 
+                        dex: 'Сноровка',
+                        int: 'Интеллект',
+                        wis: 'Мудрость',
+                        skill:'Навык',
+                        endurance:"Способность закалять организм против физического воздействия - пыток, холода, ядов, итд.", survival:"Ориентирование, охота, навигация в дикой местности, природа", conviction:"Харизма, дипломатия, обольщение, этикет", craft:"Все виды тяжёлого производного труда", medicine:"Исцеление, анатомия, первая помощь, практическое латание тел, знание плоти", vehicle:"Физическое управление механизмами: повозками, кораблями, дирижаблями, повозками", athletics:"Бег, плавание, лазание, прыжки, напор, эквилибристика, изворотливость, полет, грация", hide:"Маскировка, бесшумное передвижение, засады", thievery:"Кража, взлом, грязные трюки, воровство", deception:"Блеф, притворство, мимика, ложь лицом и телом", taming:"Верховая езда, дрессировка, уход", performance:"Танцы, игра на инструментах — моторика, музыка, игра, хореография", analysis:"Криминалистика, поиск улик, дедукция, расследование", engineering:"Ремонт, механизмы, строительство зданий, чертежи", magic:"Теория, оккультизм, использование магических устройств, настройка", history:"Обществоведение, знание дворянства, география, общая история", education:"Профессия, административные навыки, любой квалифицированный труд на заработок", attentiveness:"Восприятие, поиск, подмечание деталей", religion:"История богов, молитвы, ритуалы", trade:"Реклама, связи, логистика, торг, оценка стоимости, гильдии", contacts:"Способность добывать сплетни, слухи, неожиданные знакомства", intimidation:"Устрашение, насмешка, ментальное давление, допросы", insight:"Интуиция, психология, чтение лжи", warcraft:"Военные формирования, тактика, стратегия, звания, устройство стражи", 
+                    },
+                    points: 0,
+                    classes: {war:'Воин',rog:'Плут',mag:'Маг',pri:'Священник'},
+                    stats: { con: 3, dex: 2, int: 2, wis: 2 },
+                    attrs: {
+                        hp:8,
+                        spd: 12,
+                        ini: 0,
+                        luck:0,
+                        def:0,
+                        cd:0
+                    },
+                    attrsd: {
+                        atk:[3],
+                        matk:[2],
+                        arm:[2],
+                        bar:[2],
+                    },
+                    skills: {
+                        "endurance": {name:'Выносливость',stat:'con',desc:'Способность закалять организм против физического воздействия - пыток, холода, ядов, итд.',value:0}, "survival": {name:'Выживание',stat:'con',desc:'Ориентирование, охота, навигация в дикой местности, природа',value:0}, "conviction": {name:'Убеждение',stat:'con',desc:'Харизма, дипломатия, обольщение, этикет',value:0}, "craft": {name:'Ремесло',stat:'con',desc:'Все виды тяжёлого производного труда',value:0}, "medicine": {name:'Медицина',stat:'con',desc:'Исцеление, анатомия, первая помощь, практическое латание тел, знание плоти',value:0}, "vehicle": {name:'Транспорт',stat:'con',desc:'Физическое управление механизмами: повозками, кораблями, дирижаблями, повозками',value:0}, "athletics": {name:'Атлетика',stat:'dex',desc:'Бег, плавание, лазание, прыжки, напор, эквилибристика, изворотливость, полет, грация',value:0}, "hide": {name:'Скрытность',stat:'dex',desc:'Маскировка, бесшумное передвижение, засады',value:0}, "thievery": {name:'Ловкость рук',stat:'dex',desc:'Кража, взлом, грязные трюки, воровство',value:0}, "deception": {name:'Обман',stat:'dex',desc:'Блеф, притворство, мимика, ложь лицом и телом',value:0}, "taming": {name:'Обращение с животными',stat:'dex',desc:'Верховая езда, дрессировка, уход',value:0}, "performance": {name:'Выступление',stat:'dex',desc:'Танцы, игра на инструментах — моторика, музыка, игра, хореография',value:0}, "analysis": {name:'Анализ',stat:'int',desc:'Криминалистика, поиск улик, дедукция, расследование',value:0}, "engineering": {name:'Инженерия',stat:'int',desc:'Ремонт, механизмы, строительство зданий, чертежи',value:0}, "magic": {name:'Магия',stat:'int',desc:'Теория, оккультизм, использование магических устройств, настройка',value:0}, "history": {name:'История',stat:'int',desc:'Обществоведение, знание дворянства, география, общая история',value:0}, "education": {name:'Образование',stat:'int',desc:'Профессия, административные навыки, любой квалифицированный труд на заработок',value:0}, "attentiveness": {name:'Внимательность',stat:'int',desc:'Восприятие, поиск, подмечание деталей',value:0}, "religion": {name:'Религия',stat:'wis',desc:'История богов, молитвы, ритуалы',value:0}, "trade": {name:'Торговля',stat:'wis',desc:'Реклама, связи, логистика, торг, оценка стоимости, гильдии',value:0}, "contacts": {name:'Связи',stat:'wis',desc:'Способность добывать сплетни, слухи, неожиданные знакомства',value:0}, "intimidation": {name:'Запугивание',stat:'wis',desc:'Устрашение, насмешка, ментальное давление, допросы',value:0}, "insight": {name:'Проницательность',stat:'wis',desc:'Интуиция, психология, чтение лжи',value:0}, "warcraft": {name:'Военное ремесло',stat:'wis',desc:'Военные формирования, тактика, стратегия, звания, устройство стражи',value:0}, 
+                    },
+                    talents: [
+                        {name:'Крепость',desc:'Вы активируете карты болезней и проклятий в конце сцены, не важно получили вы их в бою или нет. Все болезни и проклятья активируются мгновенно.',icon:'ra-muscle-fat'}, {name:'Шестое чувство',desc:'Вы можете один раз в локации попросить у мастера подсказку о том, что нужно делать чтобы продвинуться по сюжету.',icon:'ra-explosion'}, {name:'Компас желаний',desc:'Вы определяете одно желание на каждую сессию. Вы всегда знаете в каком направлении искать то, чего желаете.',icon:'ra-explosion'}, {name:'Лингвист',desc:'Вы понимаете чужеродные языки и можете быстро обучиться им. Вы научились понимать намерения, а не слова, и это позволяет вам используя жесты и интонации договориваться даже с теми существами, у которого вообще нет языка (но есть разум - монстр, животное, механизм).',icon:'ra-explosion'}, {name:'Чтение по губам',desc:'Вы умеете читать по губам, в том числе на большом расстоянии.',icon:'ra-explosion'}, {name:'Этикет',desc:'Вы знаете правила этикета всех социальных групп. Это добавляет вам d4 к любым проверкам если вы находитесь в социальной группе вышего звена.',icon:'ra-explosion'}, {name:'Благородное происхождение',desc:'Вы принадлежите дворянскому роду и можете производить впечатление на крестьян и простолюдинов. Вам на 2d4 проще договариваться со стражей и любыми другими простолюдинами.',icon:'ra-explosion'}, {name:'Слепота',desc:'Вы ослепли. Это позволяет вам ориентироваться в темноте и тумане и сражаться против невидимых существ без помех. У вас обострённый слух, нюх, и вкус, однако вы не способны видеть.',icon:'ra-explosion'}, {name:'Бой двумя руками',desc:'Вы можете эффективно использовать оружие в двух руках и добавлять кость второго оружия к атаке.',icon:'ra-explosion'}, {name:'Последний шанс',desc:'Вы можете совершить одно действие при получении урона который уменьшает здоровье до нуля.',icon:'ra-explosion'}, {name:'Стихийное происхождение',desc:'Вы можете изменить любой исходящий урон на выбранный вами природный элемент. Враги с противоположным элементом получают преимущество d4 против вас.',icon:'ra-explosion'}, {name:'Живой щит',desc:'Вы получаете урон вместо союзников если они находятся с вами в одной зоне. Вы не можете отключить это.',icon:'ra-explosion'}, {name:'Фотографическая память',desc:'Вы можете идеально воспроизвести в памяти увиденную карту, документ или лицо спустя любое время.',icon:'ra-explosion'}, {name:'Общение с духами',desc:'Вы можете призывать духи мёртвых и общаться с ними.',icon:'ra-explosion'}, {name:'Импровизация',desc:'Вы можете импровизировать и использовать предметы как вам вздумается. Любой предмет в ваших руках может превратиться в оружие с костью рангом на одну меньше чем оригинальная, либо инструментом с таким же пониженным рангом. (прим.: ножка стула может использоваться как дробящее d4 (d6-1ранг))',icon:'ra-explosion'}, {name:'Быстрый сон',desc:'Вам достаточно 2х часов на долгий отдых. Остальные 6 часов вы можете использовать для любых занятий. Вы не можете видеть сны.',icon:'ra-explosion'}, {name:'Всеядность',desc:'Вы можете есть всё что угодно для утоления голода и восстановления. Такие приёмы пищи восстанавливают половину здоровья, не тратят провиант, позволяют есть всё, что могут перемолоть зубы.',icon:'ra-explosion'}, {name:'Счастливчик',desc:'Вы можете использовать бросок удачи в бою или для проверок *известных* вам навыков. Результат рассчитывается по формуле Успех=d100<=Удача. Значением броска считаеся кость единиц: 0/0 - провал, X/0 - 10, X/Y - результат Y.',icon:'ra-explosion'}, {name:'Увёртливость',desc:'Каждый раз после получения урона вы можете по желанию переместиться в соседнюю зону.',icon:'ra-explosion'}, {name:'Командир',desc:'Вы можете отдать свой ход другому члену отряда.',icon:'ra-explosion'}, {name:'Волшебные сумки',desc:'Вы использовать любой предмет из сумок членов вашего отряда.',icon:'ra-explosion'}, {name:'Железная воля',desc:'Вы получаете очко Воли каждый раз когда проваливаете бросок (не только при критическом провале), но не можете обладать более чем 1.',icon:'ra-explosion'}, {name:'Подготовка',desc:'Вы можете подготовиться к посещению локации заранее, создав кость сцены из материалов. Подготовка доступна только если локация известна заранее, у вас есть не менее 6ч, вы обладаете всеми требуемыми материалами или можете их приобрести за эти 6 часов.',icon:'ra-explosion'}, {name:'Питомец',desc:'Вы можете завести себе магического питомца - существо слабого ранга. Самая высокая характеристика питомца добавляет вам кость d4 в пулл атрибутов. Питомец получает урон от массовых атак и восстанавливается после долгого отдыха.',icon:'ra-explosion'}, {name:'Честь',desc:'При помощи вы всегда даёте кость на 1 ранг выше чем ваша. При максимальном ранге вы даёте d12+d4. Вы не можете отказать в помощи. Если вы не способны помочь при броске, вы получаете штраф -10 к результату следующего броска.',icon:'ra-explosion'}, {name:'Мастер стрельбы',desc:'Все ваши дистанционные физические атаки могут быть использованы в упор, вы можете стрелять за угол и попадать в цели за препятствиями если снаряд может отрекошетить. Не работает с огнестрельным оружием.',icon:'ra-explosion'}, {name:'Барахольщик',desc:'Один раз на локации можете найти в своих бездонных карманах преимущество d4. Вы не тратите на это очки Воли, но вы не можете использовать предметы во второй руке.',icon:'ra-explosion'}, {name:'Кровавая клятва',desc:'Вы используете Здоровье в качестве очков Воли с курсом 3к1 (3 ОЗ на 1 действие). При получении очков Воли вы получаете урон. ',icon:'ra-explosion'}, {name:'Неудачник',desc:'Ваши критические провалы считаются обычными успехами. Вы не получаете за них очки Воли.',icon:'ra-explosion'}, {name:'Последний рывок',desc:'Вы можете потратить всё здоровье на автоматический успех. Это действие считается атакой по вам приводящей здоровье к нулю.',icon:'ra-explosion'}, {name:'Манипулятор',desc:'Вы можете использовать очки Воли союзников, но только если убедите их в этом (бросок Убеждения против 2d12).',icon:'ra-explosion'}, {name:'Проклятый',desc:'Вас прокляли. Весь пулл бросков против вас всегда увеличен на d4. Вы можете носить проклятые предметы без штрафов.',icon:'ra-explosion'}, {name:'Смертельный договор',desc:'Вы умираете (спонтанное самовозгорание), но смерть предлагает вам сделку: лечение и божественная магия отныне наносят вам урон. Вы исцеляетесь на 1 ед. каждый раз когда рядом кто-то умирает, или на вас накладывают болезнь/яд. Вы не стареете, но это приключение последнее в вашей жизни.',icon:'ra-explosion'}, {name:'Библиотечные знания',desc:'Вы больше не можете помогать и сами делать проверки навыков против пула сложности, но получаете бонус 2d4 против статической сложности.',icon:'ra-explosion'}, {name:'Родные края',desc:'Вы выбираете свой *родной* ландшафт в котором получаете кость сцены d4. В остальных местах вы получаете штраф против вас d4.',icon:'ra-explosion'}, {name:'Орден смерти',desc:'Вы вступаете в орден смерти. Когда ваше здоровье достигает 0 вы совершаете саморитуал, и в следующем ходу орден присылает на ваше место нового персонажа. Этот персонаж идентичен вашему но с другим именем и полным здоровьем. Весь накопленный опыт сгорает. Труп предыдущего персонажа остаётся.',icon:'ra-explosion'}, {name:'Стиляга',desc:'Вы носите только вещи, созданные на заказ или вами. Если все предметы вашей экипировки созданы на заказ вы уменьшаете Восстановление на 1ед.',icon:'ra-explosion'}, {name:'Шрамирование',desc:'Травмы не снижают ранг характеристики, но вы больше не можете их исцелять.',icon:'ra-explosion'}, {name:'Синестезия',desc:'Вы можете обменять две кости характеристики при проверках навыков. Синестезия выбирается единожды и не может быть изменена.',icon:'ra-explosion'}, {name:'Магия имён',desc:'Вы можете провести ритуал занимающий 6ч на определение истинного имени существа - для этого вам потребуется какой-либо предмет существа. Это даёт вам d4 к проверкам Убеждения, Выступления, Запугивания, Проницательности, и всех остальных проверок общения против этого существа пока вы не сообщите существу его имя. Существо знающее своё истинное имя на всегда будет благоволить вам. Одновременно вы можете держать в уме только одно истинное имя.',icon:'ra-explosion'}, 
+                    ],
+                    icons: { 
+                        hp: 'ra-hearts',
+                        atk:'ra-explosion',
+                        matk:'ra-explosion',
+                        arm:"ra-explosion",
+                        bar:"ra-explosion",
+                        spd:'ra-boot-stomp',
+                        ini:"ra-doubled",
+                        luck:"ra-sun",
+                        def:"ra-vest",
+                        cd:"ra-circle-of-circles"
+                    },
+                    labels: { 
+                        con: 'Телосложение', 
+                        dex: 'Сноровка', 
+                        int: 'Интеллект', 
+                        wis: 'Мудрость', 
+                        hp:'Стойкость',
+                        atk:'Сила атаки',
+                        matk:'Сила магии',
+                        arm:"Уклонение",
+                        bar:"Барьер",
+                        spd:'Скорость',
+                        ini:"Инициатива",
+                        luck:"Удача",
+                        def:"Защита",
+                        cd:"Восстановление",
+                        endurance:"Выносливость", survival:"Выживание", conviction:"Убеждение", craft:"Ремесло", medicine:"Медицина", vehicle:"Транспорт", athletics:"Атлетика", hide:"Скрытность", thievery:"Ловкость рук", deception:"Обман", taming:"Обращение с животными", performance:"Выступление", analysis:"Анализ", engineering:"Инженерия", magic:"Магия", history:"История", education:"Образование", attentiveness:"Внимательность", religion:"Религия", trade:"Торговля", contacts:"Связи", intimidation:"Запугивание", insight:"Проницательность", warcraft:"Военное ремесло", 
+                        fortitude:"Крепость", sense:"Шестое чувство", desire:"Компас желаний", languages:"Лингвист", lips:"Чтение по губам", etiquet:"Этикет", noble:"Благородное происхождение", blindness:"Слепота", twohand:"Бой двумя руками", chance:"Последний шанс", elemental:"Стихийное происхождение", livingshield:"Живой щит", memory:"Фотографическая память", deadspeak:"Общение с духами", improvisation:"Импровизация", sleepfast:"Быстрый сон", eatall:"Всеядность", lucky:"Счастливчик", evasion:"Увёртливость", commander:"Командир", inventory:"Волшебные сумки", ironwill:"Железная воля", preparation:"Подготовка", pet:"Питомец", honor:"Честь", shootclose:"Мастер стрельбы", junker:"Барахольщик", bloodmagic:"Кровавая клятва", loser:"Неудачник", lastcall:"Последний рывок", manipulation:"Манипулятор", cursed:"Проклятый", undead:"Смертельный договор", practice:"Библиотечные знания", homescape:"Родные края", organization:"Орден смерти", hipster:"Стиляга", scars:"Шрамирование", synesthesia:"Синестезия", naming:"Магия имён", 
+                    },
+                    myFeats: [],
+                    tals: [],
+                    feats: [
+                        { id: 1, name: 'Могучий удар', desc: 'Нужно: Сила 13+', req: { str: 13 } },
+                        { id: 2, name: 'Уклонение', desc: 'Нужно: Ловкость 13+', req: { dex: 13 } }
+                    ],
+                    // Картинки, когда ранг ВЫБРАН
+                    activeDice: [
+                        '../images/tokens/rank1.png', // для ранга 0
+                        '../images/dices/d4.png',  // для ранга 1
+                        '../images/dices/d6.png',  // для ранга 2
+                        '../images/dices/d8.png',  // для ранга 3
+                        '../images/dices/d10.png', // для ранга 4
+                        '../images/dices/d12.png'  // для ранга 5
+                    ],
+                    
+                    // Картинки, когда ранг НЕ выбран (те самые треугольники)
+                    inactiveDice: [
+                        '../images/dices/di4.png',
+                        '../images/dices/di6.png',
+                        '../images/dices/di8.png',
+                        '../images/dices/di10.png',
+                        '../images/dices/di12.png'
+                    ],
+                    rankDiceImage: {
+                        1:'../images/tokens/rank1.png',
+                        2:'../images/tokens/rank2.png',
+                        3:'../images/tokens/rank3.png',
+                        4:'../images/tokens/rank4.png',
+                        5:'../images/tokens/rank5.png',
+                    },
+                    hpImages: {
+                        1:'../images/tokens/OZ4.png',
+                        2:'../images/tokens/OZ6.png',
+                        3:'../images/tokens/OZ8.png',
+                        4:'../images/tokens/OZ10.png',
+                        5:'../images/tokens/OZ12.png',
+                    },
+                    rankDice:[
+                        4,6,8,10,12
+                    ],
+                    rankMultiple:{
+                        1:0.3,
+                        2:0.5,
+                        3:1,
+                        4:2,
+                        5:3
+                    }
+                }
+            },
+            computed: {
+                currentLvl(){
+                    let skillsum = this.skillSum();
+                    let talTreshHold = this.tals.length *3;
+
+                    if(this.additionalTalant){
+                        talTreshHold-=3;
+                    }
+
+                    if(talTreshHold==0 || skillsum>talTreshHold)
+                        return skillsum;
+                    
+                    return talTreshHold;
+                },
+                currentTals(){
+                    return this.talents.filter(t=>this.tals.includes(t.name));
+                },
+                currentSkills() {
+                    const result = {};
+                    for (let key in this.skills) {
+                        if (this.skills[key].value>0) {
+                            result[key] = [{
+                                value: this.skills[key].value,
+                                desc: 'skill'
+                            }, {
+                               value: this.stats[this.skills[key].stat],
+                               desc: this.skills[key].stat
+                            }];
+                        }
+                    }
+                    return result;
+                },
+                currentSkillsExists(){
+                    for (let key in this.skills) {
+                        if (this.skills[key].value>0) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            },
+            methods: {
+                modStat(s, rank) {
+                    // Вычисляем разницу между тем, что хотим, и тем, что есть
+                    const diff = rank - this.stats[s];
+                    
+                    // Если очков хватает (или мы уменьшаем стат, и diff отрицательный)
+                    if (this.points >= diff) {
+                        this.stats[s] = rank;
+                        this.points -= diff;
+
+                        this.calcAttrs();
+                    }
+                },
+                selectClass(key) {
+                    this.resetStats();
+
+                    this.selectedClass=key;
+                    this.additionalTalant=false;
+
+                    this.classDices();
+                    this.calcAttrs();
+                },
+                selectCreatureRank(v){
+                    this.selectedRank=this.ranks.indexOf(v)+1;
+                    this.calcAttrs();
+                },
+                calcAttrs(){
+                    this.attrs.hp=Math.floor((this.rankDice[this.stats.con-1]*this.rankMultiple[this.selectedRank])*2);
+                    this.attrs.spd=(5-this.selectedRank)*5+this.stats.dex;
+                    this.attrs.ini = this.attrs.spd;
+                    for (let index = 0; index < this.stats.int+1; index++) {
+                        this.attrs.ini += this.getRandomInt(1,4);
+                    }
+                    this.attrs.luck = (5-this.selectedRank) * 20 + (this.stats.wis * 4);
+                    this.attrsd.atk=[
+                        this.stats.con
+                    ];
+                    this.attrsd.arm=[
+                        this.stats.dex
+                    ];
+                    this.attrsd.matk=[
+                        this.stats.int
+                    ];
+                    this.attrsd.bar=[
+                        this.stats.wis
+                    ];
+                },
+                classDices(){
+                    const key = this.selectedClass;
+                    if(key=='warrior'){
+                        this.stats.con=3;
+                    }else if (key=='rogue'){
+                        this.stats.dex=3;
+                    }else if (key=='mage'){
+                        this.stats.int=3;
+                    }else if (key=='priest'){
+                        this.stats.wis=3;
+                    }
+                },
+                resetStats(){
+                    this.stats={
+                        con:2,
+                        dex:2,
+                        int:2,
+                        wis:2
+                    };
+                    this.points=0;
+                },
+                getSkills(stat){
+                    let skilles={};
+                    Object.entries(this.skills).forEach(([key, value]) => {
+                        let skill = this.skills[key];
+                        if(skill.stat==stat)
+                            skilles[key] = skill;
+                    });
+                    return skilles;
+                },
+                skillLow(sk){
+                    this.skills[sk].value--;
+                },
+                skillHigh(sk){
+                    this.skills[sk].value++;                
+                },
+                skillReset(){
+                    Object.entries(this.skills).forEach(([key, value]) => {
+                        this.skills[key].value=0;
+                    });
+                    this.level=0;
+                },
+                skillSum(){
+                    let sum = 0;
+                    Object.entries(this.skills).forEach(([key, value]) => {
+                        if(this.skills[key].value>0)
+                            sum+=this.skills[key].value;
+                    });
+                    return sum;
+                },
+                addTal(){
+                    this.resetStats();
+                    if(this.additionalTalant)
+                        this.classDices();
+                },
+                getMod(v) { 
+                    const m = Math.floor((v - 10) / 2);
+                    return m >= 0 ? '+' + m : m;
+                },
+                getAttrDice(v) {
+                    switch(v){
+                        case 1: return 'd4';
+                        case 2: return 'd6';
+                        case 3: return 'd8';
+                        case 4: return 'd10';
+                        case 5: return 'd12';
+                    }
+                    return '';
+                },
+                getAttrValue(v){
+                    return v;
+                },
+                talReset(){
+                    this.tals=[];                },
+                canTal(f) {
+                    let max = this.additionalTalant ? 1 : 0
+                    return this.tals.length<5+max;
+                },
+                takeTal(f) {
+                    this.tals.push(f.name);
+                },
+                removeTal(f) {
+                    const index = this.tals.indexOf(f.name);
+                    if (index > -1) {
+                        this.tals.splice(index, 1);
+                    }
+                },
+                canHas(f) {
+                    return Object.keys(f.req).every(key => this.stats[key] >= f.req[key]);
+                },
+                takeFeat(f) {
+                    if (this.canHas(f)) this.myFeats.push(f.id);
+                },
+                removeFeat(f) {
+                    const index = this.myFeats.indexOf(f.id);
+                    if (index > -1) {
+                        this.myFeats.splice(index, 1);
+                    }
+                },
+                getFeatName(id) {
+                    return this.feats.find(f => f.id === id).name;
+                },
+               async updateTooltip(e, key, from = 'descriptions', resultText) {
+                if (!from) from = 'descriptions';
+                this.hoverDesc = resultText ?? this[from][key];
+                this.showTooltip = true;
+
+                // Ждем отрисовки, чтобы замерить высоту тултипа
+                await this.$nextTick();
+
+                const tooltip = this.$refs.tooltipRef; // Не забудьте добавить ref="tooltipRef" в HTML
+                if (!tooltip) return;
+
+                const gap = 15; // Отступ от курсора
+                const tooltipHeight = tooltip.offsetHeight;
+                
+                // Координата Y для положения "ВНИЗУ"
+                let y = e.pageY + gap;
+
+                // Проверяем: если координата Y + высота тултипа выходят за край вьюпорта
+                const spaceBelow = window.innerHeight + window.scrollY - (e.pageY + gap);
+                
+                if (spaceBelow < tooltipHeight) {
+                    // Если места снизу мало — перекидываем НАВЕРХ
+                    y = e.pageY - tooltipHeight - gap;
+                }
+
+                this.tooltipX = e.pageX;
+                this.tooltipY = y;
+            },
+
+                hideTooltip() {
+                    this.showTooltip = false;
+                },
+                getRandomInt(min, max) {
+                    return Math.floor(Math.random() * (max - min) + min);
+                }
+            },
+            mounted(){
+                this.calcAttrs();
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

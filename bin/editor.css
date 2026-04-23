@@ -1,0 +1,161 @@
+
+        body { background: #0f0d0b; color: #c9ad7d; font-family: serif; }
+        .nwn-bg { background: #1a1612; border: 2px solid #3d3428; box-shadow: inset 0 0 20px #000; }
+        .tab-btn { border-left: 3px solid transparent; transition: 0.2s; }
+        .tab-active { background: #2d261e; border-left: 3px solid #b38d5d; color: #fff; }
+        .nwn-btn { background: #2d261e; border: 1px solid #4a3d2b; color: #c9ad7d; }
+        .nwn-btn:hover:not(:disabled) { background: #4a3d2b; color: #fff; }
+        .nwn-btn:disabled { opacity: 0.3; }
+        img:hover { transform: scale(1.05); transition: 0.1s; }
+
+        .nwn-tooltip {
+            position: fixed;
+            pointer-events: none; /* Чтобы не мешал кликать */
+            background: #1e1a15;
+            border: 1px solid #b18c5d;
+            color: #d1b894;
+            padding: 8px 12px;
+            font-size: 12px;
+            z-index: 1000;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+            max-width: 200px;
+            transform: translate(15px, 15px); /* Смещение от курсора */
+        }
+
+        /* Прячем стандартный чекбокс */
+        .nwn-checkbox {
+            display: none;
+        }
+
+        /* Базовый вид нашей новой галочки */
+        .nwn-checkbox-custom {
+            width: 18px;
+            height: 18px;
+            border: 1px solid #4a3d2b;
+            background: #2d261e;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        /* Эффект при наведении (как у ваших кнопок) */
+        .nwn-checkbox-custom:hover {
+            border-color: #b18c5d;
+            background: #3d3428;
+        }
+
+        /* Сама «галочка» внутри (рисуем её через псевдоэлемент) */
+        .nwn-checkbox:checked + .nwn-checkbox-custom::after {
+            content: "✔";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #b18c5d;
+            font-size: 14px;
+            text-shadow: 0 0 5px #000;
+        }
+
+        /* Стиль при активации (рамка становится золотой) */
+        .nwn-checkbox:checked + .nwn-checkbox-custom {
+            border-color: #b18c5d;
+            box-shadow: inset 0 0 5px #000;
+        }
+
+        /* Контейнер селекта */
+        .nwn-select-container {
+            position: relative;
+            width: 200px; /* или любая нужная ширина */
+            user-select: none;
+        }
+
+        /* Сама "кнопка" списка */
+        .nwn-select-header {
+            background: #2d261e;
+            border: 1px solid #4a3d2b;
+            color: #c9ad7d;
+            padding: 6px 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+
+        .nwn-select-header:hover {
+            border-color: #b18c5d;
+            color: #fff;
+        }
+
+        /* Стрелочка */
+        .nwn-select-arrow {
+            font-size: 10px;
+            color: #b18c5d;
+        }
+
+        .nwn-select-options-down {
+            top: 100%;
+        }
+
+        .nwn-select-options-up {
+            bottom: 100%;
+        }
+
+        /* Выпадающее меню */
+        .nwn-select-options {
+            position: absolute;
+            left: 0;
+            right: 0;
+            background: #1a1612;
+            border: 1px solid #4a3d2b;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+            z-index: 100;
+            margin-top: 2px;
+        }
+
+        /* Пункт списка */
+        .nwn-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            color: #d1b894;
+            transition: 0.1s;
+        }
+
+        .nwn-option:hover {
+            background: #2d261e;
+            color: #fff;
+            border-left: 3px solid #b18c5d;
+        }
+
+        .bottom-list {
+            border-bottom: 1px solid #3d3428;
+        }
+
+
+        /* Стилизация скроллбара для Chrome, Edge, Safari */
+::-webkit-scrollbar {
+    width: 8px; /* Ширина скроллбара */
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1612; /* Цвет дорожки (совпадает с .nwn-bg) */
+    border-left: 1px solid #3d3428;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3d3428; /* Цвет самого ползунка */
+    border: 1px solid #4a3d2b;
+    border-radius: 0px; /* В NWN обычно острые углы */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4a3d2b;
+    border-color: #b18c5d; /* Подсветка при наведении */
+}
+
+/* Стилизация для Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #3d3428 #1a1612;
+}

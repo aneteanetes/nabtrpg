@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="../vue.global.prod.js"></script>
+    <script src="../tailwind4.js"></script>
+    <link rel="stylesheet" href="../editor.css">
+    <link rel="stylesheet" href="../css/rpg-awesome.min.css">
+    <title>Генератор персонажей - Набонассар</title>
+</head>
+<body class="p-6">
+    <div id="app" class="flex gap-4 h-[700px] max-w-6xl mx-auto">
+        
+        <!-- ЛЕВО: КАТЕГОРИИ -->        
+        <div class="w-1/4 nwn-bg flex flex-col uppercase text-xs tracking-widest">
+            <div class="p-4 border-b border-white/5 text-yellow-700 font-bold">Модусы</div>
+            <button v-for="(t,key) in tabLabels" :key="key" 
+                    @click="currentTab = key"
+                    class="p-4 text-left hover:bg-white/5 uppercase text-xs transition-all"
+                    :style="{ borderLeft: currentTab === key ? '4px solid #b18c5d' : 'none', background: currentTab === key ? '#3d352a' : 'transparent' }">
+                {{ tabLabels[key] }}
+            </button>
+        </div>
+
+        <!-- ЦЕНТР: КОНТЕНТ -->
+        <div class="w-1/2 nwn-bg px-6 pb-6 overflow-y-auto">
+            
+             <div v-if="currentTab === 'classes'" class="pt-6">
+                <h2 style="color: #b18c5d; margin-top: 0;">ВЫБОР КЛАССА</h2>
+                
+                <!-- Контейнер для кнопок -->
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button v-for="(info, key) in classesInfo" 
+                            :key="key"
+                            @click="selectClass(key)"
+                            class="nwn-btn"
+                            :style="{ 
+                                flex: 1, 
+                                padding: '10px', 
+                                border: selectedClass === key ? '1px solid #b18c5d' : '1px solid #4a3d2b',
+                                background: selectedClass === key ? '#3d352a' : '#2d261e',
+                                color: selectedClass === key ? '#fff' : '#c9ad7d'
+                            }">
+                        {{ info.name }}
+                    </button>
+                </div>
+
+                <!-- Описание класса (показывается только после выбора) -->
+                <div v-if="selectedClass" style="background: rgba(0,0,0,0.4); padding: 20px; border: 1px double #3d3428;">
+                    <h3 style="color: #fff; margin-top: 0; text-transform: uppercase;">
+                        {{ classesInfo[selectedClass].name }}
+                    </h3>
+                    <p style="color: #d1b894; line-height: 1.6; font-style: italic;">
+                        {{ classesInfo[selectedClass].desc }}
+                    </p>
+                </div>
+                
+                <!-- Заглушка, если ничего не выбрано -->
+                <div v-else style="color: #5c4a33; text-align: center; margin-top: 40px;">
+                    Выберите класс, чтобы увидеть его описание
+                </div>
+            </div>
+
+            <div v-if="currentTab === 'stats'" class="pt-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl italic">Очки: {{ points }}</h2> 
+                    <label class="flex items-center cursor-pointer" @click="addTal()">
+                        <input type="checkbox" v-model="additionalTalant" class="nwn-checkbox">
+                        <span class="nwn-checkbox-custom"></span>
+                        <span class="ml-[8px]">Дополнительный талант</span>
+                    </label>
+                </div>
+                
+                <div v-for="(val, s) in stats" :key="s" style="margin-bottom: 40px;">
+                    <!-- Заголовок характеристики -->
+                    <h3 style="color: #b18c5d; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; margin-bottom: 12px;">
+                        {{ labels[s] }}
+                    </h3>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <!-- Отрисовка 5 кнопок-рангов -->
+                        <div v-for="n in 5" :key="n" 
+                            @click="modStat(s, n)" 
+                            style="cursor: pointer; user-select: none;">
+                            
+                            <img 
+                                :src="n === val ? activeDice[n] : inactiveDice[n-1]"
+                                :style="{ 
+                                    width: '50px',
+                                    height: 'auto',
+                                    filter: n === val ? 'drop-shadow(0 0 8px rgba(177, 140, 93, 0.5))' : 'none'
+                                }" 
+                                alt="Attribute dice"
+                            />
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 style="color: #b18c5d; text-transform: uppercase; font-size: 14px; letter-spacing: 1px; margin-bottom: 12px;">
+                        Ранг существа:
+                    </h3>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <div class="nwn-select-container" @click="isRanksOpen = !isRanksOpen">
+                            <!-- Шапка селекта -->
+                            <div class="nwn-select-header">
+                                <span>{{ this.ranks[selectedRank-1] || '' }}</span>
+                                <span class="nwn-select-arrow">▼</span>
+                            </div>
+
+                            <!-- Выпадающий список -->
+                            <div v-if="isRanksOpen" class="nwn-select-options nwn-select-options-up">
+                                <div 
+                                    v-for="opt in ranks" 
+                                    :key="opt" 
+                                    class="nwn-option"
+                                    @click="selectCreatureRank(opt)"
+                                >
+                                    {{ opt }}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div v-if="currentTab === 'skills'" class="relative">
+                <div class="sticky top-0 bg-[#1a1612] py-2 z-10 border-b border-[#3d3428] flex justify-between">
+                    <h2 class="text-xl mb-4 italic" style="margin: 0;">
+                        Навыки
+                    </h2>
+                    <button @click="skillReset()" class="nwn-btn flex items-center justify-center text-sm leading-none inline mr-2 h-6 w-24">Сбросить</button>
+                </div>
+                
+                <div v-for="(sv,s) in stats" :key="s">                    
+                    <div class="flex justify-center mb-2 mt-2">
+                        <span class="text-[14px]">{{ labels[s] }}</span>
+                    </div>
+                    <div v-for="(k,v) in getSkills(s)" :key="v" class="flex justify-between p-2 border-b border-white/5">
+                        <span
+                            @mouseenter="updateTooltip($event, null,null,k.desc)"
+                            @mousemove="updateTooltip($event, null,null,k.desc)"
+                            @mouseleave="hideTooltip"
+                        >{{ labels[v] }}</span>
+                        <div>
+                            <button 
+                                @click="skillLow(v)" 
+                                :disabled="skills[v].value <= 0"
+                                class="nwn-btn w-6 h-6 flex items-center justify-center text-sm leading-none inline mr-2"
+                            >
+                                -
+                            </button>
+
+                            <!-- <span class="text-white font-bold">{{ k }}</span> -->
+                            <img 
+                                    :src="activeDice[k.value]"
+                                    :style="{ 
+                                        width: '25px',
+                                        height: 'auto',
+                                        display: 'inline',
+                                    }" 
+                                    alt="Attribute dice"
+                                />
+
+                            <button 
+                                @click="skillHigh(v)" 
+                                :disabled="skills[v].value >= 5 || skillSum()>=15"
+                                class="nwn-btn w-6 h-6 flex items-center justify-center text-sm leading-none inline ml-2"
+                            >
+                                +
+                            </button>
+                        </div>                    
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="currentTab === 'tals'" class="relative">
+                <div class="sticky top-0 bg-[#1a1612] py-2 z-10 border-b border-[#3d3428] flex justify-between">
+                    <h2 class="text-xl mb-4 italic" style="margin: 0;">
+                        Выбор талантов
+                    </h2>
+                    <button @click="talReset()" class="nwn-btn flex items-center justify-center text-sm leading-none inline mr-2 h-6 w-24">Сбросить</button>
+                </div>
+                <div v-for="f in talents" class="stat-row mb-3" style="flex-direction: column; align-items: flex-start;">
+                    <div v-if="selectedClass" style="background: rgba(0,0,0,0.4); padding: 20px; border: 1px double #3d3428;">
+                        <div class="flex justify-between">
+                            <h3 style="color: #fff; margin-top: 0; text-transform: uppercase;">
+                            <i :class="'mr-1'+' ra '+f.icon"></i>
+                                {{ f.name }}
+                            </h3>
+                        
+                            <button v-if="!tals.includes(f.name)" 
+                                    @click="takeTal(f)" 
+                                    :disabled="!canTal(f)" 
+                                    class="nwn-btn">Изучить</button> 
+                            
+                            <button v-else 
+                                    @click="removeTal(f)" 
+                                    class="nwn-btn" 
+                                    style="color: #ff4d4d; border-color: #5e1e1e;">Забыть</button>
+                        </div>
+
+                        <p class="mt-1" style="color: #d1b894; line-height: 1.6; font-style: italic;">
+                            {{ f.desc }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="currentTab === 'feats'" class="pt-6">
+                <h2 class="text-xl mb-4 italic">Доступные фиты</h2>
+                <!-- <div v-for="f in feats" :key="f.id" class="p-3 mb-2 bg-black/30 border border-white/5">
+                    <div class="flex justify-between">
+                        <span :class="canHas(f) ? 'text-white' : 'text-red-900'">{{ f.name }}</span>
+                        <button v-if="!myFeats.includes(f.id)" @click="takeFeat(f)" :disabled="!canHas(f)" class="nwn-btn text-[10px] px-2 uppercase">Взять</button>
+                    </div>
+                    <p class="text-[10px] text-gray-500 mt-1">{{ f.desc }}</p>
+                </div> -->
+
+                <div v-for="f in feats" class="stat-row" style="flex-direction: column; align-items: flex-start;">
+                    <div style="display: flex; justify-content: space-between; width: 100%;">
+                        <b :style="{ color: canHas(f) ? '#fff' : '#5e1e1e' }">{{ f.name }}</b>
+                        
+                        <!-- Если фит ЕЩЕ НЕ взят — кнопка ВЗЯТЬ -->
+                        <button v-if="!myFeats.includes(f.id)" 
+                                @click="takeFeat(f)" 
+                                :disabled="!canHas(f)" 
+                                class="nwn-btn">ВЗЯТЬ</button>
+                        
+                        <!-- Если фит УЖЕ взят — кнопка УБРАТЬ -->
+                        <button v-else 
+                                @click="removeFeat(f)" 
+                                class="nwn-btn" 
+                                style="color: #ff4d4d; border-color: #5e1e1e;">УБРАТЬ</button>
+                    </div>
+                    <small style="font-size: 10px; color: #888;">{{ f.desc }}</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- ПРАВО: ЛИСТ -->
+        <div class="w-1/4 nwn-bg p-4 bg-[#14110e] overflow-y-auto">
+            <h2 class="text-center text-yellow-700 font-bold mb-6 bottom-list pb-2">ЛИСТ ПЕРСОНАЖА</h2>
+            
+            <div style="margin-bottom: 15px; padding-bottom: 10px;" class="bottom-list flex justify-between">
+                <div>
+                    <span style="font-size: 18px; font-weight: bold;">
+                        {{ selectedClass ? classesInfo[selectedClass].name : 'Не выбран' }}
+                    </span>
+                    <span style="display: inline-block;">
+                        <img 
+                            :src="rankDiceImage[this.selectedRank]"
+                            @mouseenter="updateTooltip($event, this.selectedRank-1,'ranks')"
+                            @mousemove="updateTooltip($event, this.selectedRank-1,'ranks')"
+                            @mouseleave="hideTooltip"
+                            :style="{
+                                width: '15px',
+                                marginLeft: '5px', 
+                                height: 'auto',
+                            }" 
+                            alt="Dice rank"
+                        />
+                    </span>
+                </div>
+                <div>
+                    <span>Уровень: </span>
+                    <span>{{ currentLvl }}</span>
+                </div>
+            </div>
+
+            <div class="flex justify-center mb-2">
+                <span class="text-[14px]">Характеристики</span>
+            </div>
+            <div class="text-[12px] uppercase space-y-2 mb-2 flex justify-between bottom-list">
+                <div v-for="(v, s) in stats" :key="s" class="mb-4">
+                    <!-- <span>{{ labels[s] }}:</span> -->
+                    <img class="mx-1"   
+                        :src="activeDice[v]"
+                        @mouseenter="updateTooltip($event, s,'labels')"
+                        @mousemove="updateTooltip($event, s,'labels')"
+                        @mouseleave="hideTooltip"
+                        :style="{
+                            width: '30px',
+                            height: 'auto',
+                        }" 
+                        alt="dice"
+                    />
+                </div>
+            </div>
+            
+            <div class="flex justify-center mb-2">
+                <span class="text-[14px]">Атрибуты</span>
+            </div>
+            <div class="text-[14px] space-y-2 mb-2 bottom-list">
+                <div v-for="(v, s) in attrs" :key="s" class="flex justify-between">
+                    <span><i :class='"mr-1 ra "+icons[s]'></i> {{ labels[s] }}:</span>
+                    <span class="text-white">{{ getAttrValue(v) }}</span>
+                </div>
+                <span class="mb-4"></span>
+            </div>
+
+            <div class="flex justify-center mb-2">
+                <span class="text-[14px]">Атака</span>
+            </div>
+            <div class="text-[14px] space-y-2 mb-2 bottom-list">
+                <div v-for="(v, s) in attrsd" :key="s" class="flex justify-between">
+                    <span>{{ labels[s] }}:</span>
+                    <div class="flex">
+                        <div v-for="(vv, ss) in v" :key="ss">
+                            <img 
+                                :src="activeDice[vv]"
+                                @mouseenter="updateTooltip($event, vv,'dices')"
+                                @mousemove="updateTooltip($event, vv,'dices')"
+                                @mouseleave="hideTooltip"
+                                :style="{
+                                    width: '20px',
+                                    marginLeft: '5px', 
+                                    height: 'auto',
+                                }" 
+                                alt="dice"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <span class="mb-4"></span>
+            </div>
+            
+            <div v-if="currentSkillsExists == true" class="flex justify-center mb-2">
+                <span class="text-[14px]">Навыки</span>
+            </div>
+            <div v-if="currentSkillsExists == true" class="text-[14px] bottom-list">
+                <div v-for="(k,v) in currentSkills" :key="v" class="flex justify-between mb-2 items-center">
+                    <span 
+                        @mouseenter="updateTooltip($event, '','descriptions',skills[v].desc)"
+                        @mousemove="updateTooltip($event, '','descriptions',skills[v].desc)"
+                        @mouseleave="hideTooltip">{{ labels[v] }}</span>
+                    <div>   
+                        <img v-for="(kk,vv) in k" :key="vv"
+                        
+                            @mouseenter="updateTooltip($event, kk.desc,'descriptions',)"
+                            @mousemove="updateTooltip($event, kk.desc,'descriptions')"
+                            @mouseleave="hideTooltip"
+
+                            :src="activeDice[kk.value]"
+                            :style="{ 
+                                width: '20px',
+                                height: 'auto',
+                                display: 'inline',
+                                marginLeft: '2px',
+                            }"
+                            alt="Attribute dice"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="tals.length > 0" class="flex justify-center mb-2">
+                <span class="text-[14px]">Таланты</span>
+            </div>
+            <div v-if="tals.length > 0" class="text-[14px]">
+                <div v-for="v in currentTals" class="flex justify-between mb-2 items-center" 
+                    @mouseenter="updateTooltip($event, null,'descriptions',v.desc)"
+                    @mousemove="updateTooltip($event, null,'descriptions',v.desc)"
+                    @mouseleave="hideTooltip">
+                    <span>{{ v.name }}</span>
+                    <!-- <div>   
+                        <img v-for="(kk,vv) in k" :key="vv"
+                        
+                            @mouseenter="updateTooltip($event, kk.desc,'descriptions',)"
+                            @mousemove="updateTooltip($event, kk.desc,'descriptions')"
+                            @mouseleave="hideTooltip"
+
+                            :src="activeDice[kk.value]"
+                            :style="{ 
+                                width: '20px',
+                                height: 'auto',
+                                display: 'inline',
+                                marginLeft: '2px',
+                            }"
+                            alt="Attribute dice"
+                        />
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- tooltip -->
+        <div v-if="showTooltip" 
+            ref="tooltipRef"
+            class="nwn-tooltip" 
+            :style="{ left: tooltipX + 'px', top: tooltipY + 'px' }">
+            {{ hoverDesc }}
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            data() {
+                return {
+                    currentTab: 'classes',
+                    // Добавили этот объект, чтобы не писать сложные условия в HTML
+                    tabLabels: {
+                        classes: 'Класс',
+                        stats: 'Характеристики',
+                        skills: 'Навыки',
+                        tals: 'Таланты',
+                        feats: 'Способности'
+                    },
+                    additionalTalant:false,
+                    classesInfo: {
+                        //%classes()
+                    },
+                    showTooltip: false,
+                    hoverDesc: '',
+                    tooltipX: 0,
+                    tooltipY: 0,
+                    isRanksOpen:false,
+                    selectedRank:3,
+                    level:0,
+                    selectedClass: 'warrior',
+                    ranks:[
+                        "Слабый",
+                        "Малый",
+                        "Нормальный",
+                        "Крупный",
+                        "Большой"
+                    ],
+                    dices:[
+                        '',
+                        'd4',
+                        'd6',
+                        'd8',
+                        'd10',
+                        'd12',
+                    ],
+                    descriptions: {
+                        con: 'Телосложение', 
+                        dex: 'Сноровка',
+                        int: 'Интеллект',
+                        wis: 'Мудрость',
+                        skill:'Навык',
+                        //%skillDescs()
+                    },
+                    points: 0,
+                    classes: {war:'Воин',rog:'Плут',mag:'Маг',pri:'Священник'},
+                    stats: { con: 3, dex: 2, int: 2, wis: 2 },
+                    attrs: {
+                        hp:8,
+                        spd: 12,
+                        ini: 0,
+                        luck:0,
+                        def:0,
+                        cd:0
+                    },
+                    attrsd: {
+                        atk:[3],
+                        matk:[2],
+                        arm:[2],
+                        bar:[2],
+                    },
+                    skills: {
+                        //%skills()
+                    },
+                    talents: [
+                        //%tals()
+                    ],
+                    icons: { 
+                        hp: 'ra-hearts',
+                        atk:'ra-explosion',
+                        matk:'ra-explosion',
+                        arm:"ra-explosion",
+                        bar:"ra-explosion",
+                        spd:'ra-boot-stomp',
+                        ini:"ra-doubled",
+                        luck:"ra-sun",
+                        def:"ra-vest",
+                        cd:"ra-circle-of-circles"
+                    },
+                    labels: { 
+                        con: 'Телосложение', 
+                        dex: 'Сноровка', 
+                        int: 'Интеллект', 
+                        wis: 'Мудрость', 
+                        hp:'//%nab.stats.hp',
+                        atk:'Сила атаки',
+                        matk:'Сила магии',
+                        arm:"Уклонение",
+                        bar:"Барьер",
+                        spd:'Скорость',
+                        ini:"Инициатива",
+                        luck:"Удача",
+                        def:"Защита",
+                        cd:"Восстановление",
+                        //%skillslabels()
+                        //%talslabels()
+                    },
+                    myFeats: [],
+                    tals: [],
+                    feats: [
+                        { id: 1, name: 'Могучий удар', desc: 'Нужно: Сила 13+', req: { str: 13 } },
+                        { id: 2, name: 'Уклонение', desc: 'Нужно: Ловкость 13+', req: { dex: 13 } }
+                    ],
+                    // Картинки, когда ранг ВЫБРАН
+                    activeDice: [
+                        '../images/tokens/rank1.png', // для ранга 0
+                        '../images/dices/d4.png',  // для ранга 1
+                        '../images/dices/d6.png',  // для ранга 2
+                        '../images/dices/d8.png',  // для ранга 3
+                        '../images/dices/d10.png', // для ранга 4
+                        '../images/dices/d12.png'  // для ранга 5
+                    ],
+                    
+                    // Картинки, когда ранг НЕ выбран (те самые треугольники)
+                    inactiveDice: [
+                        '../images/dices/di4.png',
+                        '../images/dices/di6.png',
+                        '../images/dices/di8.png',
+                        '../images/dices/di10.png',
+                        '../images/dices/di12.png'
+                    ],
+                    rankDiceImage: {
+                        1:'../images/tokens/rank1.png',
+                        2:'../images/tokens/rank2.png',
+                        3:'../images/tokens/rank3.png',
+                        4:'../images/tokens/rank4.png',
+                        5:'../images/tokens/rank5.png',
+                    },
+                    hpImages: {
+                        1:'../images/tokens/OZ4.png',
+                        2:'../images/tokens/OZ6.png',
+                        3:'../images/tokens/OZ8.png',
+                        4:'../images/tokens/OZ10.png',
+                        5:'../images/tokens/OZ12.png',
+                    },
+                    rankDice:[
+                        4,6,8,10,12
+                    ],
+                    rankMultiple:{
+                        1:0.3,
+                        2:0.5,
+                        3:1,
+                        4:2,
+                        5:3
+                    }
+                }
+            },
+            computed: {
+                currentLvl(){
+                    let skillsum = this.skillSum();
+                    let talTreshHold = this.tals.length *3;
+
+                    if(this.additionalTalant){
+                        talTreshHold-=3;
+                    }
+
+                    if(talTreshHold==0 || skillsum>talTreshHold)
+                        return skillsum;
+                    
+                    return talTreshHold;
+                },
+                currentTals(){
+                    return this.talents.filter(t=>this.tals.includes(t.name));
+                },
+                currentSkills() {
+                    const result = {};
+                    for (let key in this.skills) {
+                        if (this.skills[key].value>0) {
+                            result[key] = [{
+                                value: this.skills[key].value,
+                                desc: 'skill'
+                            }, {
+                               value: this.stats[this.skills[key].stat],
+                               desc: this.skills[key].stat
+                            }];
+                        }
+                    }
+                    return result;
+                },
+                currentSkillsExists(){
+                    for (let key in this.skills) {
+                        if (this.skills[key].value>0) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            },
+            methods: {
+                modStat(s, rank) {
+                    // Вычисляем разницу между тем, что хотим, и тем, что есть
+                    const diff = rank - this.stats[s];
+                    
+                    // Если очков хватает (или мы уменьшаем стат, и diff отрицательный)
+                    if (this.points >= diff) {
+                        this.stats[s] = rank;
+                        this.points -= diff;
+
+                        this.calcAttrs();
+                    }
+                },
+                selectClass(key) {
+                    this.resetStats();
+
+                    this.selectedClass=key;
+                    this.additionalTalant=false;
+
+                    this.classDices();
+                    this.calcAttrs();
+                },
+                selectCreatureRank(v){
+                    this.selectedRank=this.ranks.indexOf(v)+1;
+                    this.calcAttrs();
+                },
+                calcAttrs(){
+                    this.attrs.hp=Math.floor((this.rankDice[this.stats.con-1]*this.rankMultiple[this.selectedRank])*2);
+                    this.attrs.spd=(5-this.selectedRank)*5+this.stats.dex;
+                    this.attrs.ini = this.attrs.spd;
+                    for (let index = 0; index < this.stats.int+1; index++) {
+                        this.attrs.ini += this.getRandomInt(1,4);
+                    }
+                    this.attrs.luck = (5-this.selectedRank) * 20 + (this.stats.wis * 4);
+                    this.attrsd.atk=[
+                        this.stats.con
+                    ];
+                    this.attrsd.arm=[
+                        this.stats.dex
+                    ];
+                    this.attrsd.matk=[
+                        this.stats.int
+                    ];
+                    this.attrsd.bar=[
+                        this.stats.wis
+                    ];
+                },
+                classDices(){
+                    const key = this.selectedClass;
+                    if(key=='warrior'){
+                        this.stats.con=3;
+                    }else if (key=='rogue'){
+                        this.stats.dex=3;
+                    }else if (key=='mage'){
+                        this.stats.int=3;
+                    }else if (key=='priest'){
+                        this.stats.wis=3;
+                    }
+                },
+                resetStats(){
+                    this.stats={
+                        con:2,
+                        dex:2,
+                        int:2,
+                        wis:2
+                    };
+                    this.points=0;
+                },
+                getSkills(stat){
+                    let skilles={};
+                    Object.entries(this.skills).forEach(([key, value]) => {
+                        let skill = this.skills[key];
+                        if(skill.stat==stat)
+                            skilles[key] = skill;
+                    });
+                    return skilles;
+                },
+                skillLow(sk){
+                    this.skills[sk].value--;
+                },
+                skillHigh(sk){
+                    this.skills[sk].value++;                
+                },
+                skillReset(){
+                    Object.entries(this.skills).forEach(([key, value]) => {
+                        this.skills[key].value=0;
+                    });
+                    this.level=0;
+                },
+                skillSum(){
+                    let sum = 0;
+                    Object.entries(this.skills).forEach(([key, value]) => {
+                        if(this.skills[key].value>0)
+                            sum+=this.skills[key].value;
+                    });
+                    return sum;
+                },
+                addTal(){
+                    this.resetStats();
+                    if(this.additionalTalant)
+                        this.classDices();
+                },
+                getMod(v) { 
+                    const m = Math.floor((v - 10) / 2);
+                    return m >= 0 ? '+' + m : m;
+                },
+                getAttrDice(v) {
+                    switch(v){
+                        case 1: return 'd4';
+                        case 2: return 'd6';
+                        case 3: return 'd8';
+                        case 4: return 'd10';
+                        case 5: return 'd12';
+                    }
+                    return '';
+                },
+                getAttrValue(v){
+                    return v;
+                },
+                talReset(){
+                    this.tals=[];                },
+                canTal(f) {
+                    let max = this.additionalTalant ? 1 : 0
+                    return this.tals.length<5+max;
+                },
+                takeTal(f) {
+                    this.tals.push(f.name);
+                },
+                removeTal(f) {
+                    const index = this.tals.indexOf(f.name);
+                    if (index > -1) {
+                        this.tals.splice(index, 1);
+                    }
+                },
+                canHas(f) {
+                    return Object.keys(f.req).every(key => this.stats[key] >= f.req[key]);
+                },
+                takeFeat(f) {
+                    if (this.canHas(f)) this.myFeats.push(f.id);
+                },
+                removeFeat(f) {
+                    const index = this.myFeats.indexOf(f.id);
+                    if (index > -1) {
+                        this.myFeats.splice(index, 1);
+                    }
+                },
+                getFeatName(id) {
+                    return this.feats.find(f => f.id === id).name;
+                },
+               async updateTooltip(e, key, from = 'descriptions', resultText) {
+                if (!from) from = 'descriptions';
+                this.hoverDesc = resultText ?? this[from][key];
+                this.showTooltip = true;
+
+                // Ждем отрисовки, чтобы замерить высоту тултипа
+                await this.$nextTick();
+
+                const tooltip = this.$refs.tooltipRef; // Не забудьте добавить ref="tooltipRef" в HTML
+                if (!tooltip) return;
+
+                const gap = 15; // Отступ от курсора
+                const tooltipHeight = tooltip.offsetHeight;
+                
+                // Координата Y для положения "ВНИЗУ"
+                let y = e.pageY + gap;
+
+                // Проверяем: если координата Y + высота тултипа выходят за край вьюпорта
+                const spaceBelow = window.innerHeight + window.scrollY - (e.pageY + gap);
+                
+                if (spaceBelow < tooltipHeight) {
+                    // Если места снизу мало — перекидываем НАВЕРХ
+                    y = e.pageY - tooltipHeight - gap;
+                }
+
+                this.tooltipX = e.pageX;
+                this.tooltipY = y;
+            },
+
+                hideTooltip() {
+                    this.showTooltip = false;
+                },
+                getRandomInt(min, max) {
+                    return Math.floor(Math.random() * (max - min) + min);
+                }
+            },
+            mounted(){
+                this.calcAttrs();
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

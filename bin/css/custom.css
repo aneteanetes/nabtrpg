@@ -1,0 +1,14 @@
+.rust {
+--links: #c5a100;
+}
+
+h2, h3 { margin-block-start: 1.5em; }
+h4, h5 { margin-block-start: 1em; }
+
+h5 {
+    margin-bottom: 0;
+}
+
+h5 + p {
+    margin-top: 0;
+}

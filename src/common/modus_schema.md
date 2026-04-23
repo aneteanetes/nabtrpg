@@ -1,0 +1,1 @@
+<img style="display: block;margin-left: auto;margin-right: auto;" src="../images/modus_schema_logo.png" alt="Modus Schema Logo">
