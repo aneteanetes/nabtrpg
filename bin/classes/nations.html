@@ -1,0 +1,561 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="rust sidebar-visible" dir="ltr">
+<head>
+    <!-- Book generated using (almost) mdBook -->
+    <meta charset="UTF-8">
+    <title>Происхождение - Набонассар</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="shortcut icon" href="./../images/favicon.png">
+    <link rel="stylesheet" href="./../css/variables.css">
+    <link rel="stylesheet" href="./../css/general.css">
+    <link rel="stylesheet" href="./../css/chrome.css">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="./../FontAwesome/css/font-awesome.css">
+    <link rel="stylesheet" href="./../fonts/fonts.css">
+
+    <!-- Highlight.js Stylesheets -->
+    <link rel="stylesheet" href="./../highlight.css">
+    <link rel="stylesheet" href="./../tomorrow-night.css">
+    <link rel="stylesheet" href="./../ayu-highlight.css">
+
+    <!-- Custom theme stylesheets -->
+    <link rel="stylesheet" href="./../css/custom.css">
+    <link rel="stylesheet" href="./../css/rpg-awesome.min.css">
+    <!-- Extensions stylesheets -->
+    <link rel="stylesheet" href="./../changelog\changelog.css">
+    <link rel="stylesheet" href="./../dices\dices.css">
+
+
+
+    <!-- Provide site root to javascript -->
+    <script>
+            var path_to_root = "./../";
+        var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "rust";
+    </script>
+</head>
+    <body>
+        <div id="body-container">
+            <!-- Work around some values being stored in localStorage wrapped in quotes -->
+            <script>
+                try {
+                    var theme = localStorage.getItem('mdbook-theme');
+                    var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                    if (theme.startsWith('"') && theme.endsWith('"')) {
+                        localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                    }
+
+                    if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                        localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                    }
+                } catch (e) { }
+            </script>
+
+            <!-- Set the theme before any content is loaded, prevents flash -->
+            <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            html.classList.add("js");
+            </script>
+
+            <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+            <!-- Hide / unhide sidebar before it is displayed -->
+            <script>
+                var sidebar = null;
+                var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+                if (document.body.clientWidth >= 1080) {
+                    try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch (e) { }
+                    sidebar = sidebar || 'visible';
+                } else {
+                    sidebar = 'hidden';
+                }
+                sidebar_toggle.checked = sidebar === 'visible';
+                html.classList.remove('sidebar-visible');
+                html.classList.add("sidebar-" + sidebar);
+            </script>
+
+            <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+                <!-- populated by js -->
+                <div class="sidebar-scrollbox"><img src="./../images/logo.png" style="width:100%">
+                    <ol class="chapter">
+                        <li class="chapter-item expanded">
+    <a href="../index.html">Главная
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../intermission.html"><strong aria-hidden="true">1.</strong>Введение
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../common/howto.html"><strong aria-hidden="true">2.</strong>Как играть?
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../common/creatures.html"><strong aria-hidden="true">3.</strong>Существа
+    </a>
+</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../attributes/attributes.html"><strong aria-hidden="true">3.1.</strong>Характеристики
+    </a>
+</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../attributes/constitution.html"><strong aria-hidden="true">3.1.1.</strong>Телосложение
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../attributes/agility.html"><strong aria-hidden="true">3.1.2.</strong>Сноровка
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../attributes/intelligence.html"><strong aria-hidden="true">3.1.3.</strong>Интеллект
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../attributes/wisdom.html"><strong aria-hidden="true">3.1.4.</strong>Мудрость
+    </a>
+</li></ol></li><li class="chapter-item expanded">
+    <a href="../stats/stats.html"><strong aria-hidden="true">3.2.</strong>Атрибуты
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../skills/skills.html"><strong aria-hidden="true">3.3.</strong>Навыки
+    </a>
+</li></ol></li><li class="chapter-item expanded">
+    <a href="../common/persons.html"><strong aria-hidden="true">4.</strong>Персонажи
+    </a>
+</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="classes.html"><strong aria-hidden="true">4.1.</strong>Классы
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../skills/talents.html"><strong aria-hidden="true">4.2.</strong>Таланты
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../abilities/abilities.html"><strong aria-hidden="true">4.3.</strong>Способности
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="specs.html"><strong aria-hidden="true">4.4.</strong>Специализации
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="" class="active"><strong aria-hidden="true">4.5.</strong>Происхождение
+    </a>
+</li></ol></li><li class="chapter-item expanded">
+    <a href="../common/gameplay.html"><strong aria-hidden="true">5.</strong>Игровой процесс
+    </a>
+</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../common/will.html"><strong aria-hidden="true">5.1.</strong>Воля
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../common/creating.html"><strong aria-hidden="true">5.2.</strong>Создание персонажа
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../scenes/common.html"><strong aria-hidden="true">5.3.</strong>Сцены и приключения
+    </a>
+</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../scenes/adventures.html"><strong aria-hidden="true">5.3.1.</strong>Приключения
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../scenes/scenes.html"><strong aria-hidden="true">5.3.2.</strong>Сцены
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../scenes/locatedzones.html"><strong aria-hidden="true">5.3.3.</strong>Локации и зоны
+    </a>
+</li></ol></li><li class="chapter-item expanded affix ">
+<li class="part-title">5.4.Жизнь и смерть</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../common/injury.html"><strong aria-hidden="true">5.4.1.</strong>Травмы
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../common/heal.html"><strong aria-hidden="true">5.4.2.</strong>Лечение
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../common/rest.html"><strong aria-hidden="true">5.4.3.</strong>Отдых
+    </a>
+</li></ol></li><li class="chapter-item expanded">
+    <a href="../exp/exp.html"><strong aria-hidden="true">5.5.</strong>Уровни и Опыт
+    </a>
+</li></ol></li><li class="chapter-item expanded">
+    <a href="../items/items.html"><strong aria-hidden="true">6.</strong>Предметы
+    </a>
+</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../items/weapons.html"><strong aria-hidden="true">6.1.</strong>Оружие
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../items/equip.html"><strong aria-hidden="true">6.2.</strong>Экипировка
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../items/other.html"><strong aria-hidden="true">6.3.</strong>Ресурсы
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../items/craft.html"><strong aria-hidden="true">6.4.</strong>Создание
+    </a>
+</li></ol></li><li class="chapter-item expanded affix ">
+<li class="part-title">7.Справочники</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../items/items.html"><strong aria-hidden="true">7.1.</strong>Предметы
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../creatures/creatures.html"><strong aria-hidden="true">7.2.</strong>Существа
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../locations/locations.html"><strong aria-hidden="true">7.3.</strong>Локации
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../abilities/list.html"><strong aria-hidden="true">7.4.</strong>Способности
+    </a>
+</li></ol></li><li class="chapter-item expanded affix ">
+<li class="part-title">8.Мастеру</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../masters/npc.html"><strong aria-hidden="true">8.1.</strong>Персонажи мастера
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../masters/adventuresconvert.html"><strong aria-hidden="true">8.2.</strong>Создание приключений
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../masters/checks.html"><strong aria-hidden="true">8.3.</strong>Проверки и сложности
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../masters/moduleabilities.html"><strong aria-hidden="true">8.4.</strong>Способности приключений
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../masters/itemscreation.html"><strong aria-hidden="true">8.5.</strong>Баланс и предметы
+    </a>
+</li></ol></li><li class="chapter-item expanded affix ">
+<li class="part-title">9.Инструменты</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../editor/editor.html"><strong aria-hidden="true">9.1.</strong>Генератор персонажей
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../editor/editor.html"><strong aria-hidden="true">9.2.</strong>Конструктор способностей
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../editor/editor.html"><strong aria-hidden="true">9.3.</strong>Редактор магии
+    </a>
+</li></ol></li><li class="chapter-item expanded affix ">
+<li class="part-title">10.Мир</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../editor/editor.html"><strong aria-hidden="true">10.1.</strong>Планеты и материки
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../editor/editor.html"><strong aria-hidden="true">10.2.</strong>Народы и боги
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../world/fractions.html"><strong aria-hidden="true">10.3.</strong>Фракции
+    </a>
+</li></ol></li><li class="chapter-item expanded affix ">
+<li class="part-title">11.Таблицы и формулы</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../tables/formulas.html"><strong aria-hidden="true">11.1.</strong>Формулы
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../tables/contest.html"><strong aria-hidden="true">11.2.</strong>Состязания
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../tables/mindful.html"><strong aria-hidden="true">11.3.</strong>Разум существ
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../tables/rankvalue.html"><strong aria-hidden="true">11.4.</strong>Ранг значения
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../tables/rankvaluereversed.html"><strong aria-hidden="true">11.5.</strong>Обратный ранг-значение
+    </a>
+</li></ol></li><li class="chapter-item expanded">
+    <a href="../common/modus_schema.html"><strong aria-hidden="true">12.</strong>Ролевая система Modus Schema
+    </a>
+</li><li class="spacer"></li><li class="chapter-item expanded">
+    <a href="../changelog.html">Архив изменений
+    </a>
+</li>
+                    </ol>
+                </div>
+                <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                    <div class="sidebar-resize-indicator"></div>
+                </div>
+            </nav>
+
+            <!-- Track and set sidebar scroll position -->
+            <script>
+                var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+                sidebarScrollbox.addEventListener('click', function (e) {
+                    if (e.target.tagName === 'A') {
+                        sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                    }
+                }, { passive: true });
+                var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+                sessionStorage.removeItem('sidebar-scroll');
+                if (sidebarScrollTop) {
+                    // preserve sidebar scroll position when navigating via links within sidebar
+                    sidebarScrollbox.scrollTop = sidebarScrollTop;
+                } else {
+                    // scroll sidebar to current active section when navigating via "next/Назад" buttons
+                    var activeSection = document.querySelector('#sidebar .active');
+                    if (activeSection) {
+                        activeSection.scrollIntoView({ block: 'center' });
+                    }
+                }
+            </script>
+
+            <div id="page-wrapper" class="page-wrapper">
+
+                <div class="page">
+                    <div id="menu-bar-hover-placeholder"></div>
+                    <div id="menu-bar" class="menu-bar sticky">
+                        <div class="left-buttons">
+                            <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Содержание" aria-label="Содержание" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </label>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Тема" aria-label="Тема" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Светлая</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Тёмная</button></li>
+                                <!--<li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>-->
+                            </ul>
+                            <button id="search-toggle" class="icon-button" type="button" title="Поиск (ctrl+f)" aria-label="Поиск" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+
+                        <h1 class="menu-title">Происхождение - Набонассар</h1>
+
+                        <div class="right-buttons">
+                        </div>
+                    </div>
+
+                    <div id="search-wrapper" class="hidden">
+                        <form id="searchbar-outer" class="searchbar-outer">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Искать в правилах..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        </form>
+                        <div id="searchresults-outer" class="searchresults-outer hidden">
+                            <div id="searchresults-header" class="searchresults-header"></div>
+                            <ul id="searchresults">
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                    <script>
+                        document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                        document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                        Array.from(document.querySelectorAll('#sidebar a')).forEach(function (link) {
+                            link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                        });
+                    </script>
+
+                    <div id="content" class="content">
+                        <main>
+                            <h1 id="Происхождение"><a class="header" href="#Происхождение">Происхождение</a></h1>
+<h2 id="Модус"><a class="header" href="#Модус">Модус</a></h2>
+<p>Модус происхождения входит в &quot;свободный&quot; модус персонажей.</p>
+<h2 id="Роль-происхождения"><a class="header" href="#Роль-происхождения">Роль происхождения</a></h2>
+<p>Происхождение определяет отношение к персонажу других народов и дополнительную способность.</p>
+<p>Каждый народ в мире Набонассар поклоняется своему божеству, но у каждого божества есть своё божество-протагонист. Больше подробностей о взаимодействии народов можно узнать из раздела <a href="../world/common.md">Мир</a>.</p>
+<h2 id="Взаимодействия"><a class="header" href="#Взаимодействия">Взаимодействия</a></h2>
+<p>Ниже представлено описание как народы относятся друг к другу. Народы на противоположных частях являются враждующими.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Пантеон</th>
+<th style="text-align: left;">VS</th>
+<th style="text-align: left;">Свободные боги</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Конгрегация</strong></td>
+<td style="text-align: left;">↔</td>
+<td style="text-align: left;"><strong>Пески мёртвых</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Изначальная роща</strong></td>
+<td style="text-align: left;">↔</td>
+<td style="text-align: left;"><strong>Тёмный лес</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Бухта пустоты</strong></td>
+<td style="text-align: left;">↔</td>
+<td style="text-align: left;"><strong>Берег древних</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Кровавые болота</strong></td>
+<td style="text-align: left;">↔</td>
+<td style="text-align: left;"><strong>Экзархат солнца</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Империя Ушал</strong></td>
+<td style="text-align: left;">↔</td>
+<td style="text-align: left;"><strong>Кузница древних</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Королевство проклятых</strong></td>
+<td style="text-align: left;">↔</td>
+<td style="text-align: left;"><strong>Остров дильмун</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="Способности-происхождения"><a class="header" href="#Способности-происхождения">Способности происхождения</a></h2>
+<h3 id="Конгрегация"><a class="header" href="#Конгрегация">Конгрегация</a></h3>
+<p><div style="background: #1a1612;margin-bottom: 10px;">
+<div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border: 1px double rgb(61, 52, 40);">
+    <div class="flex justify-between">
+        <h3 style="color: rgb(255, 255, 255); margin-top: 0px; text-transform: uppercase;">
+            <i class="ra ra-wyvern" style="margin-right: 4px"></i>Удар зимы
+        </h3>
+    </div>
+    <p class="mt-1" style="color: rgb(209, 184, 148); line-height: 1.6; font-style: italic;">Вы наносите 1 урона от холода.</p>
+</div></div>
+<h3 id="Изначальная-роща"><a class="header" href="#Изначальная-роща">Изначальная роща</a></h3>
+<p><div style="background: #1a1612;margin-bottom: 10px;">
+<div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border: 1px double rgb(61, 52, 40);">
+    <div class="flex justify-between">
+        <h3 style="color: rgb(255, 255, 255); margin-top: 0px; text-transform: uppercase;">
+            <i class="ra ra-wyvern" style="margin-right: 4px"></i>Дубовая кожа
+        </h3>
+    </div>
+    <p class="mt-1" style="color: rgb(209, 184, 148); line-height: 1.6; font-style: italic;">Ваша броня увеличена на 1. Вы не получаете штраф восстановления за эту способность.</p>
+</div></div>
+<h3 id="Бухта-пустоты"><a class="header" href="#Бухта-пустоты">Бухта пустоты</a></h3>
+<p><div style="background: #1a1612;margin-bottom: 10px;">
+<div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border: 1px double rgb(61, 52, 40);">
+    <div class="flex justify-between">
+        <h3 style="color: rgb(255, 255, 255); margin-top: 0px; text-transform: uppercase;">
+            <i class="ra ra-wyvern" style="margin-right: 4px"></i>Болезненный вид
+        </h3>
+    </div>
+    <p class="mt-1" style="color: rgb(209, 184, 148); line-height: 1.6; font-style: italic;">Весь получаемый урон от болезней и ядов уменьшен на 2.</p>
+</div></div>
+<h3 id="Кровавые-болота"><a class="header" href="#Кровавые-болота">Кровавые болота</a></h3>
+<p><div style="background: #1a1612;margin-bottom: 10px;">
+<div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border: 1px double rgb(61, 52, 40);">
+    <div class="flex justify-between">
+        <h3 style="color: rgb(255, 255, 255); margin-top: 0px; text-transform: uppercase;">
+            <i class="ra ra-wyvern" style="margin-right: 4px"></i>Жестокий удар
+        </h3>
+    </div>
+    <p class="mt-1" style="color: rgb(209, 184, 148); line-height: 1.6; font-style: italic;">Вы наносите 2 урона и накладываете *кровотечение* на 2 раунда.</p>
+</div></div>
+<h3 id="Империя-Ушал"><a class="header" href="#Империя-Ушал">Империя Ушал</a></h3>
+<p><div style="background: #1a1612;margin-bottom: 10px;">
+<div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border: 1px double rgb(61, 52, 40);">
+    <div class="flex justify-between">
+        <h3 style="color: rgb(255, 255, 255); margin-top: 0px; text-transform: uppercase;">
+            <i class="ra ra-wyvern" style="margin-right: 4px"></i>Магический талант
+        </h3>
+    </div>
+    <p class="mt-1" style="color: rgb(209, 184, 148); line-height: 1.6; font-style: italic;">Все ваши магические способности наносят на 1 урона больше.</p>
+</div></div>
+<h3 id="Королевство-проклятых"><a class="header" href="#Королевство-проклятых">Королевство проклятых</a></h3>
+<p><div style="background: #1a1612;margin-bottom: 10px;">
+<div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border: 1px double rgb(61, 52, 40);">
+    <div class="flex justify-between">
+        <h3 style="color: rgb(255, 255, 255); margin-top: 0px; text-transform: uppercase;">
+            <i class="ra ra-wyvern" style="margin-right: 4px"></i>Дикая магия
+        </h3>
+    </div>
+    <p class="mt-1" style="color: rgb(209, 184, 148); line-height: 1.6; font-style: italic;">Если вас атаковали в этом раунде вы можете нанести этой способностью 3 урона атакующему.</p>
+</div></div>
+<h3 id="Остров-дильмун"><a class="header" href="#Остров-дильмун">Остров дильмун</a></h3>
+<p><div style="background: #1a1612;margin-bottom: 10px;">
+<div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border: 1px double rgb(61, 52, 40);">
+    <div class="flex justify-between">
+        <h3 style="color: rgb(255, 255, 255); margin-top: 0px; text-transform: uppercase;">
+            <i class="ra ra-wyvern" style="margin-right: 4px"></i>Целебные воды
+        </h3>
+    </div>
+    <p class="mt-1" style="color: rgb(209, 184, 148); line-height: 1.6; font-style: italic;">Вы можете восстановить 1 стойкость двум целям.</p>
+</div></div>
+<h3 id="Кузница-древних"><a class="header" href="#Кузница-древних">Кузница древних</a></h3>
+<p><div style="background: #1a1612;margin-bottom: 10px;">
+<div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border: 1px double rgb(61, 52, 40);">
+    <div class="flex justify-between">
+        <h3 style="color: rgb(255, 255, 255); margin-top: 0px; text-transform: uppercase;">
+            <i class="ra ra-wyvern" style="margin-right: 4px"></i>Удар титанов
+        </h3>
+    </div>
+    <p class="mt-1" style="color: rgb(209, 184, 148); line-height: 1.6; font-style: italic;">Вы можете нанести цели 1 урона, оглушить, и наложить ожог.</p>
+</div></div>
+<h3 id="Экзархат-солнца"><a class="header" href="#Экзархат-солнца">Экзархат солнца</a></h3>
+<p><div style="background: #1a1612;margin-bottom: 10px;">
+<div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border: 1px double rgb(61, 52, 40);">
+    <div class="flex justify-between">
+        <h3 style="color: rgb(255, 255, 255); margin-top: 0px; text-transform: uppercase;">
+            <i class="ra ra-wyvern" style="margin-right: 4px"></i>Святая стрела
+        </h3>
+    </div>
+    <p class="mt-1" style="color: rgb(209, 184, 148); line-height: 1.6; font-style: italic;">Вы можете нанести 1 урона любой цели на поле боя на любом расстоянии. Цель получает урон даже в укрытии.</p>
+</div></div>
+<h3 id="Берег-древних"><a class="header" href="#Берег-древних">Берег древних</a></h3>
+<p><div style="background: #1a1612;margin-bottom: 10px;">
+<div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border: 1px double rgb(61, 52, 40);">
+    <div class="flex justify-between">
+        <h3 style="color: rgb(255, 255, 255); margin-top: 0px; text-transform: uppercase;">
+            <i class="ra ra-wyvern" style="margin-right: 4px"></i>Гниение души
+        </h3>
+    </div>
+    <p class="mt-1" style="color: rgb(209, 184, 148); line-height: 1.6; font-style: italic;">Вы накладываете на цель *гниение души*. При 3 эффектах цель наносит себе и соседним целям 2 урона без проверки попадания.</p>
+</div></div>
+<h3 id="Тёмный-лес"><a class="header" href="#Тёмный-лес">Тёмный лес</a></h3>
+<p><div style="background: #1a1612;margin-bottom: 10px;">
+<div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border: 1px double rgb(61, 52, 40);">
+    <div class="flex justify-between">
+        <h3 style="color: rgb(255, 255, 255); margin-top: 0px; text-transform: uppercase;">
+            <i class="ra ra-wyvern" style="margin-right: 4px"></i>Учение луны
+        </h3>
+    </div>
+    <p class="mt-1" style="color: rgb(209, 184, 148); line-height: 1.6; font-style: italic;">Вы можете изменить свой облик на любое животное проживающее в текущем регионе.</p>
+</div></div>
+<h3 id="Пески-мёртвых"><a class="header" href="#Пески-мёртвых">Пески мёртвых</a></h3>
+<p><div style="background: #1a1612;margin-bottom: 10px;">
+<div style="background: rgba(0, 0, 0, 0.4); padding: 20px; border: 1px double rgb(61, 52, 40);">
+    <div class="flex justify-between">
+        <h3 style="color: rgb(255, 255, 255); margin-top: 0px; text-transform: uppercase;">
+            <i class="ra ra-wyvern" style="margin-right: 4px"></i>Видения смерти
+        </h3>
+    </div>
+    <p class="mt-1" style="color: rgb(209, 184, 148); line-height: 1.6; font-style: italic;">Вы можете наслать на цель видения бога смерти - она пропустит свой следующий ход. Работает один раз за сцену на цель.</p>
+</div></div>
+
+                        </main>
+
+                        <nav class="nav-wrapper" aria-label="Page navigation">
+                            <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="specs.html" class="mobile-nav-chapters previous" title="Назад" aria-label="Назад" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../common/gameplay.html" class="mobile-nav-chapters next" title="Вперёд" aria-label="Вперёд" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                            <div style="clear: both"></div>
+                        </nav>
+                    </div>
+                </div>
+
+                <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="specs.html" class="nav-chapters previous" title="Назад" aria-label="Назад" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../common/gameplay.html" class="nav-chapters next" title="Вперёд" aria-label="Вперёд" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </nav>
+
+            </div>
+
+            <script src="./../elasticlunr.js"></script>
+            <script src="./../mark.js"></script>
+            <script>
+                window.search = {};
+            </script>
+            <script src="./../searchindex.js"></script>
+            <script src="./../searcher.js"></script>
+
+            <script src="./../clipboard.js"></script>
+            <script src="./../highlight.js"></script>
+            <script src="./../book.js"></script>
+
+            <!-- Custom JS scripts -->
+
+        </div>
+    <a href="./../common/modus_schema.html" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+    <img src="./../images/modus_schema_logo.png" style="width: 50px; height: auto;" alt="modus schema">
+</a></body>
+</html>

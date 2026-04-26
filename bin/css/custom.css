@@ -12,3 +12,56 @@ h5 {
 h5 + p {
     margin-top: 0;
 }
+
+.content li {
+    margin-bottom: 15px;
+}
+
+.diagram {
+            --size: 300px;
+            --line-length: 95px; 
+            --text-radius: 150px;
+            --color: #8b5a42;
+            
+            width: var(--size);
+            height: var(--size);
+            position: relative;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+            background: radial-gradient(circle, var(--color) 3px, transparent 3px) no-repeat center;
+        }
+
+        .arrow, .label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        .arrow {
+            width: var(--line-length);
+            height: 2px;
+            background: var(--color);
+            transform-origin: left center;
+            transform: translate(0, -50%) rotate(calc(var(--i) * 30deg - 90deg));
+        }
+
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 6px solid transparent;
+            border-left: 10px solid var(--color);
+        }
+
+        .label {
+            font-weight: bold;
+            white-space: nowrap;
+            transform: 
+                translate(-50%, -50%) 
+                rotate(calc(var(--i) * 30deg - 90deg)) 
+                translate(var(--text-radius)) 
+                rotate(calc(var(--i) * -30deg + 90deg));
+        }
