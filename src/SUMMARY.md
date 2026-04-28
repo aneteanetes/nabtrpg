@@ -20,13 +20,9 @@
   - [Воля](./common/will.md)
   - [Создание персонажа](./common/creating.md)
   - [Сцены и приключения](./scenes/common.md)
-    - [Приключения](./scenes/adventures.md)
-    - [Сцены](./scenes/scenes.md)
-    - [Локации и зоны](./scenes/locatedzones.md)
-  - [Жизнь и смерть]
-    - [Травмы](./common/injury.md)
-    - [Лечение](./common/heal.md)
-    - [Отдых](./common/rest.md)
+  - [Действия](./scenes/actions.md)
+  - [Жизнь и смерть](./common/injury.md)
+  - [Отдых](./common/rest.md)
   - [Уровни и Опыт](./exp/exp.md)
 - [Предметы](./items/items.md)
   - [Оружие](./items/weapons.md)
@@ -38,6 +34,8 @@
   - [Существа](./creatures/creatures.md)
   - [Локации](./locations/locations.md)
   - [Способности](./abilities/list.md)
+- [Дополнительно]
+  - [Фракции](./world/fractions.md)
 - [Мастеру]
   - [Персонажи мастера](./masters/npc.md)
   - [Создание приключений](./masters/adventuresconvert.md)

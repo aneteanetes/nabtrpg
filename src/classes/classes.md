@@ -33,10 +33,10 @@
 ### Сравнительная таблица
 |Класс| Проявление Воли|
 |---|---|
-|//%nab.classes.warrior.name|Добавить кость в пулл.|
-|//%nab.classes.rogue.name|Добавить результат из пулла.|
-|//%nab.classes.mage.name|Увеличить ранг кости пулла.|
-|//%nab.classes.priest.name|Добавить кость сцены.|
+|//%nab.classes.warrior.name|//%nab.classes.warrior.willuse|
+|//%nab.classes.rogue.name|//%nab.classes.rogue.willuse|
+|//%nab.classes.mage.name|//%nab.classes.mage.willuse|
+|//%nab.classes.priest.name|//%nab.classes.priest.willuse|
 
 ## Способности
 Каждый класс имеет свой набор способностей. Персонаж может изучить любое количество способностей, но в один момент времени может использовать только 4. [Подробнее о способностях](../abilities/abilities.md).

@@ -102,31 +102,26 @@
                         Ранг существа:
                     </h3>
                     
-                    <div style="display: flex; gap: 10px;">
-                        <div class="nwn-select-container" @click="isRanksOpen = !isRanksOpen">
-                            <!-- Шапка селекта -->
-                            <div class="nwn-select-header">
-                                <span>{{ this.ranks[selectedRank-1] || '' }}</span>
-                                <span class="nwn-select-arrow">▼</span>
-                            </div>
-
-                            <!-- Выпадающий список -->
-                            <div v-if="isRanksOpen" class="nwn-select-options nwn-select-options-up">
-                                <div 
-                                    v-for="opt in ranks" 
-                                    :key="opt" 
-                                    class="nwn-option"
-                                    @click="selectCreatureRank(opt)"
-                                >
-                                    {{ opt }}
-                                </div>
-                            </div>
+                    <div style="width:100%;" class="nwn-select-container" @click="isRanksOpen = !isRanksOpen">
+                        <!-- Шапка селекта -->
+                        <div class="nwn-select-header">
+                            <span>{{ this.ranks[selectedRank-1] || '' }}</span>
+                            <span class="nwn-select-arrow">▼</span>
                         </div>
 
+                        <!-- Выпадающий список -->
+                        <div v-if="isRanksOpen" class="nwn-select-options nwn-select-options-up">
+                            <div 
+                                v-for="opt in ranks" 
+                                :key="opt" 
+                                class="nwn-option"
+                                @click="selectCreatureRank(opt)"
+                            >
+                                {{ opt }}
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-
             </div>
 
             <div v-if="currentTab === 'skills'" class="relative">
@@ -246,6 +241,37 @@
         <!-- ПРАВО: ЛИСТ -->
         <div class="w-1/4 nwn-bg p-4 bg-[#14110e] overflow-y-auto">
             <h2 class="text-center text-yellow-700 font-bold mb-6 bottom-list pb-2">ЛИСТ ПЕРСОНАЖА</h2>
+            
+            <div style="margin-bottom: 15px; padding-bottom: 10px;" class="text-[14px] bottom-list">
+                <div class="">
+                    <div class="flex justify-center mb-2">
+                        Фракция
+                    </div>
+                    <div>
+                        
+                    <div style="display: flex; gap: 10px;">
+                        <div class="nwn-select-container mb-3" style="width:100%" @click="isFracsOpen = !isFracsOpen">
+                            <!-- Шапка селекта -->
+                            <div class="nwn-select-header">
+                                <span>{{ this.fracs[selectedFrac-1] || '' }}</span>
+                                <span class="nwn-select-arrow">▼</span>
+                            </div>
+
+                            <!-- Выпадающий список -->
+                            <div v-if="isFracsOpen" class="nwn-select-options nwn-select-options-down">
+                                <div 
+                                    v-for="opt in fracs" 
+                                    :key="opt" 
+                                    class="nwn-option"
+                                    @click="selectCreatureFrac(opt)"
+                                >
+                                    {{ opt }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <div style="margin-bottom: 15px; padding-bottom: 10px;" class="bottom-list flex justify-between">
                 <div>
@@ -421,16 +447,27 @@
                     hoverDesc: '',
                     tooltipX: 0,
                     tooltipY: 0,
+                    //drop downs
+
                     isRanksOpen:false,
                     selectedRank:3,
+                    //frac down
+                    isFracsOpen:false,
+                    selectedFrac:1,
+
+                    //
                     level:0,
                     selectedClass: 'warrior',
+                    
                     ranks:[
                         "Слабый",
                         "Малый",
                         "Нормальный",
                         "Крупный",
                         "Большой"
+                    ],
+                    fracs:[
+                        "Авангард","Круг магов","Гильдия","Церковь Солнца","Культ смерти",
                     ],
                     dices:[
                         '',
@@ -617,6 +654,9 @@
                 selectCreatureRank(v){
                     this.selectedRank=this.ranks.indexOf(v)+1;
                     this.calcAttrs();
+                },
+                selectCreatureFrac(v){
+                    this.selectedFrac=this.fracs.indexOf(v)+1;
                 },
                 calcAttrs(){
                     this.attrs.hp=Math.floor((this.rankDice[this.stats.con-1]*this.rankMultiple[this.selectedRank])*2);
