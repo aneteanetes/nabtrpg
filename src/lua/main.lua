@@ -1,12 +1,27 @@
 nab = {
+    name='Набонассар',
+    sys='Modus Schema',
     attr = {
         con='Телосложение',
         dex='Сноровка',
         int='Интеллект',
         wis='Мудрость'
     },
+    other = {
+        injury="Травма"
+    },
     stats = {
-        hp="Стойкость"
+        hp="Стойкость",
+        def="Защита",
+        defLower = function()
+            return string.lower(nab.stats.def);
+        end,
+        arm='Уклонение',
+        atk="Сила атаки",
+        atks=function ()
+            return 'Силы атаки';
+        end,
+        bar='Барьер'
     },
     classes={
         warrior = {
@@ -229,7 +244,7 @@ nab = {
         },
         twohand = {
             name = 'Бой двумя руками',
-            desc = 'Вы можете эффективно использовать оружие в двух руках и добавлять кость второго оружия к атаке.',
+            desc = 'Вы можете эффективно использовать оружие во второй руке. Это позволяет вам носить оружие размером *среднее* во второй руке или использовать *большое* оружие вместе с *малым* или щитом.',
             icon='ra-explosion'
         },
         chance = {
@@ -259,7 +274,7 @@ nab = {
         },
         improvisation = {
             name = 'Импровизация',
-            desc = 'Вы можете импровизировать и использовать предметы как вам вздумается. Любой предмет в ваших руках может превратиться в оружие с костью рангом на одну меньше чем оригинальная, либо инструментом с таким же пониженным рангом. (прим.: ножка стула может использоваться как дробящее d4 (d6-1ранг))',
+            desc = 'Вы можете импровизировать и использовать предметы как вам вздумается. Любой предмет в ваших руках может превратиться в предмет другого типа с костью рангом на одну меньше чем оригинальная. (прим.: ножка стула может использоваться как дробящее d4 а вода как зелье с минимальным эффектом)',
             icon='ra-explosion'
         },
         sleepfast = {
@@ -384,7 +399,7 @@ nab = {
         },
         naming = {
             name = 'Магия имён',
-            desc = 'Вы можете провести ритуал занимающий 6ч на определение истинного имени существа - для этого вам потребуется какой-либо предмет существа. Это даёт вам d4 к проверкам Убеждения, Выступления, Запугивания, Проницательности, и всех остальных проверок общения против этого существа пока вы не сообщите существу его имя. Существо знающее своё истинное имя на всегда будет благоволить вам. Одновременно вы можете держать в уме только одно истинное имя.',
+            desc = 'Вы можете провести ритуал занимающий 6ч на определение истинного имени существа - для этого вам потребуется какой-либо предмет существа. Это даёт вам d4 к проверкам Убеждения, Выступления, Запугивания, Проницательности, и всех остальных проверок общения против этого существа пока вы не сообщите существу его имя. Существо знающее своё истинное имя всегда будет благоволить вам. Одновременно вы можете держать в уме только одно истинное имя.',
             icon='ra-explosion'
         },
     },
@@ -634,8 +649,514 @@ nab = {
             desc = "",
             icon = 'ra-level-three'
         }
+    },
+    weapons = {
+        slice = {
+            name="Режущее",
+            desc=function ()
+                return "";
+            end,
+            sizes={
+                d4 = {
+                    name="Кинжал, Серп, Кастет с лезвием",
+                    damage=1,
+                    effect="hiddenStrike",
+                    crit="bleeding"
+                },
+                d6 = {
+                    name="Короткий и длинный меч, Топор, Сабля",
+                    damage=1,
+                    effect="slash",
+                    crit="slashDeep"
+                },
+                d8 = {
+                    name="Двуручный меч, Секира",
+                    damage=1,
+                    effect="slashInertion",
+                    crit="slashPowered"
+                }
+            }
+        },
+        stabs = {
+            name="Колющее",
+            desc=function ()
+                return "";
+            end,
+            sizes = {
+                d4 = {
+                    name="Дротик",
+                    damage=1,
+                    effect="accuracy",
+                    crit="neurotic"
+                },
+                d6 = {
+                    name="Стилет, Короткий лук",
+                    damage=1,
+                    effect="accuracy",
+                    crit="vulnerability"
+                },
+                d8 = {
+                    name="Копьё, Рапира, Длинный лук",
+                    damage=1,
+                    effect="longweapon",
+                    crit="stopping"
+                },
+                d10 = {
+                    name="Пика, Арбалет, Тяжёлое копьё",
+                    damage=1,
+                    effect="longweapon",
+                    crit="hardweight"
+                },
+            }
+        },
+        crushing = {
+            name = "Дробящее",
+            desc=function ()
+                return "";
+            end,
+            sizes = {
+                d4 = {
+                    name="Кистень, Дубинка, Молоток",
+                    damage=1,
+                    effect="shock",
+                    crit="desoriented"
+                },
+                d6 = {
+                    name="Булава, Боевой посох, Молот",
+                    damage=1,
+                    effect="push",
+                    crit="stun"
+                },
+                d8 = {
+                    name="Двуручный молот, Чекан",
+                    damage=1,
+                    effect="crush",
+                    crit="crash"
+                }
+            }
+        },        
+        flexible = {
+            name = "Гибкое",
+            desc=function ()
+                return "";
+            end,
+            sizes = {
+                d4 = {
+                    name="Плеть, Кнут, Болас",
+                    damage=1,
+                    effect="longweapon",
+                    crit="takeit"
+                },
+                d6 = {
+                    name="Цеп, Нунчаки",
+                    damage=1,
+                    effect="hiddenStrike",
+                    crit="weaponblock"
+                },
+            }
+        },
+        firearm = {
+            name = "Взрывное",
+            desc= function ()
+                return "Любое малое оружие категории может быть использовано для атаки единожды. Достать малое взрывное оружие можно свободным действием.";
+            end,
+            sizes = {
+                d4 = {
+                    name="Бомбы, Порох, Взрывная алхимия (одноразовое)",
+                    damage=1,
+                    effect="longweapon",
+                    crit="stun"
+                },
+                d6 = {
+                    name="Пистоль, Мушкет",
+                    damage=1,
+                    effect="longweapon",
+                    crit="doubleshot"
+                },
+                d8 = {
+                    name="Аркебуза, Ручница",
+                    damage=1,
+                    effect="armorignore",
+                    crit="blast"
+                },
+            }
+        },
+        magical = {
+            name = "Магическое",
+            desc= function ()
+                return "Тип урона (огонь, холод, аркана, кровь, электричество и т.д.) определяется вставленным в оружие кристаллом или типом самого оружия.  \n От атак магическим оружием можно защититься только с помощью "..nab.stats.bar.."а";
+            end,
+            sizes = {
+                d4 = {
+                    name="Волшебная палочка",
+                    damage=1,
+                    effect="anylongweapon",
+                    crit="resonance"
+                },
+                d6 = {
+                    name="Ритуальное оружие, Фокус, Книга",
+                    damage=1,
+                    effect="ritual",
+                    crit="magicblast"
+                },
+                d8 = {
+                    name="Фолиант, Посох",
+                    damage=1,
+                    effect="magicshield",
+                    crit="chainmagic"
+                },
+            }
+        },
+        hard = {
+            name = "Осадное",
+            desc= function ()
+                return "Всё осадное оружие может атаковать только цели в соседней локации. Проверка поадания против сооружений не производится. При условии попадания в сооружение, все цели внутри делают проверку "..nab.stats.arm:gsub('.$','я')..'. В случае критического удара проверка попадания по целям внутри сооружений не происходит.';
+            end,
+            sizes = {
+                d10 = {
+                    name="Баллиста",
+                    damage=2,
+                    effect="siegeweapon",
+                    crit="wallsiege"
+                },
+                d12 = {
+                    name="Таран, Катапульта",
+                    damage=2,
+                    effect="siegeweapon",
+                    crit="contusion"
+                },
+            }
+        }
+    },
+    effects = {
+        contusion = {
+            name = "Контузия",
+            desc = function ()
+                return 'Все цели в зоне попадания падают и получают 1 ед. урона.';
+            end
+        },
+        wallsiege = {
+            name = "Стенолом",
+            desc = function ()
+                return 'При попадании по живому существу прицельным выстрелом: уничтожает все цели ниже ранга "Нормальный". Все цели кроме "Больших" получают двойной урон. У целей "Большого" ранга полностью игнорируется '..nab.stats.def..'.';
+            end
+        },
+        siegeweapon = {
+            name = "Осада",
+            desc = function ()
+                return "Наносит двойной урон строениям при попадании.";
+            end
+        },
+        magicshield = {
+            name = "Магическая&nbsp;защита",
+            desc = function ()
+                return "В следующий ход вы обладаете иммунитетом к атакам элемента вашего оружия.";
+            end
+        },
+        chainmagic = {
+            name = "Потоковая&nbsp;магия",
+            desc = function ()
+                return "Если последняя цель критического попадания восприимчива к элементу вашего оружия, она получает увеличенный на 1 ед. урон от всех оружейных магических атак этого элемента до конца раунда."
+            end
+        },
+        magicblast = {
+            name = "Выброс&nbsp;магии",
+            desc = function ()
+                return "Если цель не восприимчива к элементу оружия, она получает восприимчивость на следующий ход (не раунд)."
+            end
+        },
+        ritual = {
+            name = "Ритуал",
+            desc = function ()
+                return "Вы сами в праве выбирать как цель будет пытаться избежать каждой вашей атаки - используя "..nab.stats.arm..' или '..nab.stats.bar..'.';
+            end
+        },
+        resonance = {
+            name = "Резонанс",
+            desc = function ()
+                return "Если в следующем ходу цель получит урон от элемента равному вашей волшебной палочке, она получит на 1 ед. урона больше.";
+            end
+        },
+        anylongweapon = {
+            name = "Дальнобойное",
+            desc = function ()
+                return "Вы можете атаковать любую цель в локации, если видите её.";
+            end
+        },
+        doubleshot = {
+            name = "Двойной патрон",
+            desc = function ()
+                return "Вы наносите ещё 1 ед. урона, но не можете атаковать этим оружием в текущем раунде (если у вас появится такая возможность).";
+            end
+        },
+        armorignore = {
+            name = "Бронебойность",
+            desc = function ()
+                return "Вы игнорируете всю "..nab.stats.def:gsub('.$','у')..' цели.';
+            end
+        },
+        blast = {
+            name = "Взрыв",
+            desc = function ()
+                return "Все цели в текущей зоне выполняют проверку "..nab.stats.arm:gsub('.$','я')..' против текущего результата. Все кто не прошёл проверку получают урон (в т.ч. и атакующий).';
+            end
+        },
+        weaponblock = {
+            name = "Сцепка",
+            desc = function ()
+                return "Вы сцепляете оружие цели своим. До следующего раунда ни вы, ни ваша цель не можете использовать оружие.";
+            end
+        },
+        takeit = {
+            name = "Зацеп",
+            desc = function ()
+                return "Цель притягивается из соседней зоны. Вы не можете отменить этот эффект.";
+            end
+        },
+        crash = {
+            name = "Урон&nbsp;оружию",
+            desc = function ()
+                return "Цель роняет оружие или щит. В первую очередь цель роняет оружие или щит в не основной руке.";
+            end
+        },
+        crush = {
+            name = "Крушащий&nbsp;удар",
+            desc = function ()
+                return "Эта атака игнорирует всю естественную "..nab.stats.def:gsub('.$','у')..' цели.';
+            end
+        },
+        stun = {
+            name = "Оглушение",
+            desc = function ()
+                return "Цель пропускает свой следующий ход.";
+            end
+        },
+        push = {
+            name = "Толчок",
+            desc = function ()
+                return "Цель принудительно переходит в соседнюю зону защищаясь. Эффект невозможно отключить. Если текущая зона единственная, цель перемещается в соседнюю локацию и сразу же возвращается. Если соседней зоны и локации не существует, цель получает Оглушение.";
+            end
+        },
+        desoriented = {
+            name = "Дезориентация",
+            desc = function ()
+                return "Цель не может использовать оружие в следующем ходу";
+            end
+        },
+        shock = {
+            name = "Ошеломление",
+            desc = function ()
+                return "Убирает кость самого малого ранга из пула "..nab.stats.atks()..' на следующий ход цели.';
+            end
+        },
+        hardweight = {
+            name = "Тяжёлое&nbsp;оружие",
+            desc = function ()
+                return "Бросьте d4: выпавшее число определяет какая из 4 способностей уменьшит восстановление на 1. Если способность не требует восстановления, ничего не происходит.";
+            end
+        },
+        longweapon = {
+            name = "Длинное&nbsp;оружие",
+            desc = function ()
+                return "Вы можете атаковать цели в соседних зонах.";
+            end
+        },
+        stopping = {
+            name = "Стопор",
+            desc = function ()
+                return "Атакованная цель из другой зоны не может в свой следующий ход зайти в зону, где вы стоите.";
+            end
+        },
+        vulnerability = {
+            name = "Уязвимость",
+            desc = function ()
+                return "Если следующая атака будет совершена колющим оружием и попадёт по этой цели, нанесёный урон увеличится в два раза.";
+            end
+        },
+        accuracy = {
+            name = "Точность",
+            desc = function ()
+                return "Игнорирует всю экипированную "..nab.stats.def:gsub(".$",'у');
+            end
+        },
+        neurotic = {
+            name = "Поверждение нерва",
+            desc = function ()
+                return "Убирает кость самого малого ранга из пула "..(nab.stats.arm:gsub(".$",'я')..' на следующий ход цели.');
+            end
+        },
+        hiddenStrike = {
+            name = "Неожиданный&nbsp;удар",
+            desc = function ()
+                return "при нанесении урона не учитывается "..nab.stats.def.." щита";
+            end 
+        },
+        bleeding = {
+            name = "Кровотечение",
+            desc = function ()
+                return "Цель теряет 1 "..nab.stats.hp.." перед своим следующим ходом.";
+            end
+        },
+        slash = {
+            name = "Размах",
+            desc = function ()
+                return "Поражает одну цель рядом, если у цели в пулле "..nab.stats.arm:gsub(".$",'я').." нет костей выше d6";
+            end
+        },
+        slashDeep = {
+            name = "Глубокий&nbsp;порез",
+            desc = function ()
+                return nab.stats.def.." уменьшается на 1 ед. до конца раунда.";
+            end
+        },
+        slashInertion = {
+            name = "Широкий&nbsp;размах",
+            desc = function ()
+                return "При промахе "..string.lower(nab.effects.slashPowered.desc());
+            end
+        },
+        slashPowered = {
+            name = "Рассечение",
+            desc = function ()
+                return "Результат атаки проверяется с броском "..nab.stats.arm:gsub(".$",'я')..' соседней цели (если такие есть). Наносит 1 ед. урона, срабатывает единожды.';
+            end
+        }
+    },
+    sizes = {
+        d4="Малое",
+        d6="Среднее",
+        d8="Большое",
+        d10="Огромное",
+        d12="Осадное"
     }
 }
+
+
+function weaponMobileCatTable()
+    local result = "";
+
+    local function fillMobile(dice, weapon, type)
+        local function tr(text)
+            return '<tr>'..text..'</tr>';
+        end
+        
+        local function td(text,colspan)
+            if(colspan==nil) then
+                colspan=1;
+            end
+            return '<td colspan="'..colspan..'">'..text..'</td>';
+        end
+
+        local function tdplate(text)
+            return '<blockquote>'..text..'</blockquote>'
+        end
+
+        local function tdplatex(text)
+            return '<blockquote class="crit">'..text..'</blockquote>';
+        end
+
+        local function bold(text)
+            return '<b>'..text..'</b>';
+        end
+
+        local effect = nab.effects[weapon.effect];
+        local crit = nab.effects[weapon.crit];
+
+        return tr(td(nab.sizes[dice])..td(weapon.name))
+            ..tr(td(bold(weapon.damage))..td(dice))
+            ..tr(td(tdplate(bold(effect.name)..': '..effect.desc()),2))
+            ..tr(td(tdplatex(bold(crit.name)..': '..crit.desc()),2));
+    end
+
+    for key, value in pairs(nab.weapons) do
+        local table=[[
+
+### ]]..value.name..'  \n \n  \n';
+        table = table..value.desc()..'  \n';
+
+        for dice, weapon in pairs(value.sizes) do
+            table = table..'  \n  '..[[
+
+<table class="weapon-table">
+    <thead>
+        <tr>
+        </tr>
+    </thead>
+<tbody>
+    ]]..fillMobile(dice,weapon)..'</tbody></table><br/>'..'  \n \n  \n';
+        end
+
+        result = result..table;
+    end
+
+    return '<div class="weapon-table-mob">  \n'..result..'</div>';
+end
+
+function weaponCatTable()
+    local result = "  \n";
+
+    local function fill(dice, weapon, type)
+        local function td(text)
+            return '<td>'..text..'</td>';
+        end
+
+        local function tdplate(text)
+            return '<blockquote>'..text..'</blockquote>'
+        end
+
+        local function tdplatex(text)
+            return '<blockquote class="crit">'..text..'</blockquote>';
+        end
+
+        local function bold(text)
+            return '<b>'..text..'</b>';
+        end
+
+        local effect = nab.effects[weapon.effect];
+        local crit = nab.effects[weapon.crit];
+
+        return td(nab.sizes[dice])
+            ..td(dice)
+            ..td(weapon.name)
+            ..td(bold(weapon.damage))
+            ..td(tdplate(bold(effect.name)..': '..effect.desc()))
+            ..td(tdplatex(bold(crit.name)..': '..crit.desc()));
+    end
+
+    for key, value in pairs(nab.weapons) do
+        local table=[[
+
+### ]]..value.name..'  \n \n  \n<br/>';
+        table = table..value.desc()..'  \n';
+        table = table..[[
+<table class="weapon-table">
+    <thead>
+        <tr>
+        <th>Размер</th>
+        <th>Кость</th>
+        <th>Примеры</th>
+        <th>Урон</th>
+        <th>Эффект</th>
+        <th>Критический эффект</th>
+        </tr>
+    </thead>
+<tbody>
+    ]];
+
+        for dice, weapon in pairs(value.sizes) do
+            table = table..'<tr>'..fill(dice,weapon)..'</tr>';
+        end
+
+        result = result..table..[[
+    </tbody>
+</table>
+
+
+]];
+    end
+
+    return '<div class="weapon-table-full">\n'..result..'</div>';
+end
 
 function fracsArray()
     local str = '';

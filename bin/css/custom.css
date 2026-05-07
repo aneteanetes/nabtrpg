@@ -65,3 +65,93 @@ h5 + p {
                 translate(var(--text-radius)) 
                 rotate(calc(var(--i) * -30deg + 90deg));
         }
+
+.compact-table {
+    text-align: center;
+    border: 2px solid rgb(179 164 151);
+}
+
+.compact-table td:nth-child(2n+1), 
+.compact-table th:nth-child(n+2) { 
+    border-right: 2px solid rgb(179 164 151); 
+  }
+
+.compact-table td {
+    padding: 5px;
+}
+
+@media (max-width: 600px) {
+  .compact-table thead { display: none; }
+
+  .compact-table {
+    border: none !important;
+  }
+
+  .compact-table tr {
+    display: block;
+    margin-bottom: 20px;
+    border: 2px solid #333;
+  }
+
+  .compact-table td {
+    display: flex;
+    justify-content: space-between;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .compact-table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #666;
+  }
+}
+
+
+@media (max-width: 600px) {
+    .weapon-table-mob {
+        display: block;
+    }
+    .weapon-table-full {
+        display: none;
+    }
+}
+@media (min-width: 601px) {
+    .weapon-table-mob {
+        display: none;
+    }
+    .weapon-table-full {
+        display: block;
+    }
+}
+
+.weapon-table td {
+    padding: 1px;
+    text-align: center;
+}
+
+.weapon-table th {
+    padding: 2px 5px;
+}
+
+.weapon-table blockquote {
+    margin: 0;
+    padding: 10px;
+}
+
+.weapon-table .quote {
+    background-color: var(--quote-bg);
+    padding: 10px !important;
+}
+
+.weapon-table .crit {
+    background-color: #c9bfb6;
+}
+
+.weapon-table .trup {
+    border-top: 2px solid rgb(179 164 151); 
+}
+
+.weapon-table .trdown {
+    border-bottom: 2px solid rgb(179 164 151); 
+}

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Симулятор сражений - Набонассар</title>
+    <script src="../vue.global.prod.js"></script>
+    <script src="../tailwind4.js"></script>
+    <link rel="stylesheet" href="../combat.css">
+    <link rel="shortcut icon" href="../images/favicon.png">
+    <style>
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div id="app" class="max-w-6xl mx-auto">
+        <h1 class="text-2xl mb-8 text-center uppercase tracking-[0.4em]" style="color: #b18c5d;">Симуляция сражений</h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <!-- ГЕРОИ -->
+            <div class="nwn-bg p-5">
+                <div class="flex justify-between items-center mb-4 border-b border-[#3d3428] pb-2">
+                    <h2 class="text-xl font-bold uppercase">Герои</h2>
+                    <button @click="addUnit('attackers')" class="nwn-btn">+ Добавить</button>
+                </div>
+                <div class="space-y-4">
+                    <div v-for="(u, i) in units.attackers" :key="i" class="card">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs font-bold text-amber-500 uppercase">Герой #{{i+1}}</span>
+                                <label class="flex items-center gap-2 cursor-pointer bg-black/40 px-2 py-1 border border-[#3d3428]">
+                                    <input type="checkbox" v-model="u.isAoe" class="accent-[#b18c5d]">
+                                    <span class="text-[10px] uppercase font-bold">AOE</span>
+                                </label>
+                            </div>
+                            <button @click="removeUnit('attackers', i)" class="text-red-900">✕</button>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-3 bg-black/30 p-2 border border-[#3d3428] min-h-[40px]">
+                            <div v-for="(d, dIdx) in u.pool" :key="dIdx" class="dice-tag">d{{d}} <span @click="u.pool.splice(dIdx, 1)" class="cursor-pointer">×</span></div>
+                        </div>
+                        <div class="flex gap-1 mb-4 flex-wrap">
+                            <button v-for="s in [4,6,8,10,12]" :key="s" @click="u.pool.push(s)" class="nwn-btn text-[9px] px-2">+d{{s}}</button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="text-[9px] uppercase opacity-60 font-bold">Базовое Восстановление</label><input type="number" v-model.number="u.baseCooldown" class="nwn-input"></div>
+                            <div><label class="text-[9px] uppercase opacity-60 text-amber-500 font-bold">Защита (+Восстановление)</label><input type="number" v-model.number="u.recovery" class="nwn-input border-amber-900"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ВРАГИ -->
+            <div class="nwn-bg p-5">
+                <div class="flex justify-between items-center mb-4 border-b border-[#3d3428] pb-2">
+                    <h2 class="text-xl font-bold uppercase">Враги</h2>
+                    <button @click="addUnit('defenders')" class="nwn-btn">+ Добавить</button>
+                </div>
+                <div class="space-y-4">
+                    <div v-for="(u, i) in units.defenders" :key="i" class="card">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-xs font-bold uppercase">Враг #{{i+1}}</span>
+                            <button @click="removeUnit('defenders', i)" class="text-red-900">✕</button>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-3 bg-black/30 p-2 border border-[#3d3428] min-h-[40px]">
+                            <div v-for="(d, dIdx) in u.pool" :key="dIdx" class="dice-tag">d{{d}} <span @click="u.pool.splice(dIdx, 1)" class="cursor-pointer">×</span></div>
+                        </div>
+                        <div class="flex gap-1 mb-4 flex-wrap">
+                            <button v-for="s in [4,6,8,10,12]" :key="s" @click="u.pool.push(s)" class="nwn-btn text-[9px] px-2">+d{{s}}</button>
+                        </div>
+                        <div><label class="text-[9px] uppercase opacity-60 text-red-400 font-bold">Стойкость (HP):</label><input type="number" v-model.number="u.hp" class="nwn-input border-red-900"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center mb-10"><button @click="runFullSimulation" class="nwn-btn text-xl px-20 py-5 border-2 border-[#b18c5d] tracking-widest shadow-2xl">ЗАПУСТИТЬ БИТВУ</button></div>
+
+        <!-- ИТОГИ -->
+        <div v-if="battleResult" class="nwn-bg p-8 border-t-4 border-[#b18c5d] mb-20 shadow-2xl">
+            <h2 class="text-3xl mb-8 text-center uppercase tracking-widest font-bold text-white border-b border-[#3d3428] pb-4 italic">Итоги Сражения</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+                <!-- Время -->
+                <div class="text-center bg-black/40 p-8 border border-[#3d3428]">
+                    <div class="text-xs uppercase opacity-60 mb-2 font-bold italic tracking-widest">Битва завершена за:</div>
+                    <div class="text-8xl font-bold text-white tracking-tighter mb-4">{{ battleResult.avgTurns }} <span class="text-2xl font-normal opacity-50 uppercase tracking-normal">ходов</span></div>
+                </div>
+                
+                <!-- Вклад героев -->
+                <div class="space-y-4">
+                    <div class="text-[10px] uppercase opacity-60 font-bold border-b border-[#3d3428] pb-1">Урон героев (вклад в победу):</div>
+                    <div v-for="(r, idx) in battleResult.contributions" :key="idx" class="flex justify-between items-center p-3 bg-white/5 border-l-4 border-[#b18c5d]">
+                        <div><div class="text-xs font-bold uppercase text-[#b18c5d]">Герой #{{idx+1}}</div><div class="text-[9px] opacity-40 uppercase">{{ (units.attackers[idx] && units.attackers[idx].isAoe) ? 'AOE' : 'Solo' }}</div></div>
+                        <div class="text-right"><div class="text-2xl font-mono text-white leading-none">{{ Math.round(r.hits) }}</div><div class="text-[9px] opacity-40 uppercase font-bold mt-1">атаки ({{ r.percent }}%)</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- СМЕРТНОСТЬ ВРАГОВ -->
+            <div class="mt-8 border-t border-[#3d3428] pt-6">
+                <h3 class="text-xs uppercase opacity-60 font-bold mb-4 tracking-[0.2em] text-center">Хронология падения врагов</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    <div v-for="(deathTurn, idx) in battleResult.enemyDeaths" :key="idx" class="p-3 bg-red-900/10 border border-red-900/30 text-center">
+                        <div class="text-[10px] uppercase opacity-60 text-red-400 font-bold">Враг #{{idx+1}}</div>
+                        <div class="text-xl font-bold text-white mt-1">{{ deathTurn }} <span class="text-xs font-normal opacity-50 uppercase leading-none">ход</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            data() {
+                return {
+                    units: JSON.parse(localStorage.getItem('rpg_sim_v13')) || {
+                        attackers: [{ pool: [10], baseCooldown: 1, recovery: 0, isAoe: false }],
+                        defenders: [{ pool: [6], hp: 3 }]
+                    },
+                    battleResult: null
+                }
+            },
+            watch: { units: { handler(v) { localStorage.setItem('rpg_sim_v13', JSON.stringify(v)); }, deep: true } },
+            methods: {
+                addUnit(t) { if(t === 'attackers') this.units.attackers.push({ pool: [], baseCooldown: 1, recovery: 0, isAoe: false }); else this.units.defenders.push({ pool: [], hp: 3 }); },
+                removeUnit(t, i) { this.units[t].splice(i, 1); },
+                rollAttack(p) {
+                    if (!p || p.length === 0) return 0;
+                    let rolls = p.map(s => Math.floor(Math.random() * s) + 1);
+                    let counts = {}; let tripletValue = 0;
+                    for (let val of rolls) {
+                        counts[val] = (counts[val] || 0) + 1;
+                        if (counts[val] >= 3) tripletValue = Math.max(tripletValue, val * 3);
+                    }
+                    if (tripletValue > 0) return tripletValue;
+                    rolls.sort((a,b) => b - a);
+                    return (rolls[0] || 0) + (rolls[1] || 0);
+                },
+                rollDefense(p) {
+                    if (!p || p.length === 0) return 0;
+                    let rolls = p.map(s => Math.floor(Math.random() * s) + 1);
+                    rolls.sort((a,b) => b - a);
+                    return (rolls[0] || 0) + (rolls[1] || 0);
+                },
+                runFullSimulation() {
+                    const iterations = 1000;
+                    let totalTurns = 0;
+                    let heroHits = this.units.attackers.map(() => 0);
+                    let enemyDeathTurns = this.units.defenders.map(() => 0);
+
+                    for (let it = 0; it < iterations; it++) {
+                        let enemies = this.units.defenders.map(d => ({ ...d, curHp: parseInt(d.hp) || 1, diedAt: 0 }));
+                        let cds = this.units.attackers.map(() => 0);
+                        let turns = 0;
+
+                        while (enemies.some(e => e.curHp > 0) && turns < 500) {
+                            turns++;
+                            this.units.attackers.forEach((atk, aIdx) => {
+                                if (cds[aIdx] <= 0) {
+                                    if (atk.isAoe) {
+                                        enemies.forEach((e, eIdx) => {
+                                            if (e.curHp > 0 && this.rollAttack(atk.pool) > this.rollDefense(e.pool)) {
+                                                e.curHp--; heroHits[aIdx]++;
+                                                if (e.curHp <= 0) e.diedAt = turns;
+                                            }
+                                        });
+                                    } else {
+                                        let eIdx = enemies.findIndex(e => e.curHp > 0);
+                                        if (eIdx !== -1) {
+                                            let target = enemies[eIdx];
+                                            if (this.rollAttack(atk.pool) > this.rollDefense(target.pool)) {
+                                                target.curHp--; heroHits[aIdx]++;
+                                                if (target.curHp <= 0) target.diedAt = turns;
+                                            }
+                                        }
+                                    }
+                                    cds[aIdx] = Math.max(1, (parseInt(atk.baseCooldown) || 0) + (parseInt(atk.recovery) || 0));
+                                } else { cds[aIdx]--; }
+                            });
+                        }
+                        totalTurns += turns;
+                        enemies.forEach((e, idx) => { enemyDeathTurns[idx] += e.diedAt || turns; });
+                    }
+                    const sumHits = heroHits.reduce((a,b) => a+b, 0);
+                    this.battleResult = {
+                        avgTurns: (totalTurns / iterations).toFixed(1),
+                        contributions: heroHits.map(h => ({ hits: (h/iterations), percent: sumHits > 0 ? ((h/sumHits)*100).toFixed(1) : 0 })),
+                        enemyDeaths: enemyDeathTurns.map(t => (t/iterations).toFixed(1))
+                    };
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
