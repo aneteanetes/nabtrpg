@@ -7,7 +7,7 @@
 > Пока существо находится без сознания, он неуязвим для любого урона. Тело существа сопротивляется воздействию на уровне рефлексов за счёт рептильного мозга и даже падение с высоты 12-этажного дома не нанесет вреда существу без сознания.
 
 # Возвращение сознания
-Вернуть персонажа в сознание посреди [сцены](../scenes/common.md#Типы-сцен) возможно только божественным вмешательством или особыми способностями. Лечение восстанавливает //%nab.stats.hp, но не возвращает сознание.
+Вернуть персонажа в сознание посреди [сцены](../scenes/common.md#Типы-сцен) возможно только божественным вмешательством или особыми способностями. Лечение восстанавливает //%(nab.stats.hp), но не возвращает сознание.
 
 Если при завершении сцены хотя бы один член отряда находится в сознании, все павшие существа его отряда приходят в себя в течении следующих 5 минут игрового времени. Приход в сознание лечит существ до 1 пункта //%(nab.stats.hp:gsub(".$",'и')) после чего они могут самостоятельно передвигаться, лечиться на отдыхе или пользоваться услугами храма.
 
@@ -19,66 +19,66 @@
   <thead>
     <tr>
       <th>Кость</th>
-      <th colspan="2">//%nab.attr.con</th>
-      <th colspan="2">//%nab.attr.dex</th>
-      <th colspan="2">//%nab.attr.int</th>
-      <th colspan="2">//%nab.attr.wis</th>
+      <th colspan="2">//%nab.attr.con </th>
+      <th colspan="2">//%nab.attr.dex </th>
+      <th colspan="2">//%nab.attr.int </th>
+      <th colspan="2">//%nab.attr.wis </th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><b>d4</b></td>
-      <td data-label="//%nab.attr.con"><b>1</b></td>
+      <td data-label="//%nab.attr.con "><b>1</b></td>
       <td>Глубокая рана</td>
-      <td data-label="//%nab.attr.dex"><b>2</b></td>
+      <td data-label="//%nab.attr.dex "><b>2</b></td>
       <td>Растяжение</td>
-      <td data-label="//%nab.attr.int"><b>3</b></td>
+      <td data-label="//%nab.attr.int "><b>3</b></td>
       <td>Контузия</td>
-      <td data-label="//%nab.attr.wis"><b>4</b></td>
+      <td data-label="//%nab.attr.wis "><b>4</b></td>
       <td>Испуг</td>
     </tr>
     <tr>
       <td><b>d6</b></td>
-      <td data-label="//%nab.attr.con"><b>1&#8209;2</b></td>
+      <td data-label="//%nab.attr.con "><b>1&#8209;2</b></td>
       <td>Перелом ребра</td>
-      <td data-label="//%nab.attr.dex"><b>3</b></td>
+      <td data-label="//%nab.attr.dex "><b>3</b></td>
       <td>Вывих плеча</td>
-      <td data-label="//%nab.attr.int"><b>4&#8209;5</b></td>
+      <td data-label="//%nab.attr.int "><b>4&#8209;5</b></td>
       <td>Провалы в памяти</td>
-      <td data-label="//%nab.attr.wis"><b>6</b></td>
+      <td data-label="//%nab.attr.wis "><b>6</b></td>
       <td>Тремор</td>
     </tr>
     <tr>
       <td><b>d8</b></td>
-      <td data-label="//%nab.attr.con"><b>1&#8209;2</b></td>
+      <td data-label="//%nab.attr.con "><b>1&#8209;2</b></td>
       <td>Разрыв связок</td>
-      <td data-label="//%nab.attr.dex"><b>3&#8209;4</b></td>
+      <td data-label="//%nab.attr.dex "><b>3&#8209;4</b></td>
       <td>Повреждение колена</td>
-      <td data-label="//%nab.attr.int"><b>5&#8209;6</b></td>
+      <td data-label="//%nab.attr.int "><b>5&#8209;6</b></td>
       <td>Помутнение рассудка</td>
-      <td data-label="//%nab.attr.wis"><b>7&#8209;8</b></td>
+      <td data-label="//%nab.attr.wis "><b>7&#8209;8</b></td>
       <td>Паническое расстройство</td>
     </tr>
     <tr>
       <td><b>d10</b></td>
-      <td data-label="//%nab.attr.con"><b>1&#8209;3</b></td>
+      <td data-label="//%nab.attr.con "><b>1&#8209;3</b></td>
       <td>Внутреннее кровотечение</td>
-      <td data-label="//%nab.attr.dex"><b>4&#8209;5</b></td>
+      <td data-label="//%nab.attr.dex "><b>4&#8209;5</b></td>
       <td>Осколочный перелом</td>
-      <td data-label="//%nab.attr.int"><b>6&#8209;8</b></td>
+      <td data-label="//%nab.attr.int "><b>6&#8209;8</b></td>
       <td>Когнитивный распад</td>
-      <td data-label="//%nab.attr.wis"><b>9&#8209;10</b></td>
+      <td data-label="//%nab.attr.wis "><b>9&#8209;10</b></td>
       <td>Духовное истощение</td>
     </tr>
     <tr>
       <td><b>d12</b></td>
-      <td data-label="//%nab.attr.con"><b>1&#8209;3</b></td>
+      <td data-label="//%nab.attr.con "><b>1&#8209;3</b></td>
       <td>Разрушение органов</td>
-      <td data-label="//%nab.attr.dex"><b>4&#8209;6</b></td>
+      <td data-label="//%nab.attr.dex "><b>4&#8209;6</b></td>
       <td>Паралич конечности</td>
-      <td data-label="//%nab.attr.int"><b>7&#8209;9</b></td>
+      <td data-label="//%nab.attr.int "><b>7&#8209;9</b></td>
       <td>Полная амнезия</td>
-      <td data-label="//%nab.attr.wis"><b>10&#8209;12</b></td>
+      <td data-label="//%nab.attr.wis "><b>10&#8209;12</b></td>
       <td>Разрыв связи с миром</td>
     </tr>
   </tbody>

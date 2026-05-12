@@ -23,7 +23,7 @@
 
 *При накоплении 5 травм персонаж умирает вне зависимости от его количества здоровья.*
 
-//%nab.stats.hp существа зависит от [телосложения](../attributes/constitution.md#//%nab.stats.hp).
+//%nab.stats.hp существа зависит от [телосложения](../attributes/constitution.md#//%nab.stats.hp ).
 
 ---
 

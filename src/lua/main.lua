@@ -12,16 +12,17 @@ nab = {
     },
     stats = {
         hp="Стойкость",
-        def="Защита",
-        defLower = function()
-            return string.lower(nab.stats.def);
-        end,
-        arm='Уклонение',
+        -- def="Защита",
+        -- defLower = function()
+        --     return string.lower(nab.stats.def);
+        -- end,
+        arm='Защита',
         atk="Сила атаки",
         atks=function ()
             return 'Силы атаки';
         end,
-        bar='Барьер'
+        bar='Барьер',
+        lck='Удача'
     },
     classes={
         warrior = {
@@ -810,7 +811,7 @@ nab = {
         hard = {
             name = "Осадное",
             desc= function ()
-                return "Всё осадное оружие может атаковать только цели в соседней локации. Проверка поадания против сооружений не производится. При условии попадания в сооружение, все цели внутри делают проверку "..nab.stats.arm:gsub('.$','я')..'. В случае критического удара проверка попадания по целям внутри сооружений не происходит.';
+                return "Всё осадное оружие наносит 2 урона. Всё осадное оружие может атаковать только цели в соседней локации. Проверка попадания против сооружений не производится. При условии попадания в сооружение, все цели внутри делают проверку "..nab.stats.arm:gsub('.$','я')..'. В случае критического удара проверка попадания по целям внутри сооружений не происходит.';
             end,
             sizes = {
                 d10 = {
@@ -838,7 +839,7 @@ nab = {
         wallsiege = {
             name = "Стенолом",
             desc = function ()
-                return 'При попадании по живому существу прицельным выстрелом: уничтожает все цели ниже ранга "Нормальный". Все цели кроме "Больших" получают двойной урон. У целей "Большого" ранга полностью игнорируется '..nab.stats.def..'.';
+                return 'При попадании по живому существу прицельным выстрелом: уничтожает все цели ниже ранга "Нормальный". Все цели кроме "Больших" получают двойной урон.';
             end
         },
         siegeweapon = {
@@ -892,7 +893,7 @@ nab = {
         armorignore = {
             name = "Бронебойность",
             desc = function ()
-                return "Вы игнорируете всю "..nab.stats.def:gsub('.$','у')..' цели.';
+                return "Вы игнорируете "..nab.stats.arm..' цели.';
             end
         },
         blast = {
@@ -922,7 +923,7 @@ nab = {
         crush = {
             name = "Крушащий&nbsp;удар",
             desc = function ()
-                return "Эта атака игнорирует всю естественную "..nab.stats.def:gsub('.$','у')..' цели.';
+                return "Эта атака игнорирует естественное "..nab.stats.arm..' цели (кость уклонения от характеристики не участвует в защите).';
             end
         },
         stun = {
@@ -952,7 +953,7 @@ nab = {
         hardweight = {
             name = "Тяжёлое&nbsp;оружие",
             desc = function ()
-                return "Бросьте d4: выпавшее число определяет какая из 4 способностей уменьшит восстановление на 1. Если способность не требует восстановления, ничего не происходит.";
+                return "Бросьте d4 - выпавшее число определяет какая из 4 способностей уменьшит восстановление на 1. Если способность не требует восстановления, ничего не происходит.";
             end
         },
         longweapon = {
@@ -976,7 +977,7 @@ nab = {
         accuracy = {
             name = "Точность",
             desc = function ()
-                return "Игнорирует всю экипированную "..nab.stats.def:gsub(".$",'у');
+                return "Игнорирует всё "..nab.stats.arm.." от экипировки (кости экипировки вычитаются)";
             end
         },
         neurotic = {
@@ -988,7 +989,7 @@ nab = {
         hiddenStrike = {
             name = "Неожиданный&nbsp;удар",
             desc = function ()
-                return "при нанесении урона не учитывается "..nab.stats.def.." щита";
+                return "при нанесении урона не учитывается кость щита";
             end 
         },
         bleeding = {
@@ -1006,7 +1007,7 @@ nab = {
         slashDeep = {
             name = "Глубокий&nbsp;порез",
             desc = function ()
-                return nab.stats.def.." уменьшается на 1 ед. до конца раунда.";
+                return nab.stats.arm.." уменьшается на самую малую кость до конца раунда.";
             end
         },
         slashInertion = {
@@ -1062,8 +1063,8 @@ function weaponMobileCatTable()
         local effect = nab.effects[weapon.effect];
         local crit = nab.effects[weapon.crit];
 
-        return tr(td(nab.sizes[dice])..td(weapon.name))
-            ..tr(td(bold(weapon.damage))..td(dice))
+        return tr(td(dice,2))
+            ..tr(td(nab.sizes[dice])..td(weapon.name))
             ..tr(td(tdplate(bold(effect.name)..': '..effect.desc()),2))
             ..tr(td(tdplatex(bold(crit.name)..': '..crit.desc()),2));
     end
@@ -1118,7 +1119,6 @@ function weaponCatTable()
         return td(nab.sizes[dice])
             ..td(dice)
             ..td(weapon.name)
-            ..td(bold(weapon.damage))
             ..td(tdplate(bold(effect.name)..': '..effect.desc()))
             ..td(tdplatex(bold(crit.name)..': '..crit.desc()));
     end
@@ -1135,7 +1135,6 @@ function weaponCatTable()
         <th>Размер</th>
         <th>Кость</th>
         <th>Примеры</th>
-        <th>Урон</th>
         <th>Эффект</th>
         <th>Критический эффект</th>
         </tr>
@@ -1156,6 +1155,146 @@ function weaponCatTable()
     end
 
     return '<div class="weapon-table-full">\n'..result..'</div>';
+end
+
+function charplate(class,name,level,con,dex,int,wis,hp,speed,ini,cd,atk,magic,arm,bar,skills,abilities,talants,desc,weapons,armors)
+        
+    if desc==nil then
+        desc='';
+    end
+
+
+    local weapons_str="";
+    if(weapons~=nil) then
+        weapons_str=[[<span class="cc-footer-label">Оружие:</span>]];
+        for key, value in pairs(weapons) do
+            weapons_str=weapons_str..[[<div class="cc-inventory-item">]]..value.name..' d'..value.value..[[</div>]];
+            if value.type~=nil and value.type=='magic' then
+                table.insert(magic,value.value);
+            else
+                table.insert(atk,value.value);
+            end
+        end
+    end
+
+    local armors_str="";
+    if(armors~=nil) then
+        armors_str=[[<span class="cc-footer-label">Вещи:</span>]];
+        for key, value in pairs(armors) do
+            local val = "";
+            if(value.value~=nil) then
+                val='d'..value.value;
+                cd=cd+1;
+
+                if value.type~=nil and value.type=='magic' then
+                    table.insert(bar,value.value);
+                else
+                    table.insert(arm,value.value);
+                end
+            end
+            armors_str=armors_str..[[<div class="cc-inventory-item">]]..value.name..val..[[</div>]];        
+        end
+    end
+
+
+    local atk_str="";
+    for key, value in pairs(atk) do
+        atk_str=atk_str.."d"..value;
+    end
+    local magic_str="";
+    for key, value in pairs(magic) do
+        magic_str=magic_str.."d"..value;
+    end
+    local arm_str="";
+    for key, value in pairs(arm) do
+        arm_str=arm_str.."d"..value;
+    end
+    local bar_str="";
+    for key, value in pairs(bar) do
+        bar_str=bar_str.."d"..value;
+    end
+
+    local skills_str="";
+    for key, value in pairs(skills) do
+        skills_str=skills_str..[[<div class="cc-row"><span class="cc-label">]]..value.name..[[</span><div class="cc-mini-dice-wrap">]]..value.value..[[</div></div>]];
+    end
+
+    local abils_str="";
+    for key, value in pairs(abilities) do
+        abils_str=abils_str..[[<div class="cc-side-line">]]..value..[[</div>]];
+    end
+
+    local talants_str="";
+    for key, value in pairs(talants) do
+        talants_str=talants_str..[[<div class="cc-side-line">]]..value..[[</div>]];
+    end
+
+    return [[
+<div class="nwn-card-main">
+    <div class="cc-header">
+        <div class="cc-class">]]..class..[[</div>
+        <div class="cc-name">]]..name..[[</div>
+        <div class="cc-lvl">Уровень: ]]..level..[[</div>
+    </div>
+ <div class="cc-description">]]..desc..[[</div>
+<div class="cc-body">
+<div class="cc-left-content">
+<div class="cc-dice-zone">
+    <div class="cc-img">d]]..con..[[</div>
+    <div class="cc-img">d]]..dex..[[</div>
+    <div class="cc-img">d]]..int..[[</div>
+    <div class="cc-img">d]]..wis..[[</div>
+</div>
+
+<div class="cc-bottom-grid">
+    <div class="cc-col">
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-hearts"></i> ]]..hp..[[</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-boot-stomp"></i> ]]..speed..[[</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-doubled"></i> ]]..ini..[[</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-circle-of-circles"></i> ]]..cd..[[</div>
+    </div>
+    <div class="cc-col">
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-sword"></i> Атака:</span>
+            <div class="cc-mini-dice-wrap">]]..atk_str..[[
+            </div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-crystal-wand"></i> Магия:</span>
+            <div class="cc-mini-dice-wrap">]]..magic_str..[[</div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-shield"></i> Защита:</span>
+            <div class="cc-mini-dice-wrap">]]..arm_str..[[</div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-fire-symbol"></i> Барьер:</span>
+            <div class="cc-mini-dice-wrap">]]..bar_str..[[</div>
+        </div>
+    </div>
+    <div class="cc-col">
+        ]]..skills_str..[[
+    </div>
+</div>
+</div>
+
+<div class="cc-sidebar-column">
+<div class="cc-side-box cc-side-upper">
+    ]]..abils_str..[[
+</div>
+<div class="cc-side-box">
+    ]]..talants_str..[[
+</div>
+</div>
+</div>
+<div class="cc-footer">
+    <div class="cc-footer-row">]]..weapons_str..[[</div>
+    
+    <div class="cc-footer-row">]]..armors_str..[[</div>
+</div>
+
+</div>
+    ]]
 end
 
 function fracsArray()

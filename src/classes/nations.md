@@ -20,12 +20,12 @@
 
 | Пантеон | VS | Свободные боги |
 | :--- | :--- | :--- |
-| **//%nab.locations[1].name** | ↔ | **//%nab.locations[12].name** |
-| **//%nab.locations[2].name** | ↔ | **//%nab.locations[11].name** |
-| **//%nab.locations[3].name** | ↔ | **//%nab.locations[10].name** |
-| **//%nab.locations[4].name** | ↔ | **//%nab.locations[9].name**|
-| **//%nab.locations[5].name** | ↔ | **//%nab.locations[8].name**|
-| **//%nab.locations[6].name** | ↔ | **//%nab.locations[7].name**|
+| **//%(nab.locations[1].name)** | ↔ | **//%(nab.locations[12].name)** |
+| **//%(nab.locations[2].name)** | ↔ | **//%(nab.locations[11].name)** |
+| **//%(nab.locations[3].name)** | ↔ | **//%(nab.locations[10].name)** |
+| **//%(nab.locations[4].name)** | ↔ | **//%(nab.locations[9].name)**|
+| **//%(nab.locations[5].name)** | ↔ | **//%(nab.locations[8].name)**|
+| **//%(nab.locations[6].name)** | ↔ | **//%(nab.locations[7].name)**|
 
 ## Способности происхождения
 

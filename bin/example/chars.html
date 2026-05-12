@@ -1,0 +1,646 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="rust sidebar-visible" dir="ltr">
+<head>
+    <!-- Book generated using (almost) mdBook -->
+    <meta charset="UTF-8">
+    <title>Персонажи сессии - Набонассар</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="shortcut icon" href="./../images/favicon.png">
+    <link rel="stylesheet" href="./../css/variables.css">
+    <link rel="stylesheet" href="./../css/general.css">
+    <link rel="stylesheet" href="./../css/chrome.css">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="./../FontAwesome/css/font-awesome.css">
+    <link rel="stylesheet" href="./../fonts/fonts.css">
+
+    <!-- Highlight.js Stylesheets -->
+    <link rel="stylesheet" href="./../highlight.css">
+    <link rel="stylesheet" href="./../tomorrow-night.css">
+    <link rel="stylesheet" href="./../ayu-highlight.css">
+
+    <!-- Custom theme stylesheets -->
+    <link rel="stylesheet" href="./../css/custom.css">
+    <link rel="stylesheet" href="./../css/rpg-awesome.min.css">
+    <!-- Extensions stylesheets -->
+    <link rel="stylesheet" href="./../changelog\changelog.css">
+    <link rel="stylesheet" href="./../dices\dices.css">
+
+
+
+    <!-- Provide site root to javascript -->
+    <script>
+            var path_to_root = "./../";
+        var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "rust";
+    </script>
+</head>
+    <body>
+        <div id="body-container">
+            <!-- Work around some values being stored in localStorage wrapped in quotes -->
+            <script>
+                try {
+                    var theme = localStorage.getItem('mdbook-theme');
+                    var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                    if (theme.startsWith('"') && theme.endsWith('"')) {
+                        localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                    }
+
+                    if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                        localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                    }
+                } catch (e) { }
+            </script>
+
+            <!-- Set the theme before any content is loaded, prevents flash -->
+            <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            html.classList.add("js");
+            </script>
+
+            <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+            <!-- Hide / unhide sidebar before it is displayed -->
+            <script>
+                var sidebar = null;
+                var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+                if (document.body.clientWidth >= 1080) {
+                    try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch (e) { }
+                    sidebar = sidebar || 'visible';
+                } else {
+                    sidebar = 'hidden';
+                }
+                sidebar_toggle.checked = sidebar === 'visible';
+                html.classList.remove('sidebar-visible');
+                html.classList.add("sidebar-" + sidebar);
+            </script>
+
+            <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+                <!-- populated by js -->
+                <div class="sidebar-scrollbox"><img src="./../images/logo.png" style="width:100%">
+                    <ol class="chapter">
+                        <li class="chapter-item expanded">
+    <a href="../index.html">Главная
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../intermission.html"><strong aria-hidden="true">1.</strong>Введение
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../common/gameworld.html"><strong aria-hidden="true">2.</strong>Эпоха Богов
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="game.html"><strong aria-hidden="true">3.</strong>Игровая сессия
+    </a>
+</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="" class="active"><strong aria-hidden="true">3.1.</strong>Персонажи сессии
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="tavern.html"><strong aria-hidden="true">3.2.</strong>Таверна "У горы"
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="basement.html"><strong aria-hidden="true">3.3.</strong>Тайный подвал
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="judge.html"><strong aria-hidden="true">3.4.</strong>Суд над магами
+    </a>
+</li></ol></li><li class="chapter-item expanded">
+    <a href="../common/creating.html"><strong aria-hidden="true">4.</strong>Создание персонажа
+    </a>
+</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../attributes/attributes.html"><strong aria-hidden="true">4.1.</strong>Характеристики
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../stats/stats.html"><strong aria-hidden="true">4.2.</strong>Атрибуты
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../skills/skills.html"><strong aria-hidden="true">4.3.</strong>Навыки
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../classes/classes.html"><strong aria-hidden="true">4.4.</strong>Классы
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../skills/talents.html"><strong aria-hidden="true">4.5.</strong>Таланты
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../abilities/abilities.html"><strong aria-hidden="true">4.6.</strong>Способности
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../classes/specs.html"><strong aria-hidden="true">4.7.</strong>Специализации
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../classes/nations.html"><strong aria-hidden="true">4.8.</strong>Происхождение
+    </a>
+</li></ol></li><li class="chapter-item expanded">
+    <a href="../common/gameplay.html"><strong aria-hidden="true">5.</strong>Игровой процесс
+    </a>
+</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../common/will.html"><strong aria-hidden="true">5.1.</strong>Воля
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../scenes/common.html"><strong aria-hidden="true">5.2.</strong>Сцены и приключения
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../scenes/actions.html"><strong aria-hidden="true">5.3.</strong>Действия
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../common/injury.html"><strong aria-hidden="true">5.4.</strong>Жизнь и смерть
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../exp/exp.html"><strong aria-hidden="true">5.5.</strong>Уровни и Опыт
+    </a>
+</li></ol></li><li class="chapter-item expanded">
+    <a href="../items/items.html"><strong aria-hidden="true">6.</strong>Предметы
+    </a>
+</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../items/weapons.html"><strong aria-hidden="true">6.1.</strong>Оружие
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../items/equip.html"><strong aria-hidden="true">6.2.</strong>Экипировка
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../items/craft.html"><strong aria-hidden="true">6.3.</strong>Создание
+    </a>
+</li></ol></li><li class="chapter-item expanded affix ">
+<li class="part-title">7.Мир</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../editor/editor.html"><strong aria-hidden="true">7.1.</strong>Планеты и материки
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../editor/editor.html"><strong aria-hidden="true">7.2.</strong>Народы и боги
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../world/fractions.html"><strong aria-hidden="true">7.3.</strong>Фракции
+    </a>
+</li></ol></li><li class="chapter-item expanded affix ">
+<li class="part-title">8.Справочники</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../dict/itemsdict.html"><strong aria-hidden="true">8.1.</strong>Предметы
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../dict/creaturesdict.html"><strong aria-hidden="true">8.2.</strong>Существа
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../dict/abilitiesdict.html"><strong aria-hidden="true">8.3.</strong>Способности
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../dict/effects.html"><strong aria-hidden="true">8.4.</strong>Эффекты и статусы
+    </a>
+</li></ol></li><li class="chapter-item expanded affix ">
+<li class="part-title">9.Дополнительно</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../world/fractions.html"><strong aria-hidden="true">9.1.</strong>Наследие
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../editor/editor.html" target='./editor/editor.html'><strong aria-hidden="true">9.2.</strong>Генератор персонажей
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../editor/combat.html" target='./editor/combat.html'><strong aria-hidden="true">9.3.</strong>Симулятор сражений
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../editor/editor.html"><strong aria-hidden="true">9.4.</strong>Лист персонажа
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../editor/editor.html"><strong aria-hidden="true">9.5.</strong>Редактор магии
+    </a>
+</li></ol></li><li class="chapter-item expanded affix ">
+<li class="part-title">10.Мастеру</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../common/creatures.html"><strong aria-hidden="true">10.1.</strong>Существа
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../masters/npc.html"><strong aria-hidden="true">10.2.</strong>Персонажи мастера
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../masters/adventuresconvert.html"><strong aria-hidden="true">10.3.</strong>Создание приключений
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../masters/checks.html"><strong aria-hidden="true">10.4.</strong>Проверки и сложности
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../masters/moduleabilities.html"><strong aria-hidden="true">10.5.</strong>Способности приключений
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../masters/itemscreation.html"><strong aria-hidden="true">10.6.</strong>Баланс и предметы
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../masters/economy.html"><strong aria-hidden="true">10.7.</strong>Экономика и услуги
+    </a>
+</li></ol></li><li class="chapter-item expanded">
+    <a href="../tables/common.html"><strong aria-hidden="true">11.</strong>Таблицы и формулы
+    </a>
+</li><li><ol class="section"><li class="chapter-item expanded">
+    <a href="../tables/formulas.html"><strong aria-hidden="true">11.1.</strong>Формулы
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../tables/contest.html"><strong aria-hidden="true">11.2.</strong>Состязания
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../tables/mindful.html"><strong aria-hidden="true">11.3.</strong>Разум существ
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../tables/complexity.html"><strong aria-hidden="true">11.4.</strong>Сложность
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../tables/bonusconvert.html"><strong aria-hidden="true">11.5.</strong>Таблица конвертации бонусов
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../tables/rankvalue.html"><strong aria-hidden="true">11.6.</strong>Ранг значения
+    </a>
+</li><li class="chapter-item expanded">
+    <a href="../tables/rankvaluereversed.html"><strong aria-hidden="true">11.7.</strong>Обратный ранг-значение
+    </a>
+</li></ol></li><li class="chapter-item expanded">
+    <a href="../common/modus_schema.html"><strong aria-hidden="true">12.</strong>Ролевая система Modus Schema
+    </a>
+</li><li class="spacer"></li><li class="chapter-item expanded">
+    <a href="../changelog.html">Архив изменений
+    </a>
+</li>
+                    </ol>
+                </div>
+                <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                    <div class="sidebar-resize-indicator"></div>
+                </div>
+            </nav>
+
+            <!-- Track and set sidebar scroll position -->
+            <script>
+                var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+                sidebarScrollbox.addEventListener('click', function (e) {
+                    if (e.target.tagName === 'A') {
+                        sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                    }
+                }, { passive: true });
+                var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+                sessionStorage.removeItem('sidebar-scroll');
+                if (sidebarScrollTop) {
+                    // preserve sidebar scroll position when navigating via links within sidebar
+                    sidebarScrollbox.scrollTop = sidebarScrollTop;
+                } else {
+                    // scroll sidebar to current active section when navigating via "next/Назад" buttons
+                    var activeSection = document.querySelector('#sidebar .active');
+                    if (activeSection) {
+                        activeSection.scrollIntoView({ block: 'center' });
+                    }
+                }
+            </script>
+
+            <div id="page-wrapper" class="page-wrapper">
+
+                <div class="page">
+                    <div id="menu-bar-hover-placeholder"></div>
+                    <div id="menu-bar" class="menu-bar sticky">
+                        <div class="left-buttons">
+                            <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Содержание" aria-label="Содержание" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </label>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Тема" aria-label="Тема" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Светлая</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Тёмная</button></li>
+                                <!--<li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>-->
+                            </ul>
+                            <button id="search-toggle" class="icon-button" type="button" title="Поиск (ctrl+f)" aria-label="Поиск" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+
+                        <h1 class="menu-title">Персонажи сессии - Набонассар</h1>
+
+                        <div class="right-buttons">
+                        </div>
+                    </div>
+
+                    <div id="search-wrapper" class="hidden">
+                        <form id="searchbar-outer" class="searchbar-outer">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Искать в правилах..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        </form>
+                        <div id="searchresults-outer" class="searchresults-outer hidden">
+                            <div id="searchresults-header" class="searchresults-header"></div>
+                            <ul id="searchresults">
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                    <script>
+                        document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                        document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                        Array.from(document.querySelectorAll('#sidebar a')).forEach(function (link) {
+                            link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                        });
+                    </script>
+
+                    <div id="content" class="content">
+                        <main>
+                            <h1 id="Подготовка-в-игре"><a class="header" href="#Подготовка-в-игре">Подготовка в игре</a></h1>
+<p>Перед началом сессии игроки создают персонажей. В примерах будут использоваться нижеописанные персонажи, а их карточки будут доступны по всему повествованию чтобы вы могли более подробно понять назначение атрибутов.</p>
+<h2 id="Шаррат"><a class="header" href="#Шаррат">Шаррат</a></h2>
+<div class="nwn-card-main">
+    <div class="cc-header">
+        <div class="cc-class">Воин</div>
+        <div class="cc-name">Шаррат</div>
+        <div class="cc-lvl">Уровень: 3</div>
+    </div>
+ <div class="cc-description">Женщина бледной кожи в кожаном доспехе родом из Королевства проклятых. Вместо меча в её руках — дымящиеся хирургические зажимы и склянки, взгляд полнится хищными инстинктами врачевания, а руки обследуют раны союзников. Шаррат не обычный воин, она посвятила себя искусству исцеления - хирургическая игла заменила ей махи мечом, а комплекты лечения высокий металлический щит.</div>
+<div class="cc-body">
+<div class="cc-left-content">
+<div class="cc-dice-zone">
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div>
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div>
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div>
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di6.png"></div>
+</div>
+<div class="cc-bottom-grid">
+    <div class="cc-col">
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-hearts"></i> 8</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-boot-stomp"></i> 11</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-doubled"></i> 19</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-circle-of-circles"></i> 2</div>
+    </div>
+    <div class="cc-col">
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-sword"></i> Атака:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"><img width="32" height="32" class="dice" src="./../images/dices/di4.png">            </div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-crystal-wand"></i> Магия:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di8.png"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-shield"></i> Защита:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di8.png"><img width="32" height="32" class="dice" src="./../images/dices/di6.png"></div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-fire-symbol"></i> Барьер:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di6.png"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div>
+        </div>
+    </div>
+    <div class="cc-col">
+        <div class="cc-row"><span class="cc-label">Медицина</span><div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di6.png"> <img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div></div><div class="cc-row"><span class="cc-label">Образование</span><div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"> <img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div></div>    </div>
+</div>
+</div>
+<div class="cc-sidebar-column">
+<div class="cc-side-box cc-side-upper">
+    <div class="cc-side-line">Исцеление болезней</div><div class="cc-side-line">Снятие проклятий</div><div class="cc-side-line">Приведение в чувство</div><div class="cc-side-line">Потрошение</div></div>
+<div class="cc-side-box">
+    <div class="cc-side-line">Бой двумя руками</div></div>
+</div>
+</div>
+<div class="cc-footer">
+    <div class="cc-footer-row"><span class="cc-footer-label">Оружие:</span><div class="cc-inventory-item">Скальпель (Режущее) <img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div><div class="cc-inventory-item">Учебник медицины (Магическое) <img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div></div>
+    
+    <div class="cc-footer-row"><span class="cc-footer-label">Вещи:</span><div class="cc-inventory-item">Кожаный доспех<img width="32" height="32" class="dice" src="./../images/dices/di6.png"></div><div class="cc-inventory-item">Клобук<img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div></div>
+</div>
+</div>
+    
+<p>Шаррат необычный воин: она предпочитает исцелять своих союзников а не рубить вражеские головы. У Шаррат увеличенная кость Телосложения <img width="32" height="32" class="dice" src="./../images/dices/di8.png">, самая маленькая из возможных кость Сноровки <img width="32" height="32" class="dice" src="./../images/dices/di4.png">, повышенный Интеллект <img width="32" height="32" class="dice" src="./../images/dices/di8.png"> и обычное значение Мудрости <img width="32" height="32" class="dice" src="./../images/dices/di6.png">. Она изучила навыки &quot;<strong>Медицина</strong>(+2)&quot; и &quot;<strong>Образование</strong>(+1)&quot;, и талант &quot;<strong>Бой двумя руками</strong>&quot; - который позволяет ей держать во второй руке дополнительное оружие.</p>
+<p>Специализация Шаррат - исцеление и поддержка отряда.</p>
+<p>Благодаря оружию в обеих руках и хорошей экипировке Шаррат отлично защищена и наносит урон существам с низкой защитой чаще обычного, но за это она платит долгим восстановлением между атаками.</p>
+<h2 id="Ибран"><a class="header" href="#Ибран">Ибран</a></h2>
+<div class="nwn-card-main">
+    <div class="cc-header">
+        <div class="cc-class">Маг</div>
+        <div class="cc-name">Ибран</div>
+        <div class="cc-lvl">Уровень: 3</div>
+    </div>
+ <div class="cc-description">Молодой юноша в развивающейся рясе Песков мёртвых. В отличие от других магов, он не творит разрушительных заклинаний, его призвание - магия мёртвого песка. С помощью костяного посоха он сплетает вокруг себя и своих союзников щиты из мелкой пыли и заставляет врагов атаковать себя в первую очередь.</div>
+<div class="cc-body">
+<div class="cc-left-content">
+<div class="cc-dice-zone">
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div>
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div>
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di6.png"></div>
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div>
+</div>
+<div class="cc-bottom-grid">
+    <div class="cc-col">
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-hearts"></i> 8</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-boot-stomp"></i> 13</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-doubled"></i> 18</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-circle-of-circles"></i> 0</div>
+    </div>
+    <div class="cc-col">
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-sword"></i> Атака:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"><img width="32" height="32" class="dice" src="./../images/dices/di6.png">            </div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-crystal-wand"></i> Магия:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di6.png"></div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-shield"></i> Защита:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-fire-symbol"></i> Барьер:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div>
+        </div>
+    </div>
+    <div class="cc-col">
+        <div class="cc-row"><span class="cc-label">Атлетика</span><div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"> <img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div></div><div class="cc-row"><span class="cc-label">Запугивание</span><div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"> <img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div></div><div class="cc-row"><span class="cc-label">Военное ремесло</span><div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"> <img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div></div>    </div>
+</div>
+</div>
+<div class="cc-sidebar-column">
+<div class="cc-side-box cc-side-upper">
+    <div class="cc-side-line">Провокация</div><div class="cc-side-line">Щит пыли</div><div class="cc-side-line">Тюрьма песков</div><div class="cc-side-line">Песок времени</div></div>
+<div class="cc-side-box">
+    <div class="cc-side-line">Смертельный договор</div></div>
+</div>
+</div>
+<div class="cc-footer">
+    <div class="cc-footer-row"><span class="cc-footer-label">Оружие:</span><div class="cc-inventory-item">Костяной посох (Дробящее) <img width="32" height="32" class="dice" src="./../images/dices/di6.png"></div></div>
+    
+    <div class="cc-footer-row"><span class="cc-footer-label">Вещи:</span><div class="cc-inventory-item">Мантия</div></div>
+</div>
+</div>
+    
+<p>Ибран выбрал повышенные кости Телосложения <img width="32" height="32" class="dice" src="./../images/dices/di8.png"> и Мудрости <img width="32" height="32" class="dice" src="./../images/dices/di8.png"> чтобы получить соответсвующие кости Защиты и Барьера. Низкую Сноровку он компенсирует оружием (<img width="32" height="32" class="dice" src="./../images/dices/di6.png">), а чтобы чувствовать себя в напряжённых сценах как &quot;рыба в воде&quot; он взял навыки: &quot;<strong>Атлетика</strong>&quot;(для безпроблемного перемещения по сценам), &quot;<strong>Запугивание</strong>&quot; (для эффективности провокации врагов), и &quot;<strong>Военное ремесло</strong>&quot; (чтобы иметь преимущество в тактике и стратегии на поле боя).</p>
+<p>В качестве таланта на 3-ем уровне Ибран выбрал &quot;<strong>Смертельный договор</strong>&quot; - это стоило ему жизни (это последнее приключение для персонажа), но он исцеляется каждый раз когда на него насылают болезнь, яд, либо рядом с ним кто-то умирает.</p>
+<p>Роль Ибрана - защита и выживание отряда в напряжённых сценах.</p>
+<p>Сильные стороны Ибрана в <em>универсальной</em> защите и хорошей выживаемости, но вне боевых действий он мало что может предложить отряду.</p>
+<h2 id="Инанна"><a class="header" href="#Инанна">Инанна</a></h2>
+<div class="nwn-card-main">
+    <div class="cc-header">
+        <div class="cc-class">Плут</div>
+        <div class="cc-name">Инанна</div>
+        <div class="cc-lvl">Уровень: 3</div>
+    </div>
+ <div class="cc-description">Девушка родом из Тёмного леса. Облачённая в наряд из живого мха, в её руках красуется два шипа от колючих лиан. Инанна не имеет таланта к воровству, но благодаря тренировкам под сенью мирового дереа может управлять ядовитыми шипастыми зарослями, способными поразить целую толпу врагов сильнее любых кинжалов.</div>
+<div class="cc-body">
+<div class="cc-left-content">
+<div class="cc-dice-zone">
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di6.png"></div>
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di6.png"></div>
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div>
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div>
+</div>
+<div class="cc-bottom-grid">
+    <div class="cc-col">
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-hearts"></i> 6</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-boot-stomp"></i> 12</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-doubled"></i> 18</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-circle-of-circles"></i> 1</div>
+    </div>
+    <div class="cc-col">
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-sword"></i> Атака:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di6.png"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"><img width="32" height="32" class="dice" src="./../images/dices/di4.png">            </div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-crystal-wand"></i> Магия:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-shield"></i> Защита:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di6.png"></div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-fire-symbol"></i> Барьер:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div>
+        </div>
+    </div>
+    <div class="cc-col">
+        <div class="cc-row"><span class="cc-label">Выносливость</span><div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"> <img width="32" height="32" class="dice" src="./../images/dices/di6.png"></div></div><div class="cc-row"><span class="cc-label">Выживание</span><div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"> <img width="32" height="32" class="dice" src="./../images/dices/di6.png"></div></div><div class="cc-row"><span class="cc-label">Связи</span><div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"> <img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div></div>    </div>
+</div>
+</div>
+<div class="cc-sidebar-column">
+<div class="cc-side-box cc-side-upper">
+    <div class="cc-side-line">Ядовитые шипы</div><div class="cc-side-line">Терновые заросли</div><div class="cc-side-line">Шипастые ловушки</div><div class="cc-side-line">Терновый звон</div></div>
+<div class="cc-side-box">
+    <div class="cc-side-line">Счастливчик</div><div class="cc-side-line">Увёртливость</div></div>
+</div>
+</div>
+<div class="cc-footer">
+    <div class="cc-footer-row"><span class="cc-footer-label">Оружие:</span><div class="cc-inventory-item">Ядовитая плеть (Гибкое) <img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div><div class="cc-inventory-item">Терновый кнут (Гибкое) <img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div></div>
+    
+    <div class="cc-footer-row"><span class="cc-footer-label">Вещи:</span><div class="cc-inventory-item">Живой доспех</div></div>
+</div>
+</div>
+    
+<p>Инанна - плут, представительница народа живущего под сенью дерева мира. У неё малая кость Интеллекта и повышенная кость Мудрости. В отличие от других персонажей Инанна решила не брать повышенную кость характеристики чтобы взять талант на этапе создания персонажа. Она выбрала таланты &quot;<strong>Увёртливость</strong>&quot; - чтобы сбегать после получения урона в безопасное место, и &quot;<strong>Счастливчик</strong>&quot; - чтобы использовать Удачу вместо обычного броска.</p>
+<p>Для Инанны важны навыки одиночного выживания, поэтому она выбрала &quot;<strong>Выносливость</strong>&quot;, &quot;<strong>Выживание</strong>&quot;, &quot;<strong>Связи</strong>&quot; - если ей не удастся выжить в дикой природе она сможет попытаться найти старых знакомых в любой местности.</p>
+<p>Роль Инанны - нанесение урона группам врагов. Не смотря на неплохую природную защиту она не умеет грамотно владеть оружием в обеих руках, поэтому её восстановление замедлено на 1 ед.</p>
+<h2 id="Варад"><a class="header" href="#Варад">Варад</a></h2>
+<div class="nwn-card-main">
+    <div class="cc-header">
+        <div class="cc-class">Жрец</div>
+        <div class="cc-name">Варад</div>
+        <div class="cc-lvl">Уровень: 3</div>
+    </div>
+ <div class="cc-description">Варад - жилистый фанатик из Экзархата. Он презирает молитвы и магию, предпочитая вколачивать веру в еретиков пудовым золоченым молотом. В свободное время занимается взломом замков и воровством.</div>
+<div class="cc-body">
+<div class="cc-left-content">
+<div class="cc-dice-zone">
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di6.png"></div>
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di12.png"></div>
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div>
+    <div class="cc-img"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div>
+</div>
+<div class="cc-bottom-grid">
+    <div class="cc-col">
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-hearts"></i> 6</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-boot-stomp"></i> 15</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-doubled"></i> 19</div>
+        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-circle-of-circles"></i> 2</div>
+    </div>
+    <div class="cc-col">
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-sword"></i> Атака:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di12.png"><img width="32" height="32" class="dice" src="./../images/dices/di8.png">            </div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-crystal-wand"></i> Магия:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-shield"></i> Защита:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di6.png"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div>
+        </div>
+        <div class="cc-row">
+            <span class="cc-label"><i class="ra ra-fire-symbol"></i> Барьер:</span>
+            <div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div>
+        </div>
+    </div>
+    <div class="cc-col">
+        <div class="cc-row"><span class="cc-label">Скрытность</span><div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di4.png"> <img width="32" height="32" class="dice" src="./../images/dices/di12.png"></div></div><div class="cc-row"><span class="cc-label">Ловкость рук</span><div class="cc-mini-dice-wrap"><img width="32" height="32" class="dice" src="./../images/dices/di6.png"> <img width="32" height="32" class="dice" src="./../images/dices/di12.png"></div></div>    </div>
+</div>
+</div>
+<div class="cc-sidebar-column">
+<div class="cc-side-box cc-side-upper">
+    <div class="cc-side-line">Солнечный удар</div><div class="cc-side-line">Вихрь</div><div class="cc-side-line">Железная воля</div><div class="cc-side-line">Боевой мах</div></div>
+<div class="cc-side-box">
+    <div class="cc-side-line">Кровавая клятва</div></div>
+</div>
+</div>
+<div class="cc-footer">
+    <div class="cc-footer-row"><span class="cc-footer-label">Оружие:</span><div class="cc-inventory-item">Золочёный двуручный молот (Дробящее) <img width="32" height="32" class="dice" src="./../images/dices/di8.png"></div></div>
+    
+    <div class="cc-footer-row"><span class="cc-footer-label">Вещи:</span><div class="cc-inventory-item">Боевое облачение жрецов<img width="32" height="32" class="dice" src="./../images/dices/di4.png"></div></div>
+</div>
+</div>
+    
+<p>Варад - фанатичный жрец посвятивший себя ближнему бою. У него обычная кость Телосложения <img width="32" height="32" class="dice" src="./../images/dices/di6.png">, малые кости Интеллекта и Мудрости <img width="32" height="32" class="dice" src="./../images/dices/di4.png">, и максимально возможная кость Сноровки <img width="32" height="32" class="dice" src="./../images/dices/di12.png"> которая даёт ему невероятно мощную атаку оружием и физическими способностями. Вместе с его двуручным оружием <img width="32" height="32" class="dice" src="./../images/dices/di8.png"> он обладает самой высокой силой атаки во всём отряде.</p>
+<p>Большая пользва в бою подкреплена выдающейся Сноровкой в воровском деле - он взял навыки &quot;<strong>Скрытность</strong>&quot;, &quot;<strong>Ловкость рук</strong>&quot;, что сделало его незаменимым в мирных сценах и тайных вылазках. А талант &quot;<strong>Кровавая клятва</strong>&quot; дал ему возможность использовать Стойкость вместо Воли для призыва божественных сил, которые помогают всей группе.</p>
+<p>Роль Варада - нанесение урона по одиночной цели, разминирование замков и ловушек, и поддержка всего отряда в мирных сценах.</p>
+<p>Являясь основной ударной силой отряда Варад одновременно обладает самой низкой защитой и долгим Восстановлением, что ограничивает его возможности в нанесении урона <em>каждый</em> ход.</p>
+<h1 id="Начало-приключения"><a class="header" href="#Начало-приключения">Начало приключения</a></h1>
+<p>... описание начала приключения....</p>
+
+                        </main>
+
+                        <nav class="nav-wrapper" aria-label="Page navigation">
+                            <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="game.html" class="mobile-nav-chapters previous" title="Назад" aria-label="Назад" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="tavern.html" class="mobile-nav-chapters next" title="Вперёд" aria-label="Вперёд" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                            <div style="clear: both"></div>
+                        </nav>
+                    </div>
+                </div>
+
+                <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="game.html" class="nav-chapters previous" title="Назад" aria-label="Назад" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="tavern.html" class="nav-chapters next" title="Вперёд" aria-label="Вперёд" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </nav>
+
+            </div>
+
+            <script src="./../elasticlunr.js"></script>
+            <script src="./../mark.js"></script>
+            <script>
+                window.search = {};
+            </script>
+            <script src="./../searchindex.js"></script>
+            <script src="./../searcher.js"></script>
+
+            <script src="./../clipboard.js"></script>
+            <script src="./../highlight.js"></script>
+            <script src="./../book.js"></script>
+
+            <!-- Custom JS scripts -->
+
+        </div>
+    <a href="./../common/modus_schema.html" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+    <img src="./../images/modus_schema_logo.png" style="width: 50px; height: auto;" alt="modus schema">
+</a></body>
+</html>

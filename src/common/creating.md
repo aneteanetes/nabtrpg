@@ -16,10 +16,10 @@
 
 |Класс| Проявление Воли|
 |---|---|
-|//%nab.classes.warrior.name|//%nab.classes.warrior.willuse|
-|//%nab.classes.rogue.name|//%nab.classes.rogue.willuse|
-|//%nab.classes.mage.name|//%nab.classes.mage.willuse|
-|//%nab.classes.priest.name|//%nab.classes.priest.willuse|
+|//%nab.classes.warrior.name |//%nab.classes.warrior.willuse |
+|//%nab.classes.rogue.name |//%nab.classes.rogue.willuse |
+|//%nab.classes.mage.name |//%nab.classes.mage.willuse |
+|//%nab.classes.priest.name |//%nab.classes.priest.willuse |
 
 ## Распределение характеристик
 
@@ -27,10 +27,10 @@
 
 |Класс| Проявление Воли|
 |---|---|
-|//%nab.classes.warrior.name|//%nab.attr.con|
-|//%nab.classes.rogue.name|//%nab.attr.dex|
-|//%nab.classes.mage.name|//%nab.attr.int|
-|//%nab.classes.priest.name|//%nab.attr.wis|
+|//%nab.classes.warrior.name |//%nab.attr.con |
+|//%nab.classes.rogue.name |//%nab.attr.dex |
+|//%nab.classes.mage.name |//%nab.attr.int |
+|//%nab.classes.priest.name |//%nab.attr.wis |
 
 1. Вы можете уменьшить текущие ранги костей чтобы перераспределить ранги
 2. Вы можете отказаться от дополнительного ранга кости чтобы взять талант на 1 уровне

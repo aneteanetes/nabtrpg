@@ -155,3 +155,222 @@ h5 + p {
 .weapon-table .trdown {
     border-bottom: 2px solid rgb(179 164 151); 
 }
+
+ .nwn-card-main {
+        background: #1a1612;
+        border: 2px solid #3d3428;
+        box-shadow: inset 0 0 20px #000;
+        color: #c9ad7d;
+        font-family: serif;
+        width: 100%;
+        max-width: 550px;
+        margin: 10px auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nwn-card-main * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    .cc-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 15px;
+        border-bottom: 1px solid #3d3428;
+    }
+    .cc-class { font-size: 17px; font-weight: bold; text-transform: uppercase; opacity: 0.6; }
+    .cc-name { font-size: 19px; font-style: italic; }
+    .cc-lvl { opacity: 0.6;}
+
+    .cc-body {
+        display: flex;
+        flex: 1;
+    }
+
+    .cc-left-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #3d3428;
+    }
+
+    .cc-dice-zone {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 25px;
+        height: 100px;
+        border-bottom: 1px solid #3d3428;
+    }
+
+    .cc-dice-diamond {
+        width: 34px; height: 34px;
+        background: #2d261e;
+        border: 1px solid #4a3d2b;
+        transform: rotate(45deg);
+        display: flex; align-items: center; justify-content: center;
+    }
+    .cc-dice-diamond span { transform: rotate(-45deg); font-weight: bold; font-size: 18px; }
+
+    .cc-bottom-grid {
+        display: grid;
+        grid-template-columns: 50px 1.2fr 1fr;
+        flex: 1;
+    }
+
+    .cc-col { display: flex; flex-direction: column; padding: 8px 0; }
+    .cc-col:not(:last-child) { border-right: 1px solid #3d3428; }
+
+    .cc-row {
+        height: 28px;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        font-size: 14px;
+    }
+    .ra-r { margin-right: 2px; }
+    .cc-icon-only { justify-content: space-between; color: #b18c5d; font-size: 16px; }
+    .cc-label { flex: 1; display: flex; align-items: center; gap: 8px; }
+    .cc-label i { color: #b18c5d; font-size: 16px; width: 18px; text-align: center; }
+
+    .cc-mini-dice-wrap { display: flex; gap: 5px; }
+    .cc-mini-dice {
+        width: 18px; height: 18px;
+        background: #2d261e;
+        border: 1px solid #4a3d2b;
+        transform: rotate(45deg);
+        display: flex; align-items: center; justify-content: center;
+    }
+    .cc-mini-dice span { transform: rotate(-45deg); font-size: 10px; font-weight: bold; }
+
+    .cc-sidebar-column {
+        width: 160px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cc-side-box { display: flex; flex-direction: column; padding: 8px 0; }
+    .cc-side-upper { height: 100px; border-bottom: 1px solid #3d3428; }
+    .cc-side-line { padding: 3px 12px; font-size: 14px; white-space: nowrap; }
+    .cc-dim { opacity: 0.4; }
+
+    .cc-img img { width: 48px; height: 48px;}
+    .cc-row img {width: 24px; height: 24px;}
+    .cc-footer img {width: 16px; height: 16px;}
+
+    @media (max-width: 600px) {
+        .cc-body {
+            flex-direction: column; 
+        }
+
+        .cc-left-content {
+            border-right: none; 
+        }
+
+        .cc-sidebar-column {
+            width: 100%; 
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            border-top: 1px solid #3d3428; 
+        }
+
+        .cc-side-upper {
+            height: auto; 
+            border-bottom: none;
+            border-right: 1px solid #3d3428; 
+        }
+
+        .cc-dice-zone {
+            height: 80px; 
+        }
+    }
+    .cc-row:hover, .cc-side-line:hover {
+    background: rgba(179, 141, 93, 0.1); 
+    cursor: default;
+}
+
+.cc-description {
+    grid-column: 1 / -1; 
+    padding: 10px 15px;
+    border-bottom: 1px solid #3d3428;
+    /* font-style: italic; */
+    font-size: 14px;
+    line-height: 1.4;
+    color: #c9ad7d;
+    background: rgba(0, 0, 0, 0.2); 
+}
+
+.cc-description:empty {
+    display: none;
+}
+
+/* ФУТЕР: Каждая категория — отдельная строка */
+.cc-footer {
+    grid-column: 1 / -1;
+    border-top: 1px solid #3d3428;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.cc-footer:empty { display: none; }
+.cc-footer-row:empty { display: none; }
+
+.cc-footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    padding: 8px 15px;
+}
+
+/* Линия между строками оружия и одежды */
+.cc-footer-row:not(:last-child) {
+    border-bottom: 1px solid #3d3428;
+}
+
+.cc-footer-label {
+    font-weight: bold;
+    color: #b18c5d;
+    min-width: 65px; /* Фиксированная ширина заголовка для ровности */
+}
+
+/* Мини-кубики для футера */
+.cc-footer .cc-mini-dice {
+    display: inline-flex;
+    width: 20px; height: 20px;
+    background: #2d261e;
+    border: 1px solid #4a3d2b;
+    transform: rotate(45deg);
+    align-items: center; justify-content: center;
+    margin: 0 4px;
+}
+.cc-footer .cc-mini-dice span {
+    transform: rotate(-45deg);
+    font-size: 11px;
+    font-weight: bold;
+    color: #c9ad7d;
+}
+/* Контейнер для одного предмета (название + кубик) */
+.cc-inventory-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Добавляем разделитель | между предметами */
+.cc-inventory-item:not(:last-child)::after {
+    content: "|";
+    color: #3d3428; /* Цвет линий карточки */
+    font-style: normal;
+    opacity: 0.8;
+}
+
+/* Чтобы кубики не прилипали к тексту */
+.cc-footer .cc-mini-dice {
+    margin-left: 4px;
+    /* ... остальные стили кубиков из прошлых шагов ... */
+}
+.cc-inventory-item:hover {
+    background: rgba(179, 141, 93, 0.1); 
+    cursor: default;
+}

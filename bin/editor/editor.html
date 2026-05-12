@@ -245,9 +245,14 @@
             
             <div style="margin-bottom: 15px; padding-bottom: 10px;" class="text-[14px] bottom-list">
                 <div class="">
-                    <div class="flex justify-center mb-2">
-                        Фракция
+                    <div class="flex justify-between items-center mb-2">
+                        <span>Фракция</span>
+                        <div @click="isExportModalOpen = true" 
+                            class="cursor-pointer opacity-60 hover:opacity-100 transition-opacity px-3 py-1 text-[10px] uppercase tracking-widest border border-[#4a3f35] text-center"> 
+                            Экспорт 
+                        </div>
                     </div>
+
                     <div>
                         
                     <div style="display: flex; gap: 10px;">
@@ -336,7 +341,7 @@
             </div>
             <div class="text-[14px] space-y-2 mb-2 bottom-list">
                 <div v-for="(v, s) in attrsd" :key="s" class="flex justify-between">
-                    <span>{{ labels[s] }}:</span>
+                    <span><i :class='"mr-1 ra "+icons[s]'></i>{{ labels[s] }}:</span>
                     <div class="flex">
                         <div v-for="(vv, ss) in v" :key="ss">
                             <img 
@@ -426,11 +431,50 @@
 
     </div>
 
+<div v-if="isExportModalOpen" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div class="bg-[#1a1613] border border-[#4a3f35] p-6 w-72 shadow-2xl shadow-black">
+        <div class="text-[#d4c1a1] text-xs font-bold mb-6 text-center uppercase tracking-widest">Выберите тип экспорта</div>
+        
+        <div class="space-y-3">
+            <button @click="exportCard" class="w-full py-2 bg-[#3d332a] hover:bg-[#5c4e40] text-[#d4c1a1] border border-[#4a3f35] uppercase text-[10px] tracking-tighter transition-all">
+                Копировать карточку
+            </button>
+
+            <button @click="exportFull" class="w-full py-2 bg-[#3d332a] hover:bg-[#5c4e40] text-[#d4c1a1] border border-[#4a3f35] uppercase text-[10px] tracking-tighter transition-all">
+                Копировать всё (JSON)
+            </button>
+
+            <button @click="isExportModalOpen = false" class="w-full pt-2 text-[#8b7a66] hover:text-[#d4c1a1] text-[9px] uppercase tracking-widest">
+                Отмена
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Всплывающее уведомление (Toast) -->
+<transition name="fade">
+    <div v-if="toastMessage" 
+         class="fixed bottom-10 left-1/2 -translate-x-1/2 z-50">
+        <div class="bg-[#1a1613] border border-[#d4c1a1]/50 px-6 py-3 shadow-[0_0_20px_rgba(0,0,0,0.8)] flex items-center gap-3">
+            <!-- Маленькая иконка или точка в стиле интерфейса -->
+            <div class="w-1 h-1 bg-[#d4c1a1] rotate-45"></div>
+            <span class="text-[#d4c1a1] text-xs uppercase tracking-[0.2em] whitespace-nowrap">
+                {{ toastMessage }}
+            </span>
+            <div class="w-1 h-1 bg-[#d4c1a1] rotate-45"></div>
+        </div>
+    </div>
+</transition>
+
+
     <script>
         const { createApp } = Vue;
         createApp({
             data() {
                 return {
+                    isExportModalOpen:false,
+                    toastMessage: '', // Текст уведомления
+                    toastTimer: null, // Ссылка на таймер
+                    //export end
                     currentTab: 'classes',
                     // Добавили этот объект, чтобы не писать сложные условия в HTML
                     tabLabels: {
@@ -487,14 +531,13 @@
                         endurance:"Способность закалять организм против физического воздействия - пыток, холода, ядов, итд.", survival:"Ориентирование, охота, навигация в дикой местности, природа", conviction:"Харизма, дипломатия, обольщение, этикет", craft:"Все виды тяжёлого производного труда", medicine:"Исцеление, анатомия, первая помощь, практическое латание тел, знание плоти", vehicle:"Физическое управление механизмами: повозками, кораблями, дирижаблями, повозками", athletics:"Бег, плавание, лазание, прыжки, напор, эквилибристика, изворотливость, полет, грация", hide:"Маскировка, бесшумное передвижение, засады", thievery:"Кража, взлом, грязные трюки, воровство", deception:"Блеф, притворство, мимика, ложь лицом и телом", taming:"Верховая езда, дрессировка, уход", performance:"Танцы, игра на инструментах — моторика, музыка, игра, хореография", analysis:"Криминалистика, поиск улик, дедукция, расследование", engineering:"Ремонт, механизмы, строительство зданий, чертежи", magic:"Теория, оккультизм, использование магических устройств, настройка", history:"Обществоведение, знание дворянства, география, общая история", education:"Профессия, административные навыки, любой квалифицированный труд на заработок", attentiveness:"Восприятие, поиск, подмечание деталей", religion:"История богов, молитвы, ритуалы", trade:"Реклама, связи, логистика, торг, оценка стоимости, гильдии", contacts:"Способность добывать сплетни, слухи, неожиданные знакомства", intimidation:"Устрашение, насмешка, ментальное давление, допросы", insight:"Интуиция, психология, чтение лжи", warcraft:"Военные формирования, тактика, стратегия, звания, устройство стражи", 
                     },
                     points: 0,
-                    classes: {war:'Воин',rog:'Плут',mag:'Маг',pri:'Жрец'},
+                    classes: {war:'Воин ',rog:'Плут ',mag:'Маг ',pri:'Жрец '},
                     stats: { con: 3, dex: 2, int: 2, wis: 2 },
                     attrs: {
                         hp:8,
                         spd: 12,
                         ini: 0,
                         luck:0,
-                        def:0,
                         cd:0
                     },
                     attrsd: {
@@ -511,14 +554,13 @@
                     ],
                     icons: { 
                         hp: 'ra-hearts',
-                        atk:'ra-explosion',
-                        matk:'ra-explosion',
-                        arm:"ra-explosion",
-                        bar:"ra-explosion",
+                        atk:'ra-sword',
+                        matk:'ra-crystal-wand',
+                        arm:"ra-shield",
+                        bar:"ra-fire-symbol",
                         spd:'ra-boot-stomp',
                         ini:"ra-doubled",
                         luck:"ra-sun",
-                        def:"ra-vest",
                         cd:"ra-circle-of-circles"
                     },
                     labels: { 
@@ -529,22 +571,18 @@
                         hp:'Стойкость',
                         atk:'Сила атаки',
                         matk:'Сила магии',
-                        arm:"Уклонение",
+                        arm: "Защита",
                         bar:"Барьер",
                         spd:'Скорость',
                         ini:"Инициатива",
                         luck:"Удача",
-                        def:"Защита",
                         cd:"Восстановление",
                         endurance:"Выносливость", survival:"Выживание", conviction:"Убеждение", craft:"Ремесло", medicine:"Медицина", vehicle:"Транспорт", athletics:"Атлетика", hide:"Скрытность", thievery:"Ловкость рук", deception:"Обман", taming:"Обращение с животными", performance:"Выступление", analysis:"Анализ", engineering:"Инженерия", magic:"Магия", history:"История", education:"Образование", attentiveness:"Внимательность", religion:"Религия", trade:"Торговля", contacts:"Связи", intimidation:"Запугивание", insight:"Проницательность", warcraft:"Военное ремесло", 
                         fortitude:"Крепость", sense:"Шестое чувство", desire:"Компас желаний", languages:"Лингвист", lips:"Чтение по губам", etiquet:"Этикет", noble:"Благородное происхождение", blindness:"Слепота", twohand:"Бой двумя руками", chance:"Последний шанс", elemental:"Стихийное происхождение", livingshield:"Живой щит", memory:"Фотографическая память", deadspeak:"Общение с духами", improvisation:"Импровизация", sleepfast:"Быстрый сон", eatall:"Всеядность", lucky:"Счастливчик", evasion:"Увёртливость", commander:"Командир", inventory:"Волшебные сумки", ironwill:"Железная воля", preparation:"Подготовка", pet:"Питомец", honor:"Честь", shootclose:"Мастер стрельбы", junker:"Барахольщик", bloodoath:"Кровавая клятва", loser:"Неудачник", lastcall:"Последний рывок", manipulation:"Манипулятор", cursed:"Проклятый", undead:"Смертельный договор", practice:"Библиотечные знания", homescape:"Родные края", organization:"Орден смерти", hipster:"Стиляга", scars:"Шрамирование", synesthesia:"Синестезия", naming:"Магия имён", 
                     },
                     myFeats: [],
                     tals: [],
-                    feats: [
-                        { id: 1, name: 'Могучий удар', desc: 'Нужно: Сила 13+', req: { str: 13 } },
-                        { id: 2, name: 'Уклонение', desc: 'Нужно: Ловкость 13+', req: { dex: 13 } }
-                    ],
+                    feats: [],
                     // Картинки, когда ранг ВЫБРАН
                     activeDice: [
                         '../images/tokens/rank1.png', // для ранга 0
@@ -660,7 +698,7 @@
                     this.selectedFrac=this.fracs.indexOf(v)+1;
                 },
                 calcAttrs(){
-                    this.attrs.hp=Math.floor((this.rankDice[this.stats.con-1]*this.rankMultiple[this.selectedRank])*2);
+                    this.attrs.hp=Math.floor((this.rankDice[this.stats.con-1]*this.rankMultiple[this.selectedRank]));
                     this.attrs.spd=(5-this.selectedRank)*5+this.stats.dex;
                     this.attrs.ini = this.attrs.spd;
                     for (let index = 0; index < this.stats.int+1; index++) {
@@ -668,10 +706,10 @@
                     }
                     this.attrs.luck = (5-this.selectedRank) * 20 + (this.stats.wis * 4);
                     this.attrsd.atk=[
-                        this.stats.con
+                        this.stats.dex
                     ];
                     this.attrsd.arm=[
-                        this.stats.dex
+                        this.stats.con
                     ];
                     this.attrsd.matk=[
                         this.stats.int
@@ -816,6 +854,64 @@
                 },
                 getRandomInt(min, max) {
                     return Math.floor(Math.random() * (max - min) + min);
+                },
+                exportCard() {
+                    let cardString = '/'+'/%charplate'+`('${this.classesInfo[this.selectedClass].name}','ВАШЕИМЯ',${this.currentLvl},'${this.rankDice[this.stats.con-1]}','${this.rankDice[this.stats.dex-1]}','${this.rankDice[this.stats.int-1]}','${this.rankDice[this.stats.wis-1]}',${this.attrs.hp},${this.attrs.spd},${this.attrs.ini},${this.attrs.cd}`;
+                    
+                    cardString+=`,{${this.rankDice[this.attrsd.atk[0]-1]}},{${this.rankDice[this.attrsd.matk[0]-1]}},{${this.rankDice[this.attrsd.arm[0]-1]}},{${this.rankDice[this.attrsd.bar[0]-1]}}`;
+                    cardString+=`,{`;
+                    let start=true;
+                    for (let key in this.skills) {
+                        if (this.skills[key].value>0) {
+                            let skill = this.skills[key];
+                            if(!start)
+                                cardString+=",";
+                            cardString+=`{name='${skill.name}',value='d${this.rankDice[skill.value-1]} d${this.rankDice[this.stats[skill.stat]-1]}'}`;
+                            if(start)
+                                start=false;
+                        }
+                    }
+                    cardString+='},{},{';
+
+                    this.tals.forEach(element => {
+                        cardString+=`'${element}',`;
+                    });
+
+                    cardString+='},"")';
+
+                    //function charplate(class,name,level,con,dex,int,wis,hp,speed,ini,cd,atk,magic,arm,bar,skills,abilities,talants,desc)
+   debugger;
+                    this.copyAndClose(cardString, "Карточка скопирована!");
+                },
+
+                exportFull() {
+                    // Выгружаем весь объект data целиком
+                    const fullData = JSON.stringify(this.$data, null, 2);
+                    
+                    this.copyAndClose(fullData, "Все данные скопированы в JSON!");
+                },
+
+                showToast(message) {
+                    // Если уже есть активное уведомление, сбрасываем его
+                    if (this.toastTimer) clearTimeout(this.toastTimer);
+                    
+                    this.toastMessage = message;
+                    
+                    // Закрываем модалку сразу
+                    this.isExportModalOpen = false;
+
+                    // Скрываем уведомление через 3 секунды
+                    this.toastTimer = setTimeout(() => {
+                        this.toastMessage = '';
+                    }, 3000);
+                },
+
+                copyAndClose(text, message) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        this.showToast(message); // Вместо alert
+                    }).catch(err => {
+                        console.error('Ошибка копирования', err);
+                    });
                 }
             },
             mounted(){
