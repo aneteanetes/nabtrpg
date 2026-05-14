@@ -1029,9 +1029,15 @@ nab = {
         d8="Большое",
         d10="Огромное",
         d12="Осадное"
+    },
+    set=function (var,value)
+        nab.var[var]=value;
+        return '';
+    end,
+    var = {
+        complex=0
     }
 }
-
 
 function weaponMobileCatTable()
     local result = "";
@@ -1231,66 +1237,66 @@ function charplate(class,name,level,con,dex,int,wis,hp,speed,ini,cd,atk,magic,ar
 
     return [[
 <div class="nwn-card-main">
-    <div class="cc-header">
-        <div class="cc-class">]]..class..[[</div>
-        <div class="cc-name">]]..name..[[</div>
-        <div class="cc-lvl">Уровень: ]]..level..[[</div>
-    </div>
- <div class="cc-description">]]..desc..[[</div>
+<div class="cc-header">
+    <div class="cc-class">]]..class..[[</div>
+    <div class="cc-name">]]..name..[[</div>
+    <div class="cc-lvl">Уровень: ]]..level..[[</div>
+</div>
+<div class="cc-description">]]..desc..[[</div>
 <div class="cc-body">
 <div class="cc-left-content">
 <div class="cc-dice-zone">
-    <div class="cc-img">d]]..con..[[</div>
-    <div class="cc-img">d]]..dex..[[</div>
-    <div class="cc-img">d]]..int..[[</div>
-    <div class="cc-img">d]]..wis..[[</div>
+<div class="cc-img">d]]..con..[[</div>
+<div class="cc-img">d]]..dex..[[</div>
+<div class="cc-img">d]]..int..[[</div>
+<div class="cc-img">d]]..wis..[[</div>
 </div>
 
 <div class="cc-bottom-grid">
-    <div class="cc-col">
-        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-hearts"></i> ]]..hp..[[</div>
-        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-boot-stomp"></i> ]]..speed..[[</div>
-        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-doubled"></i> ]]..ini..[[</div>
-        <div class="cc-row cc-icon-only"><i class="ra ra-r ra-circle-of-circles"></i> ]]..cd..[[</div>
-    </div>
-    <div class="cc-col">
-        <div class="cc-row">
-            <span class="cc-label"><i class="ra ra-sword"></i> Атака:</span>
-            <div class="cc-mini-dice-wrap">]]..atk_str..[[
-            </div>
-        </div>
-        <div class="cc-row">
-            <span class="cc-label"><i class="ra ra-crystal-wand"></i> Магия:</span>
-            <div class="cc-mini-dice-wrap">]]..magic_str..[[</div>
-        </div>
-        <div class="cc-row">
-            <span class="cc-label"><i class="ra ra-shield"></i> Защита:</span>
-            <div class="cc-mini-dice-wrap">]]..arm_str..[[</div>
-        </div>
-        <div class="cc-row">
-            <span class="cc-label"><i class="ra ra-fire-symbol"></i> Барьер:</span>
-            <div class="cc-mini-dice-wrap">]]..bar_str..[[</div>
+<div class="cc-col">
+    <div class="cc-row cc-icon-only"><i class="ra ra-r ra-hearts"></i> ]]..hp..[[</div>
+    <div class="cc-row cc-icon-only"><i class="ra ra-r ra-boot-stomp"></i> ]]..speed..[[</div>
+    <div class="cc-row cc-icon-only"><i class="ra ra-r ra-doubled"></i> ]]..ini..[[</div>
+    <div class="cc-row cc-icon-only"><i class="ra ra-r ra-circle-of-circles"></i> ]]..cd..[[</div>
+</div>
+<div class="cc-col">
+    <div class="cc-row">
+        <span class="cc-label"><i class="ra ra-sword"></i> Атака:</span>
+        <div class="cc-mini-dice-wrap">]]..atk_str..[[
         </div>
     </div>
-    <div class="cc-col">
-        ]]..skills_str..[[
+    <div class="cc-row">
+        <span class="cc-label"><i class="ra ra-crystal-wand"></i> Магия:</span>
+        <div class="cc-mini-dice-wrap">]]..magic_str..[[</div>
     </div>
+    <div class="cc-row">
+        <span class="cc-label"><i class="ra ra-shield"></i> Защита:</span>
+        <div class="cc-mini-dice-wrap">]]..arm_str..[[</div>
+    </div>
+    <div class="cc-row">
+        <span class="cc-label"><i class="ra ra-fire-symbol"></i> Барьер:</span>
+        <div class="cc-mini-dice-wrap">]]..bar_str..[[</div>
+    </div>
+</div>
+<div class="cc-col">
+    ]]..skills_str..[[
+</div>
 </div>
 </div>
 
 <div class="cc-sidebar-column">
 <div class="cc-side-box cc-side-upper">
-    ]]..abils_str..[[
+]]..abils_str..[[
 </div>
 <div class="cc-side-box">
-    ]]..talants_str..[[
+]]..talants_str..[[
 </div>
 </div>
 </div>
 <div class="cc-footer">
-    <div class="cc-footer-row">]]..weapons_str..[[</div>
-    
-    <div class="cc-footer-row">]]..armors_str..[[</div>
+<div class="cc-footer-row">]]..weapons_str..[[</div>
+
+<div class="cc-footer-row">]]..armors_str..[[</div>
 </div>
 
 </div>
@@ -1460,4 +1466,152 @@ function groupBy(list, key)
         table.insert(result[groupValue], item)
     end
     return result
+end
+
+function examplehero1()
+    return charplate('Воин','Шаррат',3,'8','4','8','6',8,11,16,0,{4},{8},{8},{6},
+    {{name='Медицина',value='d6 d8'},{name='Образование',value='d4 d8'}},
+    {'Исцеление болезней','Снятие проклятий','Приведение в чувство','Потрошение'},{'Бой двумя руками',},
+    'Женщина бледной кожи в кожаном доспехе родом из Королевства проклятых. Вместо меча в её руках — дымящиеся хирургические зажимы и склянки, взгляд полнится хищными инстинктами врачевания, а руки обследуют раны союзников. Шаррат не обычный воин, она посвятила себя искусству исцеления - хирургическая игла заменила ей махи мечом, а комплекты лечения высокий металлический щит.',
+    {{name='Скальпель (Режущее)',value=4,type='atk'},{name='Учебник медицины (Магическое)',value=4,type='magic'}},
+    {{name='Кожаный доспех', value=6, type='physic'},{name='Клобук',value=4, type='magic'}})
+end
+
+function examplehero2()
+    return charplate('Маг','Ибран',3,'8','4','6','8',8,13,17,0,{4},{6},{8},{8},
+    {{name='Атлетика',value='d4 d8'},{name='Запугивание',value='d4 d8'},{name='Военное ремесло',value='d4 d8'}},
+    {'Провокация','Щит пыли','Тюрьма песков','Песок времени'},{'Смертельный договор',},
+    'Молодой юноша в развивающейся рясе Песков мёртвых. В отличие от других магов, он не творит разрушительных заклинаний, его призвание - магия мёртвого песка. С помощью костяного посоха он сплетает вокруг себя и своих союзников щиты из мелкой пыли и заставляет врагов атаковать себя в первую очередь.',
+    {{name='Костяной посох (Дробящее)',value=6,type='atk'}},{{name='Мантия'}})
+end
+
+function examplehero3()
+    return charplate('Плут','Инанна',3,'6','6','4','8',6,12,18,1,{6},{4},{6},{8},
+    {{name='Магия',value='d4 d4'},{name='Выживание',value='d4 d6'},
+    {name='Связи',value='d4 d8'}},
+    {'Ядовитые шипы','Терновые заросли','Шипастые ловушки','Терновый звон'},{'Счастливчик','Увёртливость',},
+    "Девушка родом из Тёмного леса. Облачённая в наряд из живого мха, в её руках красуется два шипа от колючих лиан. Инанна не имеет таланта к воровству, но благодаря тренировкам под сенью мирового дереа может управлять ядовитыми шипастыми зарослями, способными поразить целую толпу врагов сильнее любых кинжалов.",
+    {{name='Ядовитая плеть (Гибкое)',value=4,type='atk'},{name='Терновый кнут (Гибкое)',value=4,type='phys'}},
+    {{name='Живой доспех'}})
+end
+
+function examplehero4()
+    return charplate('Жрец','Варад',3,'6','12','4','4',6,15,19,1,{12},{4},{6},{4},
+    {{name='Скрытность',value='d4 d12'},{name='Ловкость рук',value='d6 d12'}},
+    {'Солнечный удар','Вихрь','Железная воля','Боевой мах'},{'Кровавая клятва',},
+    "Варад - жилистый фанатик из Экзархата. Он презирает молитвы и магию, предпочитая вколачивать веру в еретиков пудовым золоченым молотом. В свободное время занимается взломом замков и воровством.",
+    {{name='Золочёный двуручный молот (Дробящее)',value=8,type='atk'}},
+    {{name='Боевое облачение жрецов', value=4}})
+end
+
+function rollHtml(tableLeft,complexity,tableRight,classname)
+    --[[local leftE = {
+        { name='dicename',dice=4,result=4}
+    };
+    local rightE= {
+        { name='dicename',dice=4,result=4}
+    }
+    local compE = 12;
+--]]
+
+
+    if classname==nil then
+        classname='';
+    end
+
+    local left=[[]];
+    local leftNumbers={};
+    local leftResult = 0;
+
+    local right="";
+    local rightNumbers={};
+    local rightResult = 0;
+
+    for key, value in pairs(tableLeft) do
+        left=left..[[
+<div class="nwn-roll-dice-row">
+    <div class="nwn-roll-dice-info">
+        <span class="nwn-roll-dice-text">]]..value.name..[[</span>
+        <span class="nwn-roll-dice-tag">d]]..value.dice..[[</span>
+    </div>
+    <span class="nwn-roll-dice-value">]]..value.result..[[</span>
+</div>]];
+        table.insert(leftNumbers,value.result);
+    end
+    leftResult=sumDices(leftNumbers,classname==nab.classes.rogue.name);
+
+    if tableRight == nil or #tableRight==0 then
+        right=[[<div class="nwn-roll-static-difficulty">]]..complexity..[[</div>]];
+        rightResult=complexity;
+    else
+        right=[[<div class="nwn-roll-dice-list">]]
+        for key, value in pairs(tableRight) do            
+            right=right..[[
+<div class="nwn-roll-dice-row">
+<div class="nwn-roll-dice-info">
+    <span class="nwn-roll-dice-text">]]..value.name..[[</span>
+    <span class="nwn-roll-dice-tag">d]]..value.dice..[[</span>
+</div>
+<span class="nwn-roll-dice-value">]]..value.result..[[</span>
+</div>]];
+            table.insert(rightNumbers,value.result);
+        end
+        rightResult=sumDices(rightNumbers,false);
+        right=right..[[<div class="nwn-roll-total">Результат: ]]..rightResult..[[</div></div>]];
+    end
+
+    local resultClass='success';
+    local resultText='Успех';
+    if rightResult>leftResult then
+        resultClass='failure';
+        resultText='Провал';
+    end
+
+    return [[
+<div class="nwn-roll-result-container nwn-roll-border">
+
+<!-- Left pull -->
+<div class="nwn-roll-pool-column">
+<div class="nwn-roll-pool-title">Бросок</div>
+<div class="nwn-roll-dice-list">
+]]..left..[[
+<div class="nwn-roll-total">Результат: ]]..leftResult..[[</div>
+</div>
+</div>
+
+<!-- throw result -->
+<div class="nwn-roll-status-column nwn-roll-status-]]..resultClass..[[">
+<div class="nwn-roll-status-title">]]..resultText..[[</div>
+</div>
+
+<!-- Right pull / complexity -->
+<div class="nwn-roll-pool-column">
+<div class="nwn-roll-pool-title">Сложность</div>
+]]..right..[[
+</div>
+
+</div>]]
+end
+
+function sumDices(numbers,isRogue)
+    if(isRogue==nil) then
+        isRogue=false;
+    end
+    if #numbers == 0 then
+        return 0;
+    elseif #numbers == 1 then
+        return numbers[1];
+    else
+        table.sort(numbers, function(a, b)
+            return a > b
+        end)
+
+        local sum = numbers[1] + numbers[2]
+        
+        if isRogue==true and #numbers>2 then
+            sum = sum + numbers[3];
+        end
+
+        return sum;
+    end
 end

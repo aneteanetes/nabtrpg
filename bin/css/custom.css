@@ -374,3 +374,429 @@ h5 + p {
     background: rgba(179, 141, 93, 0.1); 
     cursor: default;
 }
+
+::-webkit-scrollbar {
+    width: 8px; /* Ширина скроллбара */
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1612; /* Цвет дорожки (совпадает с .nwn-bg) */
+    border-left: 1px solid #3d3428;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3d3428; /* Цвет самого ползунка */
+    border: 1px solid #4a3d2b;
+    border-radius: 0px; /* В NWN обычно острые углы */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4a3d2b;
+    border-color: #b18c5d; /* Подсветка при наведении */
+}
+
+/* Стилизация для Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #3d3428 #1a1612;
+}
+   .fade-enter-active, .fade-leave-active {
+        transition: all 0.4s ease;
+    }
+    .fade-enter-from, .fade-leave-to {
+        opacity: 0;
+        transform: translate(-50%, 20px); /* Уезжает вниз */
+    }
+
+.btn-nwn {
+  /* Базовые свойства для ссылки */
+  display: inline-block;
+  text-decoration: none;
+  
+  /* Размеры и выравнивание */
+  padding: 12px 40px;
+  text-align: center;
+  
+  /* Цвета и фоны */
+  background-color: #1a1512; /* Темно-коричневый/черный фон */
+  color: #cca573;            /* Золотисто-бежевый цвет текста */
+  
+  /* Рамка */
+  border: 1px solid #3d332a; /* Тонкая темная рамка */
+  
+  /* Шрифт */
+  font-family: "Times New Roman", Georgia, serif; /* Шрифт с засечками */
+  font-size: 18px;
+  letter-spacing: 0.5px;     /* Небольшой отступ между буквами */
+  
+  /* Плавный переход при наведении */
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.center-margin {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.nwn-btn-a {  
+    display: block; 
+    text-decoration: none !important; 
+    background: #2d261e; 
+    border: 1px solid #4a3d2b; 
+    color: #c9ad7d !important;
+    padding: 12px 40px;
+    text-align: center;
+ }
+.nwn-btn-a:hover:not(:disabled) { background: #4a3d2b; color: #fff; }
+.nwn-btn-a:disabled { opacity: 0.3; }
+
+
+    /* Диалогусы */
+    /* Контейнер для всего примера игры */
+.dialogue-log {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    margin: 15px 0;
+}
+
+/* Базовый класс для строки диалога */
+.dialogue-line {
+    padding: 8px 14px;
+    background: #15110e;
+    border: 1px solid #2d261e;
+    line-height: 1.5;
+}
+
+/* Специфика Текста Мастера (GM) */
+.line-gm {
+    border-left: 4px solid #b18c5d; /* Золотой акцент */
+}
+.line-gm .speaker-name {
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(177, 140, 93, 0.4);
+}
+.line-gm .speech-text {
+    color: #e2cb99; /* Чуть более светлый золотистый для важного описания */
+}
+
+/* Специфика Заявок Игроков */
+.line-player {
+    border-left: 4px solid #4a3d2b; /* Приглушенный коричневый акцент */
+    background: #12100d;
+}
+.line-player .speaker-name {
+    color: #a39072;
+    font-weight: bold;
+}
+.line-player .speech-text {
+    color: #af9b7c; /* Приглушенный цвет */
+}
+
+/* Общий стиль для имени */
+.speaker-name::after {
+    content: ":";
+    margin-right: 8px;
+}
+
+/* Мета-информация (Броски кубов, системные вставки) */
+.dialogue-meta {
+    font-style: italic;
+    color: #7a6b58;
+    font-size: 0.95em;
+    padding-left: 4px;
+}
+
+
+blockquote.nwn {
+    background: #dcd1ba; /* Светлый состаренный пергамент */
+    border: 2px solid #2d261e; /* Темная рамка для контраста со светлым фоном */
+    outline: 1px solid #b18c5d; /* Тонкий золотой контур вокруг рамки */
+    outline-offset: -5px; /* Смещение золотого контура внутрь (эффект рамки NWN) */
+    padding: 22px 28px;
+    margin: 24px 0;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7), 
+                inset 0 0 20px rgba(0, 0, 0, 0.15); /* Мягкая внутренняя тень */
+    border-radius: 2px;
+}
+
+/* Стилизация текста описания */
+blockquote.nwn p {
+    margin: 0 0 12px 0;
+    color: #2c2013; /* Глубокий темно-коричневый цвет для отличной читаемости */
+    font-size: 1.05em;
+    line-height: 1.6;
+    text-align: justify;
+    font-style: normal; /* Сохраняем дефолтный курсив */
+}
+
+blockquote.nwn p:last-child {
+    margin-bottom: 0;
+}
+
+/* Выделение важных названий или имен внутри светлой карточки */
+blockquote.nwn strong {
+    color: #000; /* Абсолютно черный для акцентов */
+    font-style: normal;
+    font-weight: bold;
+}
+
+/* Заголовки внутри светлой цитаты (если используются) */
+blockquote.nwn h1, blockquote.nwn h2, blockquote.nwn h3 {
+    margin: 0 0 14px 0;
+    color: #4a3d2b; /* Темный брендовый цвет для заголовка */
+    font-family: serif;
+    font-size: 1.3em;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(74, 61, 43, 0.3);
+    padding-bottom: 6px;
+}
+
+/* spoiler */
+/* Контейнер спойлера */
+details {
+    background: #dcd1ba; /* Светлый состаренный пергамент */
+    border: 2px solid #2d261e;
+    outline: 1px solid #b18c5d;
+    outline-offset: -5px; /* Фирменная двойная рамка NWN */
+    margin: 16px 0;
+    padding: 0;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+/* Шапка спойлера (кликабельная область) */
+details summary {
+    padding: 12px 18px;
+    color: #4a3d2b; /* Темный брендовый цвет */
+    font-family: serif;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+    list-style: none; /* Прячем стандартную стрелку в Chrome/Firefox */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+/* Вебквит-сброс стрелки для Safari */
+details summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Кастомная стрелка-индикатор справа */
+details summary::after {
+    content: "▼";
+    font-size: 10px;
+    color: #b18c5d;
+    transition: transform 0.2s ease;
+}
+
+/* Эффект наведения на шапку */
+details summary:hover {
+    background: rgba(45, 38, 30, 0.05);
+    color: #2c2013;
+}
+
+/* Поворот стрелки при раскрытии */
+details[open] summary::after {
+    transform: rotate(180deg);
+}
+
+/* Контент внутри открытого спойлера */
+details p {
+    padding: 0 18px 16px 18px;
+    color: #2c2013; /* Чернильно-коричневый текст */
+    line-height: 1.6;
+    border-top: 1px dashed rgba(74, 61, 43, 0.3); /* Тонкий разделитель */
+    margin-top: 0;
+    padding-top: 12px;
+}
+
+/* Форматирование параграфов внутри контента */
+details p {
+    margin: 0 0 10px 0;
+}
+details p:last-child {
+    margin-bottom: 0;
+}
+
+/* БРОСКИ */
+/* Главный контейнер с вашей фирменной рамкой и фоном */
+.nwn-roll-result-container {
+  background: #2f2a24; 
+  border: 2px solid #3d3428; 
+  box-shadow: inset 0 0 20px #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 20px;
+  max-width: 800px;
+  margin: 20px auto;
+  gap: 20px;
+  box-sizing: border-box;
+  font-family: serif;
+  color: #c9ad7d;
+}
+
+/* Колонки пулла (Левая и Правая) */
+.nwn-roll-pool-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid #3d3428;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.nwn-roll-pool-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #b18c5d;
+  border-bottom: 1px solid #3d3428;
+  padding-bottom: 5px;
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Список и строки с кубиками */
+.nwn-roll-dice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+}
+
+.nwn-roll-dice-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(74, 61, 43, 0.4);
+  box-sizing: border-box;
+}
+
+/* Блок инфо: текст + тег кубика */
+.nwn-roll-dice-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nwn-roll-dice-text {
+  font-size: 13px;
+  color: #c9ad7d;
+}
+
+.nwn-roll-dice-tag {
+  color: #fff; 
+  padding: 2px 6px; 
+  font-size: 10px; 
+  display: inline-flex; 
+  align-items: center; 
+  border-radius: 2px;
+  font-weight: bold;
+  width: 32px;
+  height: 32px;
+}
+
+.nwn-roll-dice-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Итоговая сумма */
+.nwn-roll-total {
+  margin-top: auto;
+  padding-top: 15px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: right;
+  border-top: 1px solid #3d3428;
+  color: #b18c5d;
+}
+
+/* Статичная сложность */
+.nwn-roll-static-difficulty {
+  font-size: 42px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  margin: auto 0;
+  text-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+}
+
+/* Центральная колонка статуса */
+.nwn-roll-status-column {
+  width: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.nwn-roll-status-title {
+  font-size: 22px;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding: 12px 0;
+  width: 100%;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+}
+
+.nwn-roll-status-vs {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #4a3d2b;
+  margin-top: 10px;
+  font-style: italic;
+}
+
+/* Цветовые схемы результатов */
+.nwn-roll-status-success .nwn-roll-status-title {
+  color: #4caf50;
+  border-color: rgba(76, 175, 80, 0.4);
+  text-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.nwn-roll-status-failure .nwn-roll-status-title {
+  color: #f44336;
+  border-color: rgba(244, 67, 54, 0.4);
+  text-shadow: 0 0 10px rgba(244, 67, 54, 0.3);
+}
+
+/* Мобильная адаптация */
+@media (max-width: 650px) {
+  .nwn-roll-result-container {
+    flex-direction: column;
+  }
+  .nwn-roll-status-column {
+    width: 100%;
+    order: -1;
+    margin-bottom: 10px;
+  }
+  .nwn-roll-status-vs {
+    display: none;
+  }
+}
+
+.jb {
+    display: flex;
+    justify-content: space-between;
+}

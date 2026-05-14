@@ -3,10 +3,10 @@
 - [Введение](./intermission.md) // что такое ролевая игра
 - [Эпоха Богов](./common/gameworld.md) // краткое описание мира
 - [Игровая сессия](./example/game.md) // пример игры разделённый на две сцены: напряжённая и мирная (параллельно!)
-  - [Персонажи сессии](./example/chars.md)
+  - [Персонажи](./example/chars.md)
   - [Таверна "У горы"](./example/tavern.md)
   - [Тайный подвал](./example/basement.md)
-  - [Суд над магами](./example/judge.md)
+  - [Зал суда](./example/judge.md)
 - [Создание персонажа](./common/creating.md) // то же что есть но и чуть-чуть про модусы
   - [Характеристики](./attributes/attributes.md)
   - [Атрибуты](./stats/stats.md)
