@@ -177,7 +177,7 @@
 //%nab.set('complex',20)
 <div class="dialogue-line line-gm">
     <span class="speaker-name">Мастер</span>
-    <span class="speech-text">Хорошо, делай бросок <strong>//%(nab.skills.thievery.name)</strong> против сложности <strong>//%(nab.var.complex), так как <strong>устройство</strong> находится ровно под ногами культистов.</span>
+    <span class="speech-text">Хорошо, делай бросок <strong>//%(nab.skills.thievery.name)</strong> против сложности <strong>//%(nab.var.complex)</strong>, так как <strong>устройство</strong> находится ровно под ногами культистов.</span>
 </div>
 
 <div class="dialogue-line line-player">

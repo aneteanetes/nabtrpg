@@ -1036,6 +1036,12 @@ nab = {
     end,
     var = {
         complex=0
+    },
+    craft = {
+        mats = 'Материалы', 
+        parts = 'Ингридиенты',
+        essence = 'Компоненты',
+        res = 'Ресурсы'
     }
 }
 

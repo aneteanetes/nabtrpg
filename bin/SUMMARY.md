@@ -41,7 +41,7 @@
   - [Симулятор сражений](./editor/combat.html){_blank}
   - [Лист персонажа](./editor/editor.html)
   - [Редактор магии](./editor/editor.html)
-- [Мастеру] 
+- [Мастеру]
   - [Существа](./common/creatures.md) // как характеристики работают для не персонажей
   - [Персонажи мастера](./masters/npc.md)
   - [Создание приключений](./masters/adventuresconvert.md)

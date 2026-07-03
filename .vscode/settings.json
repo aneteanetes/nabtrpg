@@ -1,5 +1,56 @@
 {
-    "Lua.diagnostics.disable": [
-        "lowercase-global"
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": "meta.embedded.block.lua",
+        "settings": {
+          "foreground": "#4EC9B0"
+        }
+      }
     ]
+  },
+  "extensions.localRepositories": [
+    "./.vscode/extensions"
+  ],
+  
+  "Lua.runtime.fileExtensions": [
+    "lua",
+    "md"
+  ],
+  "Lua.workspace.library": [
+    // Укажите путь к вашей библиотеке/модам, если файлы лежат в другом месте
+    "${workspaceFolder}/src/lua"
+  ],
+  "Lua.workspace.checkThirdParty": false,
+  // Вот это заставит сервер Lua парсить регуляркой только твои строки //%
+  "Lua.runtime.nonStandardSymbols": {
+    "//%": "LineComment",
+    "//%(": "LineComment"
+  },
+
+  "Lua.diagnostics.disable": [
+    "lowercase-global",
+    "undefined-global",
+    "unknown-symbol",
+    "ambiguity-1"
+  ],
+  
+  "Lua.runtime.embeddedLanguageFormatting": true,
+  "Lua.workspace.supportMarkdown": true,
+  "Lua.diagnostics.ignoredFiles": "Opened",
+  
+  "[markdown]": {
+    "editor.embeddedLanguages": {
+        "meta.embedded.block.lua": "lua"
+    },
+    "editor.quickSuggestions": {
+      "other": "off",
+      "comments": "off",
+      "strings": "off"
+    },
+    "editor.wordBasedSuggestions": "off"
+  },
+  "Lua.workspace.userThirdParty": [
+    // Разрешает подключать сторонние файлы
+  ]
 }

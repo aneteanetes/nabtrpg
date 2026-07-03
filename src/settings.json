@@ -48,7 +48,7 @@
       "ContactsHeader":"Связь с создателями:",
       "TelegramLink":"https://t.me/aneteanetes",
       "VKLink":"https://vk.com/aneteanetes",
-      "FullChangesUrl":"./changelog.html",
+      "FullChangesUrl":"./changelog.md",
       "EntryCount": 2,
       "ChangeLogMenuName":"Архив изменений"
     }
