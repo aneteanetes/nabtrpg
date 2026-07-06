@@ -1,0 +1,299 @@
+<html lang="ru" class="js rust" dir="ltr"><head>
+    <!-- Book generated using (almost) mdBook -->
+    <meta charset="UTF-8">
+    <title>Действия - Набонассар</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="rgb(225, 225, 219)">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="shortcut icon" href="./../images/favicon.png">
+    <link rel="stylesheet" href="./../css/variables.css">
+    <link rel="stylesheet" href="./../css/general.css">
+    <link rel="stylesheet" href="./../css/chrome.css">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="./../FontAwesome/css/font-awesome.css">
+    <link rel="stylesheet" href="./../fonts/fonts.css">
+
+    <!-- Highlight.js Stylesheets -->
+    <link rel="stylesheet" href="./../highlight.css">
+    <link rel="stylesheet" href="./../tomorrow-night.css" disabled="">
+    <link rel="stylesheet" href="./../ayu-highlight.css" disabled="">
+
+    <!-- Custom theme stylesheets -->
+    <link rel="stylesheet" href="./../css/custom.css">
+    <link rel="stylesheet" href="./../css/rpg-awesome.min.css">
+    <!-- Extensions stylesheets -->
+    <link rel="stylesheet" href="./../changelog\changelog.css">
+    <link rel="stylesheet" href="./../dices\dices.css">
+
+    <link rel="stylesheet" href="../csbook.css">
+
+
+    <!-- Provide site root to javascript -->
+    <script>
+            var path_to_root = "./../";
+        var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "rust";
+    </script>
+</head>
+    <body class="sidebar-visible">
+        <div id="body-container">
+            <!-- Work around some values being stored in localStorage wrapped in quotes -->
+            <script>
+                try {
+                    var theme = localStorage.getItem('mdbook-theme');
+                    var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                    if (theme.startsWith('"') && theme.endsWith('"')) {
+                        localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                    }
+
+                    if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                        localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                    }
+                } catch (e) { }
+            </script>
+
+            <!-- Set the theme before any content is loaded, prevents flash -->
+            <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('rust')
+            html.classList.add(theme);
+            html.classList.add("js");
+            </script>
+
+            <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+            <!-- Hide / unhide sidebar before it is displayed -->
+            <script>
+                var sidebar = null;
+                var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+                if (document.body.clientWidth >= 1080) {
+                    try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch (e) { }
+                    sidebar = sidebar || 'visible';
+                } else {
+                    sidebar = 'hidden';
+                }
+                sidebar_toggle.checked = sidebar === 'visible';
+                html.classList.remove('sidebar-visible');
+                html.classList.add("sidebar-" + sidebar);
+            </script>
+
+            <nav id="sidebar" class="sidebar" aria-label="Table of contents" aria-hidden="false">
+                <!-- populated by js -->
+
+
+        
+                <div class="sidebar-scrollbox">
+        <div class="chapter">
+
+            <!-- 1. Пункт меню без номера (Уровень 0, обычная ссылка) -->
+            <div class="chapter-item" data-level="0" data-path="0">
+                <a href="../index.html">Главная</a>
+            </div>
+
+            <!-- 2. Пункт меню сворачиваемый (Без <a>, только текст в <span> и стрелочка) -->
+            <div class="chapter-item collapsible" data-level="0" data-menu-id="ch3" data-path="1">
+                <span><strong>3.</strong> Игровая сессия</span>
+                <span class="toggle">❯</span>
+            </div>
+
+            <!-- 3. Подпункт меню в свёрнутом (data-level="1", путь начинается с родительского "1.") -->
+            <div class="chapter-item" data-level="1" data-path="1.0" data-menu-id-parent="ch3">
+                <a href="../example/chars.html" class="active"><strong>3.1.</strong> Персонажи</a>
+            </div>
+
+            <!-- 4. Пункт меню НЕ сворачиваемый (Класса collapsible нет, но подпункты ниже будут видны всегда) -->
+            <div class="chapter-item" data-level="0" data-path="2">
+                <a href="../example/rules.html" ><strong>4.</strong> Свод правил</a>
+            </div>
+
+            <!-- 5. Пункт меню в НЕ сворачиваемом (data-level="1", путь начинается с "2.") -->
+            <div class="chapter-item" data-level="1" data-path="2.0">
+                <a href="../example/combat.html"><strong>4.1.</strong> Боевая система</a>
+            </div>
+
+            <!-- 7. Разделительная линия -->
+            <div class="spacer"></div>
+
+            <!-- 6. Пункт меню который без ссылки (Текстовый заголовок секции, без <a>, класс part-title) -->
+            <div class="chapter-item part-title" data-level="0" data-path="3">
+                <span>Дополнительно</span>
+            </div>
+
+            <!-- Еще один обычный пункт под заголовком -->
+            <div class="chapter-item" data-level="0" data-path="3.0">
+                <a href="../changelog.html">Архив изменений</a>
+            </div>
+
+        </div>
+</div>
+
+
+                <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                    <div class="sidebar-resize-indicator"></div>
+                </div>
+            </nav>
+
+            <!-- Track and set sidebar scroll position -->
+            <script>
+                var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+                sidebarScrollbox.addEventListener('click', function (e) {
+                    if (e.target.tagName === 'A') {
+                        sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                    }
+                }, { passive: true });
+                var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+                sessionStorage.removeItem('sidebar-scroll');
+                if (sidebarScrollTop) {
+                    // preserve sidebar scroll position when navigating via links within sidebar
+                    sidebarScrollbox.scrollTop = sidebarScrollTop;
+                } else {
+                    // scroll sidebar to current active section when navigating via "next/Назад" buttons
+                    var activeSection = document.querySelector('#sidebar .active');
+                    if (activeSection) {
+                        activeSection.scrollIntoView({ block: 'center' });
+                    }
+                }
+            </script>
+
+            <div id="page-wrapper" class="page-wrapper">
+
+                <div class="page">
+                    <div id="menu-bar-hover-placeholder"></div>
+                    <div id="menu-bar" class="menu-bar" style="top: 0px;">
+                        <div class="left-buttons">
+                            <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Содержание" aria-label="Содержание" aria-controls="sidebar" aria-expanded="true">
+                                <i class="fa fa-bars"></i>
+                            </label>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Тема" aria-label="Тема" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme theme-selected" id="rust">Светлая</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Тёмная</button></li>
+                                <!--<li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>-->
+                            </ul>
+                            <button id="search-toggle" class="icon-button" type="button" title="Поиск (ctrl+f)" aria-label="Поиск" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+
+                        <h1 class="menu-title">Действия - Набонассар</h1>
+
+                        <div class="right-buttons">
+                        </div>
+                    </div>
+
+                    <div id="search-wrapper" class="hidden">
+                        <form id="searchbar-outer" class="searchbar-outer">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Искать в правилах..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        </form>
+                        <div id="searchresults-outer" class="searchresults-outer hidden">
+                            <div id="searchresults-header" class="searchresults-header"></div>
+                            <ul id="searchresults">
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                    <script>
+                        document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                        document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                        Array.from(document.querySelectorAll('#sidebar a')).forEach(function (link) {
+                            link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                        });
+                    </script>
+
+                    <div id="content" class="content">
+                        <main>
+                            <h1 id="Действия"><a class="header" href="#Действия">Действия</a></h1>
+<p>Действия — это то, что персонаж может сделать во время сцены.</p>
+<h2 id="Доступные-действия"><a class="header" href="#Доступные-действия">Доступные действия</a></h2>
+<p>В свой ход персонаж может <em>последовательно</em> совершить <code class="hljs">одно действие</code> <strong><code class="hljs">каждого</code></strong> <code class="hljs">типа</code>.</p>
+<h2 id="Действие-движения"><a class="header" href="#Действие-движения">Действие движения</a></h2>
+<p>Любое намеренное перемещение внутри или между связанными зонами.</p>
+<blockquote>
+<p>Считать ли такие действия как "перекат", "пролёт", и.т.д действиями перемещения или основными действиями зависит от мастера и вашего приключения. Если вы будете считать такие действия перемещениями, тем игры останется высоким.</p>
+</blockquote>
+<h2 id="Основное-действие"><a class="header" href="#Основное-действие">Основное действие</a></h2>
+<p>Всё, что не является действием движения и свободным действием, считается основным действием. Данные правила описывают не всё, что можно охарактеризовать основным действием, но охватывают большую часть.</p>
+<h3 id="Атака"><a class="header" href="#Атака">Атака</a></h3>
+<p>Попытка нанести урон или нейтрализовать цель. Включает нанесение урона с использованием оружия, элементов окружения, безоружные атаки, и приёмы борьбы.</p>
+<h3 id="Использование-способности"><a class="header" href="#Использование-способности">Использование способности</a></h3>
+<p>Активация классовых и других <em>способностей</em>.</p>
+<h3 id="Проверка-навыка"><a class="header" href="#Проверка-навыка">Проверка навыка</a></h3>
+<p>Взаимодействие с миром с помощью навыков.</p>
+<blockquote>
+<p>Помощь считается основным действием "проверка навыка".</p>
+</blockquote>
+<blockquote>
+<p>Проверка навыка (как и помощь) доступна только в мирной и вложенной сцене.</p>
+</blockquote>
+<h3 id="Проверка-характеристики"><a class="header" href="#Проверка-характеристики">Проверка характеристики</a></h3>
+<p>Взаимодействие с миром с помощью своего тела. Например: открытие двери в процессе движения (сноровка), попытка удержать верёвку (телосложение), и.т.д.</p>
+<h3 id="Использование-предмета"><a class="header" href="#Использование-предмета">Использование предмета</a></h3>
+<p>Применение объекта, требующее времени и внимания. Например: выпить зелье, активировать сложный механизм, прочесть свиток, перевязать рану.</p>
+<h2 id="Свободное-действие"><a class="header" href="#Свободное-действие">Свободное действие</a></h2>
+<p>Мелкое, почти мгновенное взаимодействие, не требующее броска и проверки характеристики. Например: достать или убрать предмет (но не использовать его), бросить предмет на землю, высказать реплику.</p>
+<h2 id="Кости-Окружения-и-действия"><a class="header" href="#Кости-Окружения-и-действия">Кости Окружения и действия</a></h2>
+<p>Когда вы совершаете <code class="hljs">основное действие</code>, вы можете добавить <em>одну</em> кость окружения в свой пулл бросков. На добавление кости окружения не тратятся очки Воли.</p>
+<h2 id="Действия-во-вложенных-сценах"><a class="header" href="#Действия-во-вложенных-сценах">Действия во вложенных сценах</a></h2>
+<p>Персонаж, находящийся во вложенной сцене, совершает действия параллельно напряжённой сцене. Такой ход совершается за то же время, что и весь раунд (круг ходов участников напряжённой сцены).</p>
+<p>Действия во вложенных сценах позволяют выполнять длительные задачи (например, расшифровка рун), пока другие участники заняты напряжённой сценой.</p>
+
+                        </main>
+
+                        <nav class="nav-wrapper" aria-label="Page navigation">
+                            <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="common.html" class="mobile-nav-chapters previous" title="Назад" aria-label="Назад" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../common/injury.html" class="mobile-nav-chapters next" title="Вперёд" aria-label="Вперёд" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                            <div style="clear: both"></div>
+                        </nav>
+                    </div>
+                </div>
+
+                <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="common.html" class="nav-chapters previous" title="Назад" aria-label="Назад" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../common/injury.html" class="nav-chapters next" title="Вперёд" aria-label="Вперёд" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </nav>
+
+            </div>
+
+            <script src="./../elasticlunr.js"></script>
+            <script src="./../mark.js"></script>
+            <script>
+                window.search = {};
+            </script>
+            <script src="./../searchindex.js"></script>
+            <script src="./../searcher.js"></script>
+
+            <script src="./../clipboard.js"></script>
+            <script src="./../highlight.js"></script>
+            <script src="./../book.js"></script>
+
+            <script src="../csbook.js"></script>
+            <!-- Custom JS scripts -->
+
+        </div>
+    <a href="./../common/modus_schema.html" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+    <img src="./../images/modus_schema_logo.png" style="width: 50px; height: auto;" alt="modus schema">
+</a>
+
+</body></html>

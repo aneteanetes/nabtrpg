@@ -2,12 +2,12 @@
 [Главная](./index.md)
 - [Введение](./intermission.md) // что такое ролевая игра
 - [Эпоха Богов](./common/gameworld.md) // краткое описание мира
-- [Игровая сессия](./example/game.md) // пример игры разделённый на две сцены: напряжённая и мирная (параллельно!)
+-+ [Игровая сессия](./example/game.md) // пример игры разделённый на две сцены: напряжённая и мирная (параллельно!)
   - [Персонажи](./example/chars.md)
   - [Таверна "У горы"](./example/tavern.md)
   - [Тайный подвал](./example/basement.md)
   - [Зал суда](./example/judge.md)
-- [Создание персонажа](./common/creating.md) // то же что есть но и чуть-чуть про модусы
+-+ [Создание персонажа](./common/creating.md) // то же что есть но и чуть-чуть про модусы
   - [Характеристики](./attributes/attributes.md)
   - [Атрибуты](./stats/stats.md)
   - [Навыки](./skills/skills.md)
@@ -16,32 +16,32 @@
   - [Способности](./abilities/abilities.md)
   - [Специализации](./classes/specs.md)
   - [Происхождение](./classes/nations.md)
-- [Игровой процесс](./common/gameplay.md)
+-+ [Игровой процесс](./common/gameplay.md)
   - [Воля](./common/will.md)
   - [Сцены и приключения](./scenes/common.md)
   - [Действия](./scenes/actions.md)
   - [Жизнь и смерть](./common/injury.md)
   - [Уровни и Опыт](./exp/exp.md)
-- [Предметы](./items/items.md)
+-+ [Предметы](./items/items.md)
   - [Оружие](./items/weapons.md)
   - [Экипировка](./items/equip.md)
   - [Создание](./items/craft.md)
-- [Мир] // полное описание мира но без википедии
+-+ [Мир] // полное описание мира но без википедии
   - [Планеты и материки](./editor/editor.html)
   - [Народы и боги](./editor/editor.html)
   - [Фракции](./world/fractions.md)
-- [Справочники] // контент
+-+ [Справочники] // контент
   - [Предметы](./dict/itemsdict.md)
   - [Существа](./dict/creaturesdict.md)
   - [Способности](./dict/abilitiesdict.md)
   - [Эффекты и статусы](./dict/effects.md)
-- [Дополнительно]
+-+ [Дополнительно]
   - [Наследие](./world/fractions.md) // про между партиями
   - [Генератор персонажей](./editor/editor.html){_blank}
   - [Симулятор сражений](./editor/combat.html){_blank}
   - [Лист персонажа](./editor/editor.html)
   - [Редактор магии](./editor/editor.html)
-- [Мастеру]
+-+ [Мастеру]
   - [Существа](./common/creatures.md) // как характеристики работают для не персонажей
   - [Персонажи мастера](./masters/npc.md)
   - [Создание приключений](./masters/adventuresconvert.md)
@@ -49,7 +49,7 @@
   - [Способности приключений](./masters/moduleabilities.md)
   - [Баланс и предметы](./masters/itemscreation.md)
   - [Экономика и услуги](./masters/economy.md)
-- [Таблицы и формулы](./tables/common.md)
+-+ [Таблицы и формулы](./tables/common.md)
   - [Формулы](./tables/formulas.md)
   - [Состязания](./tables/contest.md)
   - [Разум существ](./tables/mindful.md)
@@ -57,4 +57,5 @@
   - [Таблица конвертации бонусов](./tables/bonusconvert.md)
   - [Ранг значения](./tables/rankvalue.md)
   - [Обратный ранг-значение](./tables/rankvaluereversed.md)
+--- 
 - [Ролевая система Modus Schema](./common/modus_schema.md)
