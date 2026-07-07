@@ -42,11 +42,16 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      # Шаг 4: Заходим в папку проекта MdBookSharp и запускаем его через dotnet run,
-      # передавая в качестве аргумента путь к книге (она осталась на шаг выше, то есть `../`)
+      # Шаг 4: Компилируем движок в конкретную папку (выходной релиз)
+      - name: Build MdBookSharp Engine
+        run: |
+          dotnet build mdbooksharp/MdBookSharp/MdBookSharp.csproj -c Release -o ./engine-dist
+
+      # Шаг 5: Запускаем скомпилированный движок, передавая ему 
+      # абсолютный путь к корню вашей книги через ${{ github.workspace }}
       - name: Generate Book
         run: |
-          dotnet run --project mdbooksharp/MdBookSharp/MdBookSharp.csproj -c Release -- "../../"
+          dotnet ./engine-dist/MdBookSharp.dll "${{ github.workspace }}"
 
 
       # Шаг 5: Загружаем артефакт для GitHub Pages
