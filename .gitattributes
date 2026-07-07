@@ -1,0 +1,5 @@
+src/editor/combat.html linguist-vendored
+src/editor/editor.html linguist-vendored
+src/editor/example.html linguist-vendored
+
+*.md linguist-detectable
