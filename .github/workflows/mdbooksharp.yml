@@ -42,25 +42,21 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      # Шаг 4: Собираем компилятор MdBookSharp под Linux
-      - name: Build MdBookSharp Engine
-        run: |
-          dotnet build mdbooksharp/MdBookSharp/MdBookSharp.csproj -c Release
-
-      # Шаг 5: Генерируем книгу
-      # Запускаем движок и передаем ему текущую папку с книгой (она в корне)
+      # Шаг 4: Заходим в папку проекта MdBookSharp и запускаем его через dotnet run,
+      # передавая в качестве аргумента путь к книге (она осталась на шаг выше, то есть `../`)
       - name: Generate Book
         run: |
-          dotnet mdbooksharp/MdBookSharp/bin/Release/net10.0/MdBookSharp.dll "."
+          dotnet run --project mdbooksharp/MdBookSharp/MdBookSharp.csproj -c Release -- "../"
 
-      # Шаг 6: Загружаем артефакт для GitHub Pages
+
+      # Шаг 5: Загружаем артефакт для GitHub Pages
       # Укажите папку, куда ваш движок сохраняет готовый HTML (например, './book' или './bin')
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './bin' 
 
-      # Шаг 7: Публикуем на GitHub Pages
+      # Шаг 6: Публикуем на GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
