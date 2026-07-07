@@ -51,7 +51,7 @@ jobs:
       # Запускаем движок и передаем ему текущую папку с книгой (она в корне)
       - name: Generate Book
         run: |
-          dotnet mdbooksharp/MdBookSharp/bin/Release/net10.0/MdBookSharp.dll "./src"
+          dotnet mdbooksharp/MdBookSharp/bin/Release/net10.0/MdBookSharp.dll "."
 
       # Шаг 6: Загружаем артефакт для GitHub Pages
       # Укажите папку, куда ваш движок сохраняет готовый HTML (например, './book' или './bin')
