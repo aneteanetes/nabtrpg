@@ -1,0 +1,66 @@
+name: Deploy Book to Pages using MdBookSharp Engine
+
+on:
+  push:
+    branches:
+      - main  # Запуск деплоя при пуше в ветку вашей книги
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      # Шаг 1: Скачиваем текущий репозиторий (где лежит ваша книга)
+      # Он скачается в корневую папку воркфлоу
+      - name: Checkout Book Repository
+        uses: actions/checkout@v4
+
+      # Шаг 2: Скачиваем репозиторий движка MdBookSharp
+      # Мы складываем его в соседнюю папку 'mdbooksharp', как у вас локально!
+      - name: Checkout MdBookSharp Engine
+        uses: actions/checkout@v4
+        with:
+          repository: 'aneteanetes/mdbooksharp'
+          path: 'mdbooksharp' # Скачается в ./mdbooksharp
+
+      # Шаг 3: Устанавливаем .NET 10
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      # Шаг 4: Собираем компилятор MdBookSharp под Linux
+      - name: Build MdBookSharp Engine
+        run: |
+          dotnet build mdbooksharp/MdBookSharp/MdBookSharp.csproj -c Release
+
+      # Шаг 5: Генерируем книгу
+      # Запускаем движок и передаем ему текущую папку с книгой (она в корне)
+      - name: Generate Book
+        run: |
+          dotnet mdbooksharp/MdBookSharp/bin/Release/net10.0/MdBookSharp.dll "./src"
+
+      # Шаг 6: Загружаем артефакт для GitHub Pages
+      # Укажите папку, куда ваш движок сохраняет готовый HTML (например, './book' или './bin')
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './bin' 
+
+      # Шаг 7: Публикуем на GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
